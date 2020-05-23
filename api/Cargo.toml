@@ -1,0 +1,18 @@
+# Copyright (c) The dgc.network
+# SPDX-License-Identifier: Apache-2.0
+
+[package]
+name = "dgc-api"
+version = "0.1.0"
+authors = ["Contributors to Hyperledger Grid"]
+edition = "2018"
+license = "Apache-2.0"
+description = """\
+    Hyperledger Grid is a platform for building supply chain solutions. It \
+    provides a growing set of tools that accelerate development for supply \
+    chain smart contracts and client interfaces.
+"""
+
+[dependencies]
+actix-rt = "1.0"
+actix-web = "2.0"
