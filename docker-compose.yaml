@@ -8,9 +8,9 @@ volumes:
 
 services:
 
-  dgcd:
-    image: dgcd:${ISOLATION_ID}
-    container_name: dgcd
+  dgc-api:
+    image: dgc-api:${ISOLATION_ID}
+    container_name: dgc-api
     build:
       context: .
       dockerfile: api/Dockerfile
@@ -21,7 +21,7 @@ services:
       - 8088
     ports:
       - '8088:8088'
-    entrypoint: gridd -vv -b gridd:8088 -C tcp://validator:4004
+    entrypoint: gridd -vv -b dgc-api:8088 -C tcp://validator:4004
 
   tnt-contract-builder:
     image: tnt-contract-builder
