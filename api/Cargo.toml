@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 [package]
-name = "dgcd"
+name = "dgc-api"
 version = "0.1.0"
 authors = ["Contributors to Hyperledger Grid"]
 edition = "2018"
