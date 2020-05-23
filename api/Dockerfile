@@ -19,6 +19,13 @@ COPY cli /build/cli
 COPY daemon /build/daemon
 COPY sdk /build/sdk
 
+# Build the dgc-api package
+WORKDIR /build/api
+ARG CARGO_ARGS
+ARG REPO_VERSION
+RUN sed -i -e "0,/version.*$/ s/version.*$/version\ =\ \"${REPO_VERSION}\"/" Cargo.toml
+RUN cargo deb --deb-version $REPO_VERSION $CARGO_ARGS
+
 # Build the gridd package
 WORKDIR /build/daemon
 ARG CARGO_ARGS
