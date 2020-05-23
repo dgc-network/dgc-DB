@@ -43,9 +43,9 @@ COPY --from=gridd-builder /build/target/debian/grid-cli_*.deb /tmp
 COPY --from=gridd-builder /build/target/debian/grid-daemon_*.deb /tmp
 
 RUN apt-get update \
- && apt-get install -y -q \
-    postgresql-client \
+# && apt-get install -y -q \
+#    postgresql-client \
  && dpkg --unpack /tmp/grid*.deb \
  && apt-get -f -y install
 
-CMD ["dgc-api"]
+CMD ["dgcd"]
