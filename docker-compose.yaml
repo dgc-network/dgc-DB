@@ -21,7 +21,7 @@ services:
       - 8088
     ports:
       - '8088:8088'
-    entrypoint: dgc-api -vv -b dgc-api:8088 -C tcp://validator:4004
+#    entrypoint: dgc-api -vv -b dgc-api:8088 -C tcp://validator:4004
 
   tnt-contract-builder:
     image: tnt-contract-builder
