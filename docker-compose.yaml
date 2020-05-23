@@ -21,10 +21,7 @@ services:
       - 8088
     ports:
       - '8088:8088'
-    entrypoint: |
-        bash -c "
-          dgcd -vv -b dgcd:8088 -C tcp://validator:4004
-        "
+    entrypoint: dgcd -vv -b dgcd:8088 -C tcp://validator:4004
 
   tnt-contract-builder:
     image: tnt-contract-builder
