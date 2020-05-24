@@ -4,7 +4,7 @@
 FROM hyperledger/grid-dev:v2 as gridd-builder
 
 # Copy over Cargo.toml files
-COPY Cargo.toml /build/Cargo.toml
+#COPY Cargo.toml /build/Cargo.toml
 COPY api/Cargo.toml /build/api/Cargo.toml
 COPY cli/Cargo.toml /build/cli/Cargo.toml
 COPY daemon/Cargo.toml /build/daemon/Cargo.toml
@@ -16,13 +16,13 @@ COPY contracts/schema/Cargo.toml /build/contracts/schema/Cargo.toml
 COPY contracts/track_and_trace/Cargo.toml /build/contracts/track_and_trace/Cargo.toml
 
 # Copy over build files
-#COPY api /build/api
+COPY api /build/api
 COPY cli /build/cli
 COPY daemon /build/daemon
 COPY sdk /build/sdk
 
 # Build the dgc-api package
-WORKDIR /build
+WORKDIR /build/api
 ARG CARGO_ARGS
 ARG REPO_VERSION
 RUN sed -i -e "0,/version.*$/ s/version.*$/version\ =\ \"${REPO_VERSION}\"/" Cargo.toml
