@@ -4,7 +4,7 @@
 FROM hyperledger/grid-dev:v2 as gridd-builder
 
 # Copy over Cargo.toml files
-#COPY Cargo.toml /build/Cargo.toml
+COPY Cargo.toml /build/Cargo.toml
 COPY api/Cargo.toml /build/api/Cargo.toml
 COPY cli/Cargo.toml /build/cli/Cargo.toml
 COPY daemon/Cargo.toml /build/daemon/Cargo.toml
@@ -29,18 +29,18 @@ RUN sed -i -e "0,/version.*$/ s/version.*$/version\ =\ \"${REPO_VERSION}\"/" Car
 RUN cargo deb --deb-version $REPO_VERSION $CARGO_ARGS
 
 # Build the gridd package
-WORKDIR /build/daemon
-ARG CARGO_ARGS
-ARG REPO_VERSION
-RUN sed -i -e "0,/version.*$/ s/version.*$/version\ =\ \"${REPO_VERSION}\"/" Cargo.toml
-RUN cargo deb --deb-version $REPO_VERSION $CARGO_ARGS
+#WORKDIR /build/daemon
+#ARG CARGO_ARGS
+#ARG REPO_VERSION
+#RUN sed -i -e "0,/version.*$/ s/version.*$/version\ =\ \"${REPO_VERSION}\"/" Cargo.toml
+#RUN cargo deb --deb-version $REPO_VERSION $CARGO_ARGS
 
 # Build the grid-cli package
-WORKDIR /build/cli
-ARG CARGO_ARGS
-ARG REPO_VERSION
-RUN sed -i -e "0,/version.*$/ s/version.*$/version\ =\ \"${REPO_VERSION}\"/" Cargo.toml
-RUN cargo deb --deb-version $REPO_VERSION $CARGO_ARGS
+#WORKDIR /build/cli
+#ARG CARGO_ARGS
+#ARG REPO_VERSION
+#RUN sed -i -e "0,/version.*$/ s/version.*$/version\ =\ \"${REPO_VERSION}\"/" Cargo.toml
+#RUN cargo deb --deb-version $REPO_VERSION $CARGO_ARGS
 
 # -------------=== gridd docker build ===-------------
 FROM ubuntu:bionic
@@ -49,7 +49,7 @@ ARG CARGO_ARGS
 RUN echo "CARGO_ARGS = '$CARGO_ARGS'" > CARGO_ARGS
 
 #COPY --from=gridd-builder /build/target/debian/grid-cli_*.deb /tmp
-COPY --from=gridd-builder /build/target/debian/grid-daemon_*.deb /tmp
+#COPY --from=gridd-builder /build/target/debian/grid-daemon_*.deb /tmp
 
 RUN apt-get update \
 # && apt-get install -y -q \
