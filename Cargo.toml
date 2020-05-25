@@ -1,6 +1,7 @@
 [workspace]
 
 members = [
+    "api",
     "cli",
     "contracts/pike",
     "contracts/product",
