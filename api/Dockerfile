@@ -54,7 +54,7 @@ RUN echo "CARGO_ARGS = '$CARGO_ARGS'" > CARGO_ARGS
 RUN apt-get update \
 # && apt-get install -y -q \
 #    postgresql-client \
- && dpkg --unpack /tmp/grid*.deb \
+# && dpkg --unpack /tmp/grid*.deb \
  && apt-get -f -y install
 
 CMD ["dgc-api"]
