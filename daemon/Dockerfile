@@ -27,6 +27,7 @@ COPY contracts/schema/Cargo.toml /build/contracts/schema/Cargo.toml
 COPY contracts/track_and_trace/Cargo.toml /build/contracts/track_and_trace/Cargo.toml
 
 # Copy over build files
+COPY api /build/api
 COPY cli /build/cli
 COPY daemon /build/daemon
 COPY sdk /build/sdk
