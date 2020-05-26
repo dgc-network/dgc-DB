@@ -13,6 +13,10 @@ description = """\
     chain smart contracts and client interfaces.
 """
 
+[[bin]]
+name = "dgc-api"
+path = "src/main.rs"
+
 [dependencies]
 actix-rt = "1.0"
 actix-web = "2.0"
