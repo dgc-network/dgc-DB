@@ -14,7 +14,7 @@ description = """\
 """
 
 [[bin]]
-name = "dgc-api"
+name = "dgc"
 path = "src/main.rs"
 
 [dependencies]

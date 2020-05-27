@@ -57,4 +57,4 @@ RUN apt-get update \
 # && dpkg --unpack /tmp/grid*.deb \
  && apt-get -f -y install
 
-#CMD ["dgc-api"]
+CMD ["dgc"]
