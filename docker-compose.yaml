@@ -29,7 +29,7 @@ services:
     entrypoint: |
         bash -c "
           # we need to wait for the db to have started.
-          dgc -vv -b dgc:8080 -C tcp://validator:4004
+          dgc -vv -b dgc:8088 -C tcp://validator:4004
         "
 
 
