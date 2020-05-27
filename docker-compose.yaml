@@ -23,7 +23,7 @@ services:
       - '8088:8088'
 #    entrypoint: dgc -vv -b dgc:8088 -C tcp://validator:4004
     entrypoint: |
-      dgc-api -vv
+      dgc -vv
         --connect tcp://validator:4004
         --bind dgc-api:8088
 
