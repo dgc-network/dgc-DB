@@ -21,7 +21,7 @@ services:
       - 8088
     ports:
       - '8089:8088'
-#    entrypoint: dgc -vv -b dgc:8088 -C tcp://validator:4004
+    entrypoint: dgc -vv -b dgc-api:8088 -C tcp://validator:4004
 #    entrypoint: |
 #      dgc -vv
 #        --connect tcp://validator:4004
