@@ -58,4 +58,4 @@ RUN apt-get update \
  && dpkg --unpack /tmp/*.deb \
  && apt-get -f -y install
 
-CMD ["dgc"]
+#CMD ["dgc"]

@@ -26,11 +26,10 @@ services:
 #      dgc -vv
 #        --connect tcp://validator:4004
 #        --bind dgc:8088
-    entrypoint: |
-        bash -c "
-          # we need to wait for the db to have started.
-          dgc -vv -b dgc:8088 -C tcp://validator:4004
-        "
+#    entrypoint: |
+#        bash -c "
+#          dgc -vv -b dgc:8088 -C tcp://validator:4004
+#        "
 
 
   tnt-contract-builder:
