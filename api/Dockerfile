@@ -48,13 +48,14 @@ FROM ubuntu:bionic
 ARG CARGO_ARGS
 RUN echo "CARGO_ARGS = '$CARGO_ARGS'" > CARGO_ARGS
 
+COPY --from=gridd-builder /build/target/debian/*.deb /tmp
 #COPY --from=gridd-builder /build/target/debian/grid-cli_*.deb /tmp
 #COPY --from=gridd-builder /build/target/debian/grid-daemon_*.deb /tmp
 
 RUN apt-get update \
 # && apt-get install -y -q \
 #    postgresql-client \
-# && dpkg --unpack /tmp/grid*.deb \
+ && dpkg --unpack /tmp/*.deb \
  && apt-get -f -y install
 
-#CMD ["dgc"]
+CMD ["dgc"]
