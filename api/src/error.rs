@@ -161,13 +161,13 @@ impl From<UrlGenerationError> for RestApiResponseError {
         ))
     }
 }
-
+/*
 impl From<DatabaseError> for RestApiResponseError {
     fn from(err: DatabaseError) -> RestApiResponseError {
         RestApiResponseError::DatabaseError(format!("Database Error occured: {}", err.to_string()))
     }
 }
-
+*/
 impl From<diesel::result::Error> for RestApiResponseError {
     fn from(err: diesel::result::Error) -> Self {
         RestApiResponseError::DatabaseError(format!(

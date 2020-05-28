@@ -50,7 +50,7 @@ struct Params {
 pub async fn get_batch_statuses(
     req: HttpRequest,
     //state: web::Data<AppState>,
-    state: BatchSubmitter,
+    state: dyn BatchSubmitter,
     query: web::Query<HashMap<String, String>>,
     //query_service_id: web::Query<QueryServiceId>,
     //_: AcceptServiceIdParam,
