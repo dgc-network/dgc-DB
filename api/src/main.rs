@@ -1,6 +1,8 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
+mod routes;
+
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use crate::routes::{
 //    fetch_agent, fetch_grid_schema, fetch_organization, fetch_product, fetch_record,
