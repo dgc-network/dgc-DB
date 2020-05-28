@@ -16,12 +16,12 @@ use serde_json::Value as JsonValue;
 //use crate::error::CliError;
 //use crate::http::submit_batches;
 //use crate::transaction::{pike_batch_builder, PIKE_NAMESPACE};
-use grid_sdk::protocol::pike::Agent;
+use grid_sdk::protocol::pike::state::Agent;
 use grid_sdk::{
     protocol::pike::payload::{Action, CreateAgentAction, PikePayloadBuilder, UpdateAgentAction},
     protos::IntoProto,
 };
-
+/*
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AgentSlice {
     pub public_key: String,
@@ -33,7 +33,7 @@ pub struct AgentSlice {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub service_id: Option<String>,
 }
-/*
+
 impl AgentSlice {
     pub fn from_agent(agent: &Agent) -> Self {
         Self {
@@ -52,7 +52,8 @@ struct ListAgents {
 }
 
 impl Message for ListAgents {
-    type Result = Result<Vec<AgentSlice>, RestApiResponseError>;
+    //type Result = Result<Vec<AgentSlice>, RestApiResponseError>;
+    type Result = Result<Vec<Agent>, RestApiResponseError>;
 }
 /*
 impl Handler<ListAgents> for DbExecutor {
@@ -94,7 +95,8 @@ struct FetchAgent {
 }
 
 impl Message for FetchAgent {
-    type Result = Result<AgentSlice, RestApiResponseError>;
+    //type Result = Result<AgentSlice, RestApiResponseError>;
+    type Result = Result<Agent, RestApiResponseError>;
 }
 /*
 impl Handler<FetchAgent> for DbExecutor {
@@ -144,7 +146,7 @@ pub async fn create_agent(
     //url: &str,
     //key: Option<String>,
     //wait: u64,
-    create_agent: CreateAgentAction,
+    create_agent: web::Json<CreateAgentAction>,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -172,7 +174,7 @@ pub async fn update_agent(
     //url: &str,
     //key: Option<String>,
     //wait: u64,
-    update_agent: UpdateAgentAction,
+    update_agent: web::Json<UpdateAgentAction>,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
