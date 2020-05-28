@@ -61,8 +61,8 @@ impl Handler<ListAgents> for DbExecutor {
 }
 */
 pub async fn list_agents(
-    //state: web::Data<AppState>,
-    batch_submitter: Box<dyn BatchSubmitter + 'static>,
+    state: web::Data<AppState>,
+    //batch_submitter: Box<dyn BatchSubmitter + 'static>,
     //query: web::Query<QueryServiceId>,
     //_: AcceptServiceIdParam,
 ) -> Result<HttpResponse, RestApiResponseError> {
