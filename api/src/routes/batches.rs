@@ -9,7 +9,7 @@ use serde::Deserialize;
 
 use crate::api::error::RestApiResponseError;
 //use crate::rest_api::{AcceptServiceIdParam, AppState, QueryServiceId};
-//use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
+use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 /*
 pub async fn submit_batches(
     req: HttpRequest,
