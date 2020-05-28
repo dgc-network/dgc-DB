@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
-mod api;
 use crate::api::routes::{
 //    fetch_agent, fetch_grid_schema, fetch_organization, fetch_product, fetch_record,
 //    fetch_record_property, list_agents, list_grid_schemas, list_organizations,
