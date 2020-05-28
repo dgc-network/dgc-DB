@@ -41,16 +41,16 @@ async fn index() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
 }
 
-async fn index2() -> impl Responder {
-    HttpResponse::Ok().body("Hello world again!")
-}
-
 #[actix_rt::main]
-async fn main() -> std::io::Result<()> {
+async fn main(
+    bind_url: &str,
+    batch_submitter: Box<dyn BatchSubmitter + 'static>,
+) -> std::io::Result<()> {
+    let state = AppState::new(batch_submitter);
     HttpServer::new(|| {
         App::new()
+            .data(state.clone())
             .route("/", web::get().to(index))
-            .route("/again", web::get().to(index2))
             .service(web::resource("/batches").route(web::post().to(submit_batches)))
             .service(
                 web::resource("/batch_statuses")
