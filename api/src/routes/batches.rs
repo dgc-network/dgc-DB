@@ -102,7 +102,7 @@ pub async fn get_batch_statuses(
     };
 
     state
-        //.batch_submitter
+        .batch_submitter
         .batch_status(BatchStatuses {
             batch_ids,
             wait,
