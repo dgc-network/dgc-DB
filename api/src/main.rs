@@ -47,7 +47,7 @@ async fn main(
     batch_submitter: Box<dyn BatchSubmitter + 'static>,
 ) -> std::io::Result<()> {
     let state = AppState::new(batch_submitter);
-    HttpServer::new(|| {
+    HttpServer::new(move || {
         App::new()
             .data(state.clone())
             .route("/", web::get().to(index))
