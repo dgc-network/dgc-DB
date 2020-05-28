@@ -71,7 +71,8 @@ impl Handler<ListAgents> for DbExecutor {
 }
 */
 pub async fn list_agents(
-    state: web::Data<AppState>,
+    //state: web::Data<AppState>,
+    list_agent: web::Json<Agent>,
     //batch_submitter: Box<dyn BatchSubmitter + 'static>,
     //query: web::Query<QueryServiceId>,
     //_: AcceptServiceIdParam,
@@ -122,7 +123,8 @@ impl Handler<FetchAgent> for DbExecutor {
 }
 */
 pub async fn fetch_agent(
-    state: web::Data<AppState>,
+    //state: web::Data<AppState>,
+    list_agent: web::Json<Agent>,
     public_key: web::Path<String>,
 //    query: web::Query<QueryServiceId>,
 //    _: AcceptServiceIdParam,
@@ -146,7 +148,7 @@ pub async fn create_agent(
     //url: &str,
     //key: Option<String>,
     //wait: u64,
-    create_agent: web::Json<CreateAgentAction>,
+    //create_agent: web::Json<CreateAgentAction>,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -174,7 +176,7 @@ pub async fn update_agent(
     //url: &str,
     //key: Option<String>,
     //wait: u64,
-    update_agent: web::Json<UpdateAgentAction>,
+    //update_agent: web::Json<UpdateAgentAction>,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
