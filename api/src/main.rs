@@ -52,7 +52,8 @@ async fn main(
 //) -> Result() {
 
     //let state = AppState::new(batch_submitter);
-    HttpServer::new(move || {
+    //HttpServer::new(move || {
+    HttpServer::new(|| {
         App::new()
             //.data(state.clone())
             .route("/", web::get().to(index))
