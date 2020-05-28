@@ -61,9 +61,9 @@ async fn main() -> std::io::Result<()> {
             .service(
                 web::scope("/agent")
                     .service(web::resource("")
-                        .route(web::post().to(create_agent)),
-                        .route(web::put().to(update_agent)),
-                        .route(web::get().to(list_agents)))
+                        .route(web::post().to(create_agent))
+                        .route(web::put().to(update_agent))
+                        .route(web::get().to(list_agents))),
                     .service(
                         web::resource("/{public_key}").route(web::get().to(fetch_agent)),
                     ),

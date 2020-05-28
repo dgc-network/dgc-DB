@@ -24,7 +24,7 @@ pub struct AgentSlice {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub service_id: Option<String>,
 }
-
+/*
 impl AgentSlice {
     pub fn from_agent(agent: &Agent) -> Self {
         Self {
@@ -37,7 +37,7 @@ impl AgentSlice {
         }
     }
 }
-
+*/
 struct ListAgents {
     service_id: Option<String>,
 }
@@ -45,7 +45,7 @@ struct ListAgents {
 impl Message for ListAgents {
     type Result = Result<Vec<AgentSlice>, RestApiResponseError>;
 }
-
+/*
 impl Handler<ListAgents> for DbExecutor {
     type Result = Result<Vec<AgentSlice>, RestApiResponseError>;
 
@@ -59,7 +59,7 @@ impl Handler<ListAgents> for DbExecutor {
         Ok(fetched_agents)
     }
 }
-
+*/
 pub async fn list_agents(
     state: web::Data<AppState>,
     //query: web::Query<QueryServiceId>,
@@ -86,7 +86,7 @@ struct FetchAgent {
 impl Message for FetchAgent {
     type Result = Result<AgentSlice, RestApiResponseError>;
 }
-
+/*
 impl Handler<FetchAgent> for DbExecutor {
     type Result = Result<AgentSlice, RestApiResponseError>;
 
@@ -108,7 +108,7 @@ impl Handler<FetchAgent> for DbExecutor {
         Ok(fetched_agent)
     }
 }
-
+*/
 pub async fn fetch_agent(
     state: web::Data<AppState>,
     public_key: web::Path<String>,
