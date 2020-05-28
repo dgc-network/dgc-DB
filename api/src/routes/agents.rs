@@ -13,6 +13,15 @@ use actix_web::{web, HttpResponse};
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 
+//use crate::error::CliError;
+//use crate::http::submit_batches;
+//use crate::transaction::{pike_batch_builder, PIKE_NAMESPACE};
+use grid_sdk::protocol::pike::Agent;
+use grid_sdk::{
+    protocol::pike::payload::{Action, CreateAgentAction, PikePayloadBuilder, UpdateAgentAction},
+    protos::IntoProto,
+};
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AgentSlice {
     pub public_key: String,
@@ -131,19 +140,11 @@ pub async fn fetch_agent(
 }
 
 
-//use crate::error::CliError;
-//use crate::http::submit_batches;
-//use crate::transaction::{pike_batch_builder, PIKE_NAMESPACE};
-//use grid_sdk::{
-//    protocol::pike::payload::{Action, CreateAgentAction, PikePayloadBuilder, UpdateAgentAction},
-//    protos::IntoProto,
-//};
-
 pub async fn create_agent(
     //url: &str,
     //key: Option<String>,
     //wait: u64,
-    //create_agent: CreateAgentAction,
+    create_agent: CreateAgentAction,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -171,7 +172,7 @@ pub async fn update_agent(
     //url: &str,
     //key: Option<String>,
     //wait: u64,
-    //update_agent: UpdateAgentAction,
+    update_agent: UpdateAgentAction,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
