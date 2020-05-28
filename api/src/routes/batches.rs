@@ -9,8 +9,9 @@ use serde::Deserialize;
 
 use crate::error::RestApiResponseError;
 //use crate::{AcceptServiceIdParam, AppState, QueryServiceId};
+use crate::AppState;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
-use crate::submitter::BatchSubmitter;
+//use crate::submitter::BatchSubmitter;
 /*
 pub async fn submit_batches(
     req: HttpRequest,
@@ -49,8 +50,7 @@ struct Params {
 
 pub async fn get_batch_statuses(
     req: HttpRequest,
-    //state: web::Data<AppState>,
-    state: dyn BatchSubmitter,
+    state: web::Data<AppState>,
     query: web::Query<HashMap<String, String>>,
     //query_service_id: web::Query<QueryServiceId>,
     //_: AcceptServiceIdParam,

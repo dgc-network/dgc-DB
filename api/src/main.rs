@@ -12,7 +12,8 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 //    list_products, list_records, submit_batches, get_batch_statuses, 
 //};
 use crate::routes::batches::get_batch_statuses;
-/*
+use crate::submitter::BatchSubmitter;
+
 #[derive(Clone)]
 pub struct AppState {
     batch_submitter: Box<dyn BatchSubmitter + 'static>,
@@ -34,7 +35,7 @@ impl AppState {
         }
     }
 }
-*/
+
 async fn index() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
 }
