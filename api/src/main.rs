@@ -12,7 +12,29 @@ use crate::routes::batches::get_batch_statuses;
 //    fetch_record_property, list_agents, list_grid_schemas, list_organizations,
 //    list_products, list_records, submit_batches, get_batch_statuses, 
 //};
+/*
+#[derive(Clone)]
+pub struct AppState {
+    batch_submitter: Box<dyn BatchSubmitter + 'static>,
+    //database_connection: Addr<DbExecutor>,
+}
 
+impl AppState {
+    pub fn new(
+        batch_submitter: Box<dyn BatchSubmitter + 'static>,
+        //connection_pool: ConnectionPool,
+    ) -> Self {
+        //let database_connection = SyncArbiter::start(SYNC_ARBITER_THREAD_COUNT, move || {
+        //    DbExecutor::new(connection_pool.clone())
+        //});
+
+        AppState {
+            batch_submitter,
+            //database_connection,
+        }
+    }
+}
+*/
 async fn index() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
 }

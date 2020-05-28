@@ -10,7 +10,7 @@ use sawtooth_sdk::messages::client_batch_submit::ClientBatchStatus;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
-use crate::api::error::RestApiResponseError;
+use crate::error::RestApiResponseError;
 
 pub const DEFAULT_TIME_OUT: u32 = 300; // Max timeout 300 seconds == 5 minutes
 

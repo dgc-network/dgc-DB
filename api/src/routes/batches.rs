@@ -8,8 +8,9 @@ use sawtooth_sdk::messages::batch::BatchList;
 use serde::Deserialize;
 
 use crate::error::RestApiResponseError;
-//use crate::rest_api::{AcceptServiceIdParam, AppState, QueryServiceId};
+//use crate::{AcceptServiceIdParam, AppState, QueryServiceId};
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
+use crate::submitter::BatchSubmitter;
 /*
 pub async fn submit_batches(
     req: HttpRequest,
@@ -48,10 +49,11 @@ struct Params {
 
 pub async fn get_batch_statuses(
     req: HttpRequest,
-    state: web::Data<AppState>,
+    //state: web::Data<AppState>,
+    state: BatchSubmitter,
     query: web::Query<HashMap<String, String>>,
-    query_service_id: web::Query<QueryServiceId>,
-    _: AcceptServiceIdParam,
+    //query_service_id: web::Query<QueryServiceId>,
+    //_: AcceptServiceIdParam,
 ) -> Result<HttpResponse, RestApiResponseError> {
     let batch_ids = match query.get("id") {
         Some(ids) => ids.split(',').map(ToString::to_string).collect(),
@@ -100,11 +102,11 @@ pub async fn get_batch_statuses(
     };
 
     state
-        .batch_submitter
+        //.batch_submitter
         .batch_status(BatchStatuses {
             batch_ids,
             wait,
-            service_id: query_service_id.into_inner().service_id,
+            //service_id: query_service_id.into_inner().service_id,
         })
         .await
         .map(|batch_statuses| {
