@@ -11,14 +11,15 @@ use crate::error::RestApiResponseError;
 //use crate::{AcceptServiceIdParam, AppState, QueryServiceId};
 use crate::AppState;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
-//use crate::submitter::BatchSubmitter;
-/*
+use crate::submitter::BatchSubmitter;
+
 pub async fn submit_batches(
     req: HttpRequest,
     body: web::Bytes,
-    state: web::Data<AppState>,
-    query_service_id: web::Query<QueryServiceId>,
-    _: AcceptServiceIdParam,
+    //state: web::Data<AppState>,
+    batch_submitter: Box<dyn BatchSubmitter + 'static>,
+    //query_service_id: web::Query<QueryServiceId>,
+    //_: AcceptServiceIdParam,
 ) -> Result<HttpResponse, RestApiResponseError> {
     let batch_list: BatchList = match protobuf::parse_from_bytes(&*body) {
         Ok(batch_list) => batch_list,
@@ -32,17 +33,18 @@ pub async fn submit_batches(
 
     let response_url = req.url_for_static("batch_statuses")?;
 
-    state
-        .batch_submitter
+    //state
+    //    .batch_submitter
+    batch_submitter
         .submit_batches(SubmitBatches {
             batch_list,
             response_url,
-            service_id: query_service_id.into_inner().service_id,
+            //service_id: query_service_id.into_inner().service_id,
         })
         .await
         .map(|link| HttpResponse::Ok().json(link))
 }
-*/
+
 #[derive(Deserialize, Debug)]
 struct Params {
     id: Vec<String>,
@@ -50,7 +52,8 @@ struct Params {
 
 pub async fn get_batch_statuses(
     req: HttpRequest,
-    state: web::Data<AppState>,
+    //state: web::Data<AppState>,
+    batch_submitter: Box<dyn BatchSubmitter + 'static>,
     query: web::Query<HashMap<String, String>>,
     //query_service_id: web::Query<QueryServiceId>,
     //_: AcceptServiceIdParam,
@@ -101,8 +104,9 @@ pub async fn get_batch_statuses(
         }
     };
 
-    state
-        .batch_submitter
+    //state
+    //.batch_submitter
+    batch_submitter
         .batch_status(BatchStatuses {
             batch_ids,
             wait,

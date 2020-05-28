@@ -11,7 +11,7 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 //    fetch_record_property, list_agents, list_grid_schemas, list_organizations,
 //    list_products, list_records, submit_batches, get_batch_statuses, 
 //};
-use crate::routes::batches::get_batch_statuses;
+use crate::routes::batches::{submit_batches, get_batch_statuses};
 use crate::submitter::BatchSubmitter;
 
 #[derive(Clone)]
@@ -50,7 +50,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .route("/", web::get().to(index))
             .route("/again", web::get().to(index2))
-//            .service(web::resource("/batches").route(web::post().to(submit_batches)))
+            .service(web::resource("/batches").route(web::post().to(submit_batches)))
             .service(
                 web::resource("/batch_statuses")
                     .name("batch_statuses")
