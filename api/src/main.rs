@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+mod api;
 use crate::api::routes::{
 //    fetch_agent, fetch_grid_schema, fetch_organization, fetch_product, fetch_record,
 //    fetch_record_property, list_agents, list_grid_schemas, list_organizations,
@@ -23,7 +24,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .route("/", web::get().to(index))
             .route("/again", web::get().to(index2))
-            .service(web::resource("/batches").route(web::post().to(submit_batches)))
+//            .service(web::resource("/batches").route(web::post().to(submit_batches)))
             .service(
                 web::resource("/batch_statuses")
                     .name("batch_statuses")
