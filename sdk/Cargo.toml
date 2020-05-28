@@ -31,6 +31,10 @@ license = "Apache-2.0"
 protobuf = "2"
 cfg-if = "0.1"
 
+actix-web = "2.0"
+futures = "0.3.5"
+serde_derive = "1.0.110"
+
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 rust-crypto-wasm = "0.3"
 sabre-sdk = "0.5"
