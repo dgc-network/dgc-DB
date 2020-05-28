@@ -5,7 +5,7 @@ mod routes;
 mod error;
 mod submitter;
 
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{web, App, HttpResponse, HttpServer, Responder, Result,};
 //use crate::routes::{
 //    fetch_agent, fetch_grid_schema, fetch_organization, fetch_product, fetch_record,
 //    fetch_record_property, list_agents, list_grid_schemas, list_organizations,
@@ -45,7 +45,12 @@ async fn index() -> impl Responder {
 async fn main(
     bind_url: &str,
     batch_submitter: Box<dyn BatchSubmitter + 'static>,
-) -> std::io::Result<()> {
+//) -> std::io::Result<()> {
+//) -> Result<(RestApiShutdownHandle,
+//    thread::JoinHandle<Result<(), RestApiServerError>>,),
+//    RestApiServerError,> {
+) -> Result<()> {
+
     let state = AppState::new(batch_submitter);
     HttpServer::new(move || {
         App::new()
