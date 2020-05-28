@@ -28,4 +28,5 @@ futures = "0.3"
 url = "2.1"
 diesel = "1.0.0"
 base64 = "0.10"
+protobuf = "2"
 
