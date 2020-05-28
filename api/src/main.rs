@@ -2,14 +2,16 @@
 // SPDX-License-Identifier: Apache-2.0
 
 mod routes;
+mod error;
+mod submitter;
 
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
-use crate::routes::{
+use crate::routes::batches::get_batch_statuses;
+//use crate::routes::{
 //    fetch_agent, fetch_grid_schema, fetch_organization, fetch_product, fetch_record,
 //    fetch_record_property, list_agents, list_grid_schemas, list_organizations,
-//    list_products, list_records, submit_batches,
-    get_batch_statuses, 
-};
+//    list_products, list_records, submit_batches, get_batch_statuses, 
+//};
 
 async fn index() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")

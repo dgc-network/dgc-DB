@@ -7,7 +7,7 @@ use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::messages::batch::BatchList;
 use serde::Deserialize;
 
-use crate::api::error::RestApiResponseError;
+use crate::error::RestApiResponseError;
 //use crate::rest_api::{AcceptServiceIdParam, AppState, QueryServiceId};
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 /*
