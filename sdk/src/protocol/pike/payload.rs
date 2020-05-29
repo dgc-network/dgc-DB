@@ -97,7 +97,7 @@ impl CreateAgentAction {
         &self.metadata
     }
 }
-
+/*
 impl FromRequest for CreateAgentAction {
     type Error = Error;
     type Future = Ready<Result<Self, Self::Error>>;
@@ -113,7 +113,7 @@ impl FromRequest for CreateAgentAction {
         })
     }
 }
-
+*/
 impl FromProto<protos::pike_payload::CreateAgentAction> for CreateAgentAction {
     fn from_proto(
         create_agent: protos::pike_payload::CreateAgentAction,

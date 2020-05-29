@@ -143,12 +143,33 @@ pub async fn fetch_agent(
 
 }
 
+#[derive(Deserialize)]
+pub struct NewAgent {
+    agent: NewAgentData,
+}
+
+#[derive(Deserialize, Validate)]
+struct NewAgentData {
+    //private_key: Option<String>,
+    org_id: Option<String>, 
+    roles: Option<String>, 
+    metadata: Option<String>
+/*
+    #[validate(length(min = 1))]
+    username: Option<String>,
+    #[validate(email)]
+    email: Option<String>,
+    #[validate(length(min = 8))]
+    password: Option<String>,
+*/
+}
 
 pub async fn create_agent(
+    new_agent: Json<NewAgent>,
     //url: &str,
     //key: Option<String>,
     //wait: u64,
-    create_agent: web::Json<CreateAgentAction>,
+    //create_agent: web::Json<CreateAgentAction>,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
