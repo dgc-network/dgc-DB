@@ -196,13 +196,15 @@ pub async fn create_agent(
 */
 
     let mut roles = Vec::<String>::new();
-    for role in new_agent.roles.chars() {
+    //for role in new_agent.roles.chars() {
+    for role in new_agent.roles {
         let entry: String = role.to_string().split(",").collect();
         roles.push(entry.clone());
     }
 
     let mut metadata = Vec::<KeyValueEntry>::new();
-    for meta in new_agent.metadata.chars() {
+    //for meta in new_agent.metadata.chars() {
+    for meta in new_agent.metadata {
         let meta_as_string = meta.to_string();
         let key_val: Vec<&str> = meta_as_string.split(",").collect();
         if key_val.len() != 2 {
