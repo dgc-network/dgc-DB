@@ -17,13 +17,15 @@ use serde_json::Value as JsonValue;
 //use crate::http::submit_batches;
 //use crate::transaction::{pike_batch_builder, PIKE_NAMESPACE};
 use grid_sdk::protocol::pike::state::{
-    KeyValueEntryBuilder,
-    KeyValueEntry, Agent,
+    KeyValueEntry, KeyValueEntryBuilder,
+    Agent,
 };
-use grid_sdk::{
-    protocol::pike::payload::{Action, CreateAgentAction, PikePayloadBuilder, UpdateAgentAction},
-    protos::IntoProto,
-};
+use grid_sdk::protocol::pike::payload::{
+    Action, PikePayloadBuilder, 
+    CreateAgentAction, CreateAgentActionBuilder, 
+    UpdateAgentAction, UpdateAgentActionBuilder, 
+},
+use grid_sdk::protos::IntoProto;
 
 use validator::Validate;
 //use protos::state::{
@@ -196,6 +198,8 @@ pub async fn create_agent(
     extractor.check()?;
 */
 
+    let org_id = new_agent.org_id.to_string();
+
     let mut roles = Vec::<String>::new();
     //for role in new_agent.roles.chars() {
     for role in new_agent.roles {
@@ -220,15 +224,39 @@ pub async fn create_agent(
             None => "Metadata is formated incorrectly".to_string()
         };
         //let mut entry = KeyValueEntry::new();
-        let mut entry = KeyValueEntryBuilder::new();
+        //entry.set_key(key);
+        //entry.set_value(value);
+        //metadata.push(entry.clone());
 
-        entry.set_key(key);
-        entry.set_value(value);
-        metadata.push(entry.clone());
+        let builder = KeyValueEntryBuilder::new();
+        let key_value = builder
+            .with_key(key.to_string())
+            .with_value(value.to_string())
+            .build()
+            .unwrap();
+
+        metadata.push(key_value.clone());
     }
 
-    let payload = create_agent_payload(&org_id, &public_key, roles, metadata);
+    let builder = CreateAgentActionBuilder::new();
+    let action = builder
+        .with_org_id(org_id)
+        .with_public_key("public_key".to_string())
+        .with_active(true)
+        .with_roles(roles)
+        .with_metadata(metadata)
+        .build()
+        .unwrap();
+/*
+        let builder = PikePayloadBuilder::new();
+        let payload = builder
+            .with_action(Action::CreateAgent)
+            .with_create_agent(action.clone())
+            .build()
+            .unwrap();
 
+    let payload = create_agent_payload(&org_id, &public_key, roles, metadata);
+*/
     Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 /*
     let payload = PikePayloadBuilder::new()
