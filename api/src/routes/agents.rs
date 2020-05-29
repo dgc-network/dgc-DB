@@ -21,6 +21,9 @@ use grid_sdk::{
     protocol::pike::payload::{Action, CreateAgentAction, PikePayloadBuilder, UpdateAgentAction},
     protos::IntoProto,
 };
+
+use validator::Validate;
+
 /*
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AgentSlice {
@@ -148,7 +151,8 @@ pub struct NewAgent {
     agent: NewAgentData,
 }
 
-#[derive(Deserialize, Validate)]
+//#[derive(Deserialize, Validate)]
+#[derive(Deserialize)]
 struct NewAgentData {
     //private_key: Option<String>,
     org_id: Option<String>, 
@@ -165,7 +169,7 @@ struct NewAgentData {
 }
 
 pub async fn create_agent(
-    new_agent: Json<NewAgent>,
+    new_agent: web::Json<NewAgent>,
     //url: &str,
     //key: Option<String>,
     //wait: u64,
@@ -173,6 +177,47 @@ pub async fn create_agent(
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
+
+    let new_agent = new_agent.into_inner().agent;
+/*
+    let mut extractor = FieldValidator::validate(&new_agent);
+    let org_id = extractor.extract("org_id", new_agent.org_id);
+    let roles_as_strings = extractor.extract("roles", new_agent.roles);
+    let metadata_as_strings = extractor.extract("metadata", new_agent.metadata);
+    //let private_key_hex_string = extractor.extract("private_key", new_agent.private_key);
+    extractor.check()?;
+*/
+
+    let mut roles = Vec::<String>::new();
+    for role in new_agent.roles.chars() {
+        let entry: String = role.to_string().split(",").collect();
+        roles.push(entry.clone());
+    }
+
+    let mut metadata = Vec::<KeyValueEntry>::new();
+    for meta in new_agent.metadata.chars() {
+        let meta_as_string = meta.to_string();
+        let key_val: Vec<&str> = meta_as_string.split(",").collect();
+        if key_val.len() != 2 {
+            "Metadata is formated incorrectly".to_string();            
+        }
+        let key = match key_val.get(0) {
+            Some(key) => key.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let value = match key_val.get(1) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let mut entry = KeyValueEntry::new();
+
+        entry.set_key(key);
+        entry.set_value(value);
+        metadata.push(entry.clone());
+    }
+
+    let payload = create_agent_payload(&org_id, &public_key, roles, metadata);
+    
     Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 /*
     let payload = PikePayloadBuilder::new()
