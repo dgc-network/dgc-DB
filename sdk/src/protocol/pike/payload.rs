@@ -108,7 +108,7 @@ impl FromRequest for CreateAgentAction {
             org_id: "org_id".into(),
             public_key: "public_key".into(),
             active: "active".into(),
-            roles: "roles".into(),
+            roles: vec!["roles".into()],
             metadata: "metadata".into(),
         })
     }
