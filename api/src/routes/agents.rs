@@ -17,7 +17,8 @@ use serde_json::Value as JsonValue;
 //use crate::http::submit_batches;
 //use crate::transaction::{pike_batch_builder, PIKE_NAMESPACE};
 use grid_sdk::protocol::pike::state::{
-    KeyValueEntry, Agent
+    KeyValueEntryBuilder,
+    KeyValueEntry, Agent,
 };
 use grid_sdk::{
     protocol::pike::payload::{Action, CreateAgentAction, PikePayloadBuilder, UpdateAgentAction},
@@ -219,10 +220,10 @@ pub async fn create_agent(
             None => "Metadata is formated incorrectly".to_string()
         };
         //let mut entry = KeyValueEntry::new();
-        let mut entry = KeyValueEntry::from_native(key: value);
+        let mut entry = KeyValueEntryBuilder::new();
 
-        //entry.set_key(key);
-        //entry.set_value(value);
+        entry.set_key(key);
+        entry.set_value(value);
         metadata.push(entry.clone());
     }
 
