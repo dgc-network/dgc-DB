@@ -12,11 +12,6 @@ use crate::protos::{
     FromBytes, FromNative, FromProto, IntoBytes, IntoNative, IntoProto, ProtoConversionError,
 };
 
-use actix_web::{web, dev, App, Error, HttpRequest, FromRequest};
-use actix_web::error::ErrorBadRequest;
-use futures::future::{ok, err, Ready};
-use serde_derive::Deserialize;
-
 /// Native implementation for PikePayload_Action
 #[derive(Debug, Clone, PartialEq)]
 pub enum Action {
@@ -97,23 +92,7 @@ impl CreateAgentAction {
         &self.metadata
     }
 }
-/*
-impl FromRequest for CreateAgentAction {
-    type Error = Error;
-    type Future = Ready<Result<Self, Self::Error>>;
-    type Config = ();
 
-    fn from_request(req: &HttpRequest, payload: &mut dev::Payload) -> Self::Future {
-        ok(CreateAgentAction { 
-            org_id: "org_id".into(),
-            public_key: "public_key".into(),
-            active: "active".into(bool),
-            roles: vec!["roles".into()],
-            metadata: vec!["metadata".into()],
-        })
-    }
-}
-*/
 impl FromProto<protos::pike_payload::CreateAgentAction> for CreateAgentAction {
     fn from_proto(
         create_agent: protos::pike_payload::CreateAgentAction,

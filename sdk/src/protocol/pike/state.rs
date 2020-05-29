@@ -11,11 +11,6 @@ use crate::protos::{
     FromBytes, FromNative, FromProto, IntoBytes, IntoNative, IntoProto, ProtoConversionError,
 };
 
-use actix_web::{web, dev, App, Error, HttpRequest, FromRequest};
-use actix_web::error::ErrorBadRequest;
-use futures::future::{ok, err, Ready};
-use serde_derive::Deserialize;
-
 /// Native implementation for KeyValueEntry
 #[derive(Debug, Clone, PartialEq)]
 pub struct KeyValueEntry {
@@ -175,23 +170,7 @@ impl Agent {
         &self.metadata
     }
 }
-/*
-impl FromRequest for Agent {
-    type Error = Error;
-    type Future = Ready<Result<Self, Self::Error>>;
-    type Config = ();
 
-    fn from_request(req: &HttpRequest, payload: &mut dev::Payload) -> Self::Future {
-        ok(Agent { 
-            org_id: "org_id".into(),
-            public_key: "public_key".into(),
-            active: "active".into(),
-            roles: "roles".into(),
-            metadata: "metadata".into(),
-        })
-    }
-}
-*/
 impl FromProto<protos::pike_state::Agent> for Agent {
     fn from_proto(agent: protos::pike_state::Agent) -> Result<Self, ProtoConversionError> {
         Ok(Agent {
