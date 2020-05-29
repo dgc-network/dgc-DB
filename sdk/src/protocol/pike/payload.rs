@@ -107,9 +107,9 @@ impl FromRequest for CreateAgentAction {
         ok(CreateAgentAction { 
             org_id: "org_id".into(),
             public_key: "public_key".into(),
-            active: "active".into(),
+            active: "active".into(bool),
             roles: vec!["roles".into()],
-            metadata: "metadata".into(),
+            metadata: vec!["metadata".into()],
         })
     }
 }
