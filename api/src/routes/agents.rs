@@ -219,7 +219,7 @@ pub async fn create_agent(
             None => "Metadata is formated incorrectly".to_string()
         };
         //let mut entry = KeyValueEntry::new();
-        let mut entry = KeyValueEntry::from_poto();
+        let mut entry = KeyValueEntry::from_proto();
 
         entry.set_key(key);
         entry.set_value(value);
