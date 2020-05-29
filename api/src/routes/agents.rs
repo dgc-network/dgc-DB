@@ -16,13 +16,20 @@ use serde_json::Value as JsonValue;
 //use crate::error::CliError;
 //use crate::http::submit_batches;
 //use crate::transaction::{pike_batch_builder, PIKE_NAMESPACE};
-use grid_sdk::protocol::pike::state::Agent;
+use grid_sdk::protocol::pike::state::{
+    KeyValueEntry, Agent
+};
 use grid_sdk::{
     protocol::pike::payload::{Action, CreateAgentAction, PikePayloadBuilder, UpdateAgentAction},
     protos::IntoProto,
 };
 
 use validator::Validate;
+//use protos::state::{
+//    KeyValueEntry,
+//    Agent, AgentList, 
+//    Organization, OrganizationList
+//};
 
 /*
 #[derive(Debug, Serialize, Deserialize)]
@@ -217,7 +224,7 @@ pub async fn create_agent(
     }
 
     let payload = create_agent_payload(&org_id, &public_key, roles, metadata);
-    
+
     Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 /*
     let payload = PikePayloadBuilder::new()
