@@ -175,7 +175,7 @@ impl Agent {
         &self.metadata
     }
 }
-
+/*
 impl FromRequest for Agent {
     type Error = Error;
     type Future = Ready<Result<Self, Self::Error>>;
@@ -191,7 +191,7 @@ impl FromRequest for Agent {
         })
     }
 }
-
+*/
 impl FromProto<protos::pike_state::Agent> for Agent {
     fn from_proto(agent: protos::pike_state::Agent) -> Result<Self, ProtoConversionError> {
         Ok(Agent {

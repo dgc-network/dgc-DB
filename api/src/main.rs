@@ -43,7 +43,7 @@ async fn index() -> impl Responder {
 
 #[actix_rt::main]
 async fn main(
-    bind_url: &str,
+    //bind_url: &str,
 //    batch_submitter: Box<dyn BatchSubmitter + 'static>,
 ) -> std::io::Result<()> {
 //) -> Result<(RestApiShutdownHandle,

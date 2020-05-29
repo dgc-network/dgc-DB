@@ -104,6 +104,22 @@ impl CreateAgentAction {
     }
 }
 
+impl FromRequest for CreateAgentAction {
+    type Error = Error;
+    type Future = Ready<Result<Self, Self::Error>>;
+    type Config = ();
+
+    fn from_request(req: &HttpRequest, payload: &mut dev::Payload) -> Self::Future {
+        ok(CreateAgentAction { 
+            org_id: "org_id".into(),
+            public_key: "public_key".into(),
+            active: "active".into(),
+            roles: "roles".into(),
+            metadata: "metadata".into(),
+        })
+    }
+}
+
 impl FromProto<protos::pike_payload::CreateAgentAction> for CreateAgentAction {
     fn from_proto(
         create_agent: protos::pike_payload::CreateAgentAction,
