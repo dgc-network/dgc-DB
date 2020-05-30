@@ -6,12 +6,12 @@
 //    error::RestApiResponseError, routes::DbExecutor, AcceptServiceIdParam, AppState, QueryServiceId,
 //};
 use crate::error::RestApiResponseError;
-use crate::AppState;
+//use crate::AppState;
 
 use actix::{Handler, Message, SyncContext};
 use actix_web::{web, HttpResponse};
 use serde::{Deserialize, Serialize};
-use serde_json::Value as JsonValue;
+//use serde_json::Value as JsonValue;
 
 //use crate::error::CliError;
 //use crate::http::submit_batches;
@@ -25,7 +25,7 @@ use grid_sdk::protocol::pike::payload::{
     CreateAgentAction, CreateAgentActionBuilder, 
     UpdateAgentAction, UpdateAgentActionBuilder, 
 };
-use grid_sdk::protos::IntoProto;
+//use grid_sdk::protos::IntoProto;
 
 use validator::Validate;
 //use protos::state::{
@@ -161,8 +161,8 @@ pub struct NewAgent {
     agent: NewAgentData,
 }
 
-//#[derive(Deserialize, Validate)]
-#[derive(Deserialize)]
+#[derive(Deserialize, Validate)]
+//#[derive(Deserialize)]
 struct NewAgentData {
     //private_key: Option<String>,
     org_id: Option<String>, 
@@ -242,7 +242,8 @@ pub async fn create_agent(
 
     let payload = PikePayloadBuilder::new()
         .with_action(Action::CreateAgent)
-        .with_create_agent(create_agent)
+        //.with_create_agent(create_agent)
+        .with_create_agent(action)
         .build()
         //.map_err(|err| CliError::UserError(format!("{}", err)))?;
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
