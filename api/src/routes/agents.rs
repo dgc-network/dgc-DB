@@ -201,14 +201,12 @@ pub async fn create_agent(
     let org_id: String = new_agent.org_id.unwrap();
 
     let mut roles = Vec::<String>::new();
-    //for role in new_agent.roles.chars() {
     for role in new_agent.roles {
         let entry: String = role.to_string().split(",").collect();
         roles.push(entry.clone());
     }
 
     let mut metadata = Vec::<KeyValueEntry>::new();
-    //for meta in new_agent.metadata.chars() {
     for meta in new_agent.metadata {
         let meta_as_string = meta.to_string();
         let key_val: Vec<&str> = meta_as_string.split(",").collect();
@@ -223,13 +221,8 @@ pub async fn create_agent(
             Some(value) => value.to_string(),
             None => "Metadata is formated incorrectly".to_string()
         };
-        //let mut entry = KeyValueEntry::new();
-        //entry.set_key(key);
-        //entry.set_value(value);
-        //metadata.push(entry.clone());
 
-        let builder = KeyValueEntryBuilder::new();
-        let key_value = builder
+        let key_value = KeyValueEntryBuilder::new()
             .with_key(key.to_string())
             .with_value(value.to_string())
             .build()
@@ -238,8 +231,7 @@ pub async fn create_agent(
         metadata.push(key_value.clone());
     }
 
-    let builder = CreateAgentActionBuilder::new();
-    let action = builder
+    let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id)
         .with_public_key("public_key".to_string())
         .with_active(true)
@@ -247,24 +239,14 @@ pub async fn create_agent(
         .with_metadata(metadata)
         .build()
         .unwrap();
-/*
-        let builder = PikePayloadBuilder::new();
-        let payload = builder
-            .with_action(Action::CreateAgent)
-            .with_create_agent(action.clone())
-            .build()
-            .unwrap();
 
-    let payload = create_agent_payload(&org_id, &public_key, roles, metadata);
-*/
-    Ok(HttpResponse::Ok().body("Hello world! create_agent"))
-/*
     let payload = PikePayloadBuilder::new()
         .with_action(Action::CreateAgent)
         .with_create_agent(create_agent)
         .build()
-        .map_err(|err| CliError::UserError(format!("{}", err)))?;
-
+        //.map_err(|err| CliError::UserError(format!("{}", err)))?;
+        .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
+/*
     let batch_list = pike_batch_builder(key)
         .add_transaction(
             &payload.into_proto()?,
@@ -275,6 +257,7 @@ pub async fn create_agent(
 
     submit_batches(url, wait, &batch_list, service_id.as_deref())
 */    
+    Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
 
 pub async fn update_agent(
