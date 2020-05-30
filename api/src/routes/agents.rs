@@ -26,13 +26,16 @@ use grid_sdk::protocol::pike::payload::{
     UpdateAgentAction, UpdateAgentActionBuilder, 
 };
 use grid_sdk::protos::IntoProto;
+use std::collections::HashMap;
 
 use validator::Validate;
 
 const GRID_DAEMON_KEY: &str = "GRID_DAEMON_KEY";
 const GRID_DAEMON_ENDPOINT: &str = "GRID_DAEMON_ENDPOINT";
 const GRID_SERVICE_ID: &str = "GRID_SERVICE_ID";
+const DEFAULT_TIME_OUT: u32 = 300; // Max timeout 300 seconds == 5 minutes
 
+/*
 let url = matches
     .value_of("url")
     .map(String::from)
@@ -50,7 +53,7 @@ let service_id = matches
     .value_of("service_id")
     .map(String::from)
     .or_else(|| env::var(GRID_SERVICE_ID).ok());
-
+*/
 #[derive(Deserialize)]
 pub struct NewAgent {
     agent: NewAgentData,
@@ -197,6 +200,7 @@ pub async fn create_agent(
     //wait: u64,
     //create_agent: web::Json<CreateAgentAction>,
     new_agent: web::Json<NewAgent>,
+    query: web::Query<HashMap<String, String>>,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -269,7 +273,46 @@ pub async fn create_agent(
         )?
         .create_batch_list();
 
-    let url: &str = ;
+    let url = match query.get("url") {
+        Some(url) => url,
+        None => Some(GRID_DAEMON_ENDPOINT),
+    };
+
+    let service_id = match query.get("service_id") {
+        Some(service_id) => service_id,
+        None => Some(GRID_SERVICE_ID),
+    };
+
+    // Max wait time allowed is 95% of network's configured timeout
+    let max_wait_time = (DEFAULT_TIME_OUT * 95) / 100;
+
+    let wait = match query.get("wait") {
+        Some(wait_time) => {
+            if wait_time == "false" {
+                None
+            } else {
+                match wait_time.parse::<u32>() {
+                    Ok(wait_time) => {
+                        if wait_time > max_wait_time {
+                            Some(max_wait_time)
+                        } else {
+                            Some(wait_time)
+                        }
+                    }
+                    Err(_) => {
+                        return Err(RestApiResponseError::BadRequest(format!(
+                            "Query wait has invalid value {}. \
+                             It should set to false or a time in seconds to wait for the commit",
+                            wait_time
+                        )));
+                    }
+                }
+            }
+        }
+
+        None => Some(max_wait_time),
+    };
+
     submit_batches(url, wait, &batch_list, service_id.as_deref());
 
     Ok(HttpResponse::Ok().body("Hello world! create_agent"))
