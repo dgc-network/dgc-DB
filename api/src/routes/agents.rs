@@ -170,12 +170,12 @@ pub async fn fetch_agent(
 }
 
 pub async fn create_agent(
-    new_agent: web::Json<NewAgent>,
-    //url: &str,
+    url: &str,
     secret_key: Option<String>,
-    //wait: u64,
+    wait: u64,
     //create_agent: web::Json<CreateAgentAction>,
-    //service_id: Option<String>,
+    new_agent: web::Json<NewAgent>,
+    service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
 
@@ -247,7 +247,7 @@ pub async fn create_agent(
         )?
         .create_batch_list();
 
-    submit_batches(url, wait, &batch_list, service_id.as_deref())
+    submit_batches(url, wait, &batch_list, service_id.as_deref());
 
     Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
