@@ -275,12 +275,12 @@ pub async fn create_agent(
 
     let url = match query.get("url") {
         Some(url) => url,
-        None => Some(GRID_DAEMON_ENDPOINT.as_ref()),
+        None => Some(GRID_DAEMON_ENDPOINT.to_string()),
     };
 
     let service_id = match query.get("service_id") {
         Some(service_id) => service_id,
-        None => Some(GRID_SERVICE_ID.as_ref()),
+        None => Some(GRID_SERVICE_ID.to_string()),
     };
 
     // Max wait time allowed is 95% of network's configured timeout
