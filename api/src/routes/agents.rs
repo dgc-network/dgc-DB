@@ -25,7 +25,7 @@ use grid_sdk::protocol::pike::payload::{
     CreateAgentAction, CreateAgentActionBuilder, 
     UpdateAgentAction, UpdateAgentActionBuilder, 
 };
-//use grid_sdk::protos::IntoProto;
+use grid_sdk::protos::IntoProto;
 
 use validator::Validate;
 
