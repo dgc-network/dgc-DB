@@ -18,7 +18,7 @@ use crate::http::submit_batches;
 use crate::transaction::{pike_batch_builder, PIKE_NAMESPACE};
 use grid_sdk::protocol::pike::state::{
     KeyValueEntry, KeyValueEntryBuilder,
-    Agent,
+    //Agent,
 };
 use grid_sdk::protocol::pike::payload::{
     Action, PikePayloadBuilder, 

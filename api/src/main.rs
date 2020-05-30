@@ -1,6 +1,8 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
+#[macro_use] extern crate log;
+
 mod routes;
 mod error;
 mod submitter;
