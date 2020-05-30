@@ -280,7 +280,7 @@ pub async fn create_agent(
 
     let service_id = match query.get("service_id") {
         Some(service_id) => service_id,
-        None => Some(GRID_SERVICE_ID),
+        None => GRID_SERVICE_ID,
     };
 
     // Max wait time allowed is 95% of network's configured timeout
