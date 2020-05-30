@@ -275,7 +275,7 @@ pub async fn create_agent(
 
     let url = match query.get("url") {
         Some(url) => url,
-        None => Some(GRID_DAEMON_ENDPOINT.as_ref()),
+        None => GRID_DAEMON_ENDPOINT,
     };
 
     let service_id = match query.get("service_id") {
