@@ -5,6 +5,7 @@ mod routes;
 mod error;
 mod submitter;
 mod transaction;
+mod key;
 
 use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
 //use actix_web::{web, App, HttpResponse, HttpServer, Responder, Result,};

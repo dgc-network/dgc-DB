@@ -14,6 +14,8 @@ use std::error::Error;
 
 use std::fmt;
 
+use grid_sdk::protos;
+
 #[derive(Debug)]
 pub enum RestApiServerError {
     StartUpError(String),
