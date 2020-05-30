@@ -28,13 +28,29 @@ use grid_sdk::protocol::pike::payload::{
 //use grid_sdk::protos::IntoProto;
 
 use validator::Validate;
-//use protos::state::{
-//    KeyValueEntry,
-//    Agent, AgentList, 
-//    Organization, OrganizationList
-//};
 
+#[derive(Deserialize)]
+pub struct NewAgent {
+    agent: NewAgentData,
+}
+
+//#[derive(Deserialize, Validate)]
+#[derive(Deserialize)]
+struct NewAgentData {
+    //private_key: Option<String>,
+    org_id: Option<String>, 
+    roles: Option<String>, 
+    metadata: Option<String>
 /*
+    #[validate(length(min = 1))]
+    username: Option<String>,
+    #[validate(email)]
+    email: Option<String>,
+    #[validate(length(min = 8))]
+    password: Option<String>,
+*/
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AgentSlice {
     pub public_key: String,
@@ -59,14 +75,13 @@ impl AgentSlice {
         }
     }
 }
-*/
+
 struct ListAgents {
     service_id: Option<String>,
 }
 
 impl Message for ListAgents {
-    //type Result = Result<Vec<AgentSlice>, RestApiResponseError>;
-    type Result = Result<Vec<Agent>, RestApiResponseError>;
+    type Result = Result<Vec<AgentSlice>, RestApiResponseError>;
 }
 /*
 impl Handler<ListAgents> for DbExecutor {
@@ -85,8 +100,6 @@ impl Handler<ListAgents> for DbExecutor {
 */
 pub async fn list_agents(
     //state: web::Data<AppState>,
-    //list_agent: web::Json<Agent>,
-    //batch_submitter: Box<dyn BatchSubmitter + 'static>,
     //query: web::Query<QueryServiceId>,
     //_: AcceptServiceIdParam,
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -109,8 +122,7 @@ struct FetchAgent {
 }
 
 impl Message for FetchAgent {
-    //type Result = Result<AgentSlice, RestApiResponseError>;
-    type Result = Result<Agent, RestApiResponseError>;
+    type Result = Result<AgentSlice, RestApiResponseError>;
 }
 /*
 impl Handler<FetchAgent> for DbExecutor {
@@ -137,7 +149,6 @@ impl Handler<FetchAgent> for DbExecutor {
 */
 pub async fn fetch_agent(
     //state: web::Data<AppState>,
-    //list_agent: web::Json<Agent>,
     public_key: web::Path<String>,
 //    query: web::Query<QueryServiceId>,
 //    _: AcceptServiceIdParam,
@@ -156,32 +167,10 @@ pub async fn fetch_agent(
 
 }
 
-#[derive(Deserialize)]
-pub struct NewAgent {
-    agent: NewAgentData,
-}
-
-#[derive(Deserialize, Validate)]
-//#[derive(Deserialize)]
-struct NewAgentData {
-    //private_key: Option<String>,
-    org_id: Option<String>, 
-    roles: Option<String>, 
-    metadata: Option<String>
-/*
-    #[validate(length(min = 1))]
-    username: Option<String>,
-    #[validate(email)]
-    email: Option<String>,
-    #[validate(length(min = 8))]
-    password: Option<String>,
-*/
-}
-
 pub async fn create_agent(
     new_agent: web::Json<NewAgent>,
     //url: &str,
-    //key: Option<String>,
+    secret_key: Option<String>,
     //wait: u64,
     //create_agent: web::Json<CreateAgentAction>,
     //service_id: Option<String>,
@@ -247,15 +236,15 @@ pub async fn create_agent(
         .build()
         //.map_err(|err| CliError::UserError(format!("{}", err)))?;
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
-/*
-    let batch_list = pike_batch_builder(key)
+
+    let batch_list = pike_batch_builder(secret_key)
         .add_transaction(
             &payload.into_proto()?,
             &[PIKE_NAMESPACE.to_string()],
             &[PIKE_NAMESPACE.to_string()],
         )?
         .create_batch_list();
-
+/*
     submit_batches(url, wait, &batch_list, service_id.as_deref())
 */    
     Ok(HttpResponse::Ok().body("Hello world! create_agent"))
