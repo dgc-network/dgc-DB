@@ -50,7 +50,7 @@ struct NewAgentData {
     password: Option<String>,
 */
 }
-
+/*
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AgentSlice {
     pub public_key: String,
@@ -83,6 +83,7 @@ struct ListAgents {
 impl Message for ListAgents {
     type Result = Result<Vec<AgentSlice>, RestApiResponseError>;
 }
+*/
 /*
 impl Handler<ListAgents> for DbExecutor {
     type Result = Result<Vec<AgentSlice>, RestApiResponseError>;
@@ -115,7 +116,7 @@ pub async fn list_agents(
     Ok(HttpResponse::Ok().body("Hello world! list_agents"))
 
 }
-
+/*
 struct FetchAgent {
     public_key: String,
     service_id: Option<String>,
@@ -124,6 +125,7 @@ struct FetchAgent {
 impl Message for FetchAgent {
     type Result = Result<AgentSlice, RestApiResponseError>;
 }
+*/
 /*
 impl Handler<FetchAgent> for DbExecutor {
     type Result = Result<AgentSlice, RestApiResponseError>;
