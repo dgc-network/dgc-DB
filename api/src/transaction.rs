@@ -23,7 +23,7 @@ use sawtooth_sdk::signing;
 use crate::key;
 
 //use crate::CliError;
-use crate::RestApiResponseError;
+use crate::RestApiResponseError as CliError;
 
 pub const PIKE_NAMESPACE: &str = "cad11d";
 const PIKE_FAMILY_NAME: &str = "pike";
