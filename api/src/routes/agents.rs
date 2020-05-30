@@ -11,7 +11,7 @@ use crate::error::RestApiResponseError;
 use actix::{Handler, Message, SyncContext};
 use actix_web::{web, HttpResponse};
 use serde::{Deserialize, Serialize};
-//use serde_json::Value as JsonValue;
+use serde_json::Value as JsonValue;
 
 //use crate::error::CliError;
 //use crate::http::submit_batches;
