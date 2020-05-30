@@ -246,9 +246,9 @@ pub async fn create_agent(
             &[PIKE_NAMESPACE.to_string()],
         )?
         .create_batch_list();
-/*
+
     submit_batches(url, wait, &batch_list, service_id.as_deref())
-*/    
+
     Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
 
