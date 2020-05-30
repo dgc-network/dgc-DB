@@ -29,6 +29,28 @@ use grid_sdk::protos::IntoProto;
 
 use validator::Validate;
 
+const GRID_DAEMON_KEY: &str = "GRID_DAEMON_KEY";
+const GRID_DAEMON_ENDPOINT: &str = "GRID_DAEMON_ENDPOINT";
+const GRID_SERVICE_ID: &str = "GRID_SERVICE_ID";
+
+let url = matches
+    .value_of("url")
+    .map(String::from)
+    .or_else(|| env::var(GRID_DAEMON_ENDPOINT).ok())
+    .unwrap_or_else(|| String::from("http://localhost:8000"));
+
+let key = matches
+    .value_of("key")
+    .map(String::from)
+    .or_else(|| env::var(GRID_DAEMON_KEY).ok());
+
+let wait = value_t!(matches, "wait", u64).unwrap_or(0);
+
+let service_id = matches
+    .value_of("service_id")
+    .map(String::from)
+    .or_else(|| env::var(GRID_SERVICE_ID).ok());
+
 #[derive(Deserialize)]
 pub struct NewAgent {
     agent: NewAgentData,
@@ -170,12 +192,12 @@ pub async fn fetch_agent(
 }
 
 pub async fn create_agent(
-    url: &str,
+    //url: &str,
     secret_key: Option<String>,
-    wait: u64,
+    //wait: u64,
     //create_agent: web::Json<CreateAgentAction>,
     new_agent: web::Json<NewAgent>,
-    service_id: Option<String>,
+    //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
 
@@ -247,6 +269,7 @@ pub async fn create_agent(
         )?
         .create_batch_list();
 
+    let url: &str = ;
     submit_batches(url, wait, &batch_list, service_id.as_deref());
 
     Ok(HttpResponse::Ok().body("Hello world! create_agent"))
