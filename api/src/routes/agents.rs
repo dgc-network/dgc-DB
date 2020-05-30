@@ -15,7 +15,7 @@ use serde_json::Value as JsonValue;
 
 //use crate::error::CliError;
 //use crate::http::submit_batches;
-//use crate::transaction::{pike_batch_builder, PIKE_NAMESPACE};
+use crate::transaction::{pike_batch_builder, PIKE_NAMESPACE};
 use grid_sdk::protocol::pike::state::{
     KeyValueEntry, KeyValueEntryBuilder,
     Agent,
