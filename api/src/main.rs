@@ -47,7 +47,7 @@ async fn index() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
 }
 
-#[actix_rt::main]
+//#[actix_rt::main]
 async fn main(
     //bind_url: &str,
     batch_submitter: Box<dyn BatchSubmitter + 'static>,
