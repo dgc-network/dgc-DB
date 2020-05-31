@@ -218,7 +218,7 @@ pub async fn create_agent(
     //let org_id: String = new_agent.org_id.unwrap();
     let org_id = match query.get("org_id") {
         Some(org_id) => org_id,
-        None => None,
+        None => "",
     };
 
 
