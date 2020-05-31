@@ -287,7 +287,7 @@ pub async fn create_agent(
     };
     
     //let batch_list = pike_batch_builder(secret_key)
-    let batch_list = pike_batch_builder(private_key.to_string())
+    let batch_list = pike_batch_builder(private_key)
         .add_transaction(
             &payload.into_proto()?,
             &[PIKE_NAMESPACE.to_string()],
