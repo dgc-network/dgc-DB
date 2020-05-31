@@ -60,6 +60,7 @@ pub enum RestApiResponseError {
     IoError(io::Error),
     ProtobufError(protobuf::ProtobufError),
     SigningError(signing::Error),
+    ReqwestError(reqwest::Error),
     GridProtoError(protos::ProtoConversionError),
     SabreProtoError(sabre_sdk::protos::ProtoConversionError),
 }
@@ -77,6 +78,7 @@ impl Error for RestApiResponseError {
             RestApiResponseError::IoError(_) => None,
             RestApiResponseError::ProtobufError(_) => None,
             RestApiResponseError::SigningError(_) => None,
+            RestApiResponseError::ReqwestError(_) => None,
             RestApiResponseError::GridProtoError(_) => None,
             RestApiResponseError::SabreProtoError(_) => None,
         }
@@ -102,6 +104,7 @@ impl fmt::Display for RestApiResponseError {
             RestApiResponseError::IoError(ref err) => write!(f, "IoError: {}", err),
             RestApiResponseError::ProtobufError(ref err) => write!(f, "ProtobufError: {}", err),
             RestApiResponseError::SigningError(ref err) => write!(f, "SigningError: {}", err),
+            RestApiResponseError::ReqwestError(ref err) => write!(f, "Reqwest Error: {}", err),
             RestApiResponseError::GridProtoError(ref err) => write!(f, "Grid Proto Error: {}", err),
             RestApiResponseError::SabreProtoError(ref err) => write!(f, "Sabre Proto Error: {}", err),
         }
@@ -214,6 +217,12 @@ impl From<protobuf::ProtobufError> for RestApiResponseError {
 impl From<signing::Error> for RestApiResponseError {
     fn from(err: signing::Error) -> Self {
         RestApiResponseError::SigningError(err)
+    }
+}
+
+impl From<reqwest::Error> for RestApiResponseError {
+    fn from(err: reqwest::Error) -> Self {
+        RestApiResponseError::ReqwestError(err)
     }
 }
 
