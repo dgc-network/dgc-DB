@@ -56,7 +56,7 @@ async fn main(
 //) -> Result<(RestApiShutdownHandle,
 //    thread::JoinHandle<Result<(), RestApiServerError>>,),
 //    RestApiServerError,> {
-) -> () {
+) -> Result {
 
     let state = AppState::new(batch_submitter);
     HttpServer::new(move || {
