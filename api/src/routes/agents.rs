@@ -196,10 +196,10 @@ pub async fn fetch_agent(
 
 pub async fn create_agent(
     //url: &str,
-    secret_key: Option<String>,
+    //secret_key: Option<String>,
     //wait: u64,
     //create_agent: web::Json<CreateAgentAction>,
-    new_agent: web::Json<NewAgent>,
+    //new_agent: web::Json<NewAgent>,
     query: web::Query<HashMap<String, String>>,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
@@ -281,7 +281,13 @@ pub async fn create_agent(
         //.map_err(|err| CliError::UserError(format!("{}", err)))?;
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
 
-    let batch_list = pike_batch_builder(secret_key)
+    let private_key = match query.get("private_key") {
+        Some(private_key) => private_key,
+        None => "",
+    };
+    
+    //let batch_list = pike_batch_builder(secret_key)
+    let batch_list = pike_batch_builder(private_key)
         .add_transaction(
             &payload.into_proto()?,
             &[PIKE_NAMESPACE.to_string()],
