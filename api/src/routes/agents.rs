@@ -279,7 +279,7 @@ pub async fn create_agent(
     };
 
     let service_id = match query.get("service_id") {
-        Some(service_id) => Some(service_id),
+        Some(service_id) => Some(service_id.as_str()),
         None => Some(GRID_SERVICE_ID),
     };
 
@@ -298,7 +298,7 @@ pub async fn create_agent(
                             max_wait_time
                         } else {
                             //Some(wait_time)
-                            wait_time.as_ref()
+                            wait_time
                         }
                     }
                     Err(_) => {
