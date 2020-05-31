@@ -34,7 +34,7 @@ use validator::Validate;
 const GRID_DAEMON_KEY: &str = "GRID_DAEMON_KEY";
 const GRID_DAEMON_ENDPOINT: &str = "GRID_DAEMON_ENDPOINT";
 const GRID_SERVICE_ID: &str = "GRID_SERVICE_ID";
-const DEFAULT_TIME_OUT: u32 = 300; // Max timeout 300 seconds == 5 minutes
+//const DEFAULT_TIME_OUT: u32 = 300; // Max timeout 300 seconds == 5 minutes
 
 /*
 let url = matches
