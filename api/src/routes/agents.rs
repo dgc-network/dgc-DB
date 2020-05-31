@@ -295,7 +295,7 @@ pub async fn create_agent(
                     Ok(wait_time) => {
                         if wait_time > max_wait_time {
                             //Some(max_wait_time)
-                            max_wait_time
+                            max_wait_time.as_ref()
                         } else {
                             //Some(wait_time)
                             wait_time
@@ -317,7 +317,7 @@ pub async fn create_agent(
     };
 
     //submit_batches(url, wait, &batch_list, service_id.as_deref());
-    submit_batches(url, wait, &batch_list, query.get("service_id"));
+    submit_batches(url, wait, &batch_list, query.get("service_id").as_str());
 
     Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
