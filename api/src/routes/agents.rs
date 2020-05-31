@@ -205,7 +205,7 @@ pub async fn create_agent(
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let new_agent = new_agent.into_inner().agent;
+    //let new_agent = new_agent.into_inner().agent;
 /*
     let mut extractor = FieldValidator::validate(&new_agent);
     let org_id = extractor.extract("org_id", new_agent.org_id);
@@ -282,8 +282,8 @@ pub async fn create_agent(
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
 
     let private_key = match query.get("private_key") {
-        Some(private_key) => private_key,
-        None => "",
+        Some(private_key) => Some(private_key.as_str()),
+        None => Some(""),
     };
     
     //let batch_list = pike_batch_builder(secret_key)
