@@ -6,7 +6,7 @@
 //    error::RestApiResponseError, routes::DbExecutor, AcceptServiceIdParam, AppState, QueryServiceId,
 //};
 use crate::error::RestApiResponseError;
-//use crate::AppState;
+use crate::AppState;
 
 use actix::{Handler, Message, SyncContext};
 use actix_web::{web, HttpResponse};
@@ -201,6 +201,7 @@ pub async fn create_agent(
     //create_agent: web::Json<CreateAgentAction>,
     //new_agent: web::Json<NewAgent>,
     query: web::Query<HashMap<String, String>>,
+    state: web::Data<AppState>,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -339,7 +340,33 @@ pub async fn create_agent(
     };
 
     //submit_batches(url, wait, &batch_list, service_id.as_deref());
-    submit_batches(url, wait.unwrap().into(), &batch_list, service_id);
+//    submit_batches(url, wait.unwrap().into(), &batch_list, service_id);
+/*
+    let bytes = batch_list.write_to_bytes()?;
+
+    let batch_list: BatchList = match protobuf::parse_from_bytes(&*body) {
+        Ok(batch_list) => batch_list,
+        Err(err) => {
+            return Err(RestApiResponseError::BadRequest(format!(
+                "Protobuf message was badly formatted. {}",
+                err.to_string()
+            )));
+        }
+    };
+
+    let response_url = req.url_for_static("batch_statuses")?;
+*/
+    state
+        .batch_submitter
+    //batch_submitter
+        .submit_batches(SubmitBatches {
+            batch_list,
+            //response_url,
+            //service_id: query_service_id.into_inner().service_id,
+        })
+        .await
+        .map(|link| HttpResponse::Ok().json(link))
+
 
     Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }

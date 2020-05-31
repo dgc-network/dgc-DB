@@ -35,7 +35,7 @@ impl Clone for Box<dyn BatchSubmitter> {
 }
 pub struct SubmitBatches {
     pub batch_list: BatchList,
-    pub response_url: Url,
+    //pub response_url: Url,
     //pub service_id: Option<String>,
 }
 
