@@ -282,7 +282,7 @@ pub async fn create_agent(
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
 
     let private_key = match query.get("private_key") {
-        Some(private_key) => Some(private_key),
+        Some(private_key) => Some(private_key.as_str().to_string()),
         None => Some("".to_string()),
     };
     
