@@ -294,9 +294,11 @@ pub async fn create_agent(
                 match wait_time.parse::<u32>() {
                     Ok(wait_time) => {
                         if wait_time > max_wait_time {
-                            Some(max_wait_time)
+                            //Some(max_wait_time)
+                            max_wait_time
                         } else {
-                            Some(wait_time)
+                            //Some(wait_time)
+                            wait_time
                         }
                     }
                     Err(_) => {
@@ -310,7 +312,8 @@ pub async fn create_agent(
             }
         }
 
-        None => Some(max_wait_time),
+        //None => Some(max_wait_time),
+        None => max_wait_time,
     };
 
     submit_batches(url, wait, &batch_list, service_id.as_deref());
