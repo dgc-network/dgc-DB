@@ -279,8 +279,8 @@ pub async fn create_agent(
     };
 
     let service_id = match query.get("service_id") {
-        Some(service_id) => service_id,
-        None => GRID_SERVICE_ID,
+        Some(service_id) => Some(service_id),
+        None => Some(GRID_SERVICE_ID),
     };
 
     // Max wait time allowed is 95% of network's configured timeout
@@ -295,10 +295,10 @@ pub async fn create_agent(
                     Ok(wait_time) => {
                         if wait_time > max_wait_time {
                             //Some(max_wait_time)
-                            max_wait_time.as_ref()
+                            max_wait_time
                         } else {
                             //Some(wait_time)
-                            wait_time
+                            wait_time.as_ref()
                         }
                     }
                     Err(_) => {
@@ -317,7 +317,7 @@ pub async fn create_agent(
     };
 
     //submit_batches(url, wait, &batch_list, service_id.as_deref());
-    submit_batches(url, wait, &batch_list, query.get("service_id").as_str());
+    submit_batches(url, wait, &batch_list, service_id);
 
     Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
