@@ -20,6 +20,7 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
 use crate::routes::batches::{submit_batches, get_batch_statuses};
 use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};
 use crate::submitter::BatchSubmitter;
+pub use crate::error::RestApiServerError;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -51,11 +52,11 @@ async fn index() -> impl Responder {
 async fn main(
     //bind_url: &str,
     batch_submitter: Box<dyn BatchSubmitter + 'static>,
-) -> std::io::Result<()> {
+//) -> std::io::Result<()> {
 //) -> Result<(RestApiShutdownHandle,
 //    thread::JoinHandle<Result<(), RestApiServerError>>,),
 //    RestApiServerError,> {
-//) -> Result() {
+) -> Result<RestApiServerError> {
 
     let state = AppState::new(batch_submitter);
     HttpServer::new(move || {
