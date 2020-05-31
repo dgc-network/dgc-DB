@@ -203,7 +203,7 @@ pub async fn create_agent(
     //new_agent: web::Json<NewAgent>,
     query: web::Query<HashMap<String, String>>,
     //state: web::Data<AppState>,
-    state: web::Query<AppState>,
+    batch_submitter: Box<dyn BatchSubmitter + 'static>,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -358,9 +358,9 @@ pub async fn create_agent(
 
     let response_url = req.url_for_static("batch_statuses")?;
 */
-    state
-        .batch_submitter
-    //batch_submitter
+    //state
+    //    .batch_submitter
+    batch_submitter
         .submit_batches(SubmitBatches {
             batch_list,
             //response_url,
