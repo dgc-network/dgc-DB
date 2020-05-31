@@ -242,7 +242,7 @@ pub async fn create_agent(
     //for meta in new_agent.metadata {
     for meta in metadata_as_string.chars() {
         let meta_as_string = meta.to_string();
-        let key_val: Vec<&str> = meta.split(",").collect();
+        let key_val: Vec<&str> = meta_as_string.split(",").collect();
         if key_val.len() != 2 {
             "Metadata is formated incorrectly".to_string();            
         }
