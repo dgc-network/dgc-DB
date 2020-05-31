@@ -317,7 +317,7 @@ pub async fn create_agent(
     };
 
     //submit_batches(url, wait, &batch_list, service_id.as_deref());
-    submit_batches(url, wait.as_ref(), &batch_list, service_id);
+    submit_batches(url, wait.unwrap(), &batch_list, service_id);
 
     Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
