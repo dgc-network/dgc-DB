@@ -7,6 +7,7 @@
 //};
 use crate::error::RestApiResponseError;
 use crate::AppState;
+use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 
 use actix::{Handler, Message, SyncContext};
 use actix_web::{web, HttpResponse};
