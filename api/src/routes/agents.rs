@@ -294,11 +294,11 @@ pub async fn create_agent(
                 match wait_time.parse::<u32>() {
                     Ok(wait_time) => {
                         if wait_time > max_wait_time {
-                            //Some(max_wait_time)
-                            max_wait_time
+                            Some(max_wait_time)
+                            //max_wait_time
                         } else {
-                            //Some(wait_time)
-                            wait_time
+                            Some(wait_time)
+                            //wait_time
                         }
                     }
                     Err(_) => {
