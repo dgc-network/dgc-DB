@@ -233,14 +233,14 @@ pub async fn create_agent(
 
     let mut roles = Vec::<String>::new();
     //for role in new_agent.roles {
-    for role in roles_as_string {
+    for role in roles_as_string.chars() {
         let entry: String = role.to_string().split(",").collect();
         roles.push(entry.clone());
     }
 
     let mut metadata = Vec::<KeyValueEntry>::new();
     //for meta in new_agent.metadata {
-    for meta in metadata_as_string {
+    for meta in metadata_as_string.chars() {
         //let meta_as_string = meta.to_string();
         let key_val: Vec<&str> = meta.to_string().split(",").collect();
         if key_val.len() != 2 {
