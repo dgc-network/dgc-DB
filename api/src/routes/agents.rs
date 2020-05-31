@@ -368,7 +368,7 @@ pub async fn create_agent(
         .map(|link| HttpResponse::Ok().json(link))
 
 
-    Ok(HttpResponse::Ok().body("Hello world! create_agent"))
+    //Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
 
 pub async fn update_agent(
