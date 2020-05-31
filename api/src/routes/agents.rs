@@ -241,8 +241,8 @@ pub async fn create_agent(
     let mut metadata = Vec::<KeyValueEntry>::new();
     //for meta in new_agent.metadata {
     for meta in metadata_as_string.chars() {
-        //let meta_as_string = meta.to_string();
-        let key_val: Vec<&str> = meta.to_string().split(",").collect();
+        let meta_as_string = meta.to_string();
+        let key_val: Vec<&str> = meta.split(",").collect();
         if key_val.len() != 2 {
             "Metadata is formated incorrectly".to_string();            
         }
