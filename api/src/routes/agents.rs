@@ -282,8 +282,8 @@ pub async fn create_agent(
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
 
     let private_key = match query.get("private_key") {
-        Some(private_key) => Some(private_key.as_str()),
-        None => Some(""),
+        Some(private_key) => Some(private_key),
+        None => Some("".to_string()),
     };
     
     //let batch_list = pike_batch_builder(secret_key)
