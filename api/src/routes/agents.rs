@@ -15,7 +15,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 
 //use crate::error::CliError;
-use crate::http::submit_batches;
+//use crate::http::submit_batches;
 use crate::transaction::{pike_batch_builder, PIKE_NAMESPACE};
 use grid_sdk::protocol::pike::state::{
     KeyValueEntry, KeyValueEntryBuilder,
@@ -202,7 +202,8 @@ pub async fn create_agent(
     //create_agent: web::Json<CreateAgentAction>,
     //new_agent: web::Json<NewAgent>,
     query: web::Query<HashMap<String, String>>,
-    state: web::Data<AppState>,
+    //state: web::Data<AppState>,
+    state: web::Query<AppState>,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
