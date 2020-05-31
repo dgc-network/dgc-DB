@@ -215,7 +215,12 @@ pub async fn create_agent(
     extractor.check()?;
 */
 
-    let org_id: String = new_agent.org_id.unwrap();
+    //let org_id: String = new_agent.org_id.unwrap();
+    let org_id = match query.get("org_id") {
+        Some(org_id) => org_id,
+        None => None,
+    };
+
 
     let mut roles = Vec::<String>::new();
     for role in new_agent.roles {
