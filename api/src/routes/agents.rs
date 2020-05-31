@@ -217,21 +217,32 @@ pub async fn create_agent(
 
     //let org_id: String = new_agent.org_id.unwrap();
     let org_id = match query.get("org_id") {
-        Some(org_id) => org_id,
-        None => "",
+        Some(org_id) => org_id.to_string(),
+        None => "".to_string(),
     };
 
+    let roles_as_string = match query.get("roles_as_string") {
+        Some(roles_as_string) => roles_as_string.to_string(),
+        None => "".to_string(),
+    };
+
+    let metadata_as_string = match query.get("metadata_as_string") {
+        Some(metadata_as_string) => metadata_as_string.to_string(),
+        None => "".to_string(),
+    };
 
     let mut roles = Vec::<String>::new();
-    for role in new_agent.roles {
+    //for role in new_agent.roles {
+    for role in roles_as_string {
         let entry: String = role.to_string().split(",").collect();
         roles.push(entry.clone());
     }
 
     let mut metadata = Vec::<KeyValueEntry>::new();
-    for meta in new_agent.metadata {
-        let meta_as_string = meta.to_string();
-        let key_val: Vec<&str> = meta_as_string.split(",").collect();
+    //for meta in new_agent.metadata {
+    for meta in metadata_as_string {
+        //let meta_as_string = meta.to_string();
+        let key_val: Vec<&str> = meta.to_string().split(",").collect();
         if key_val.len() != 2 {
             "Metadata is formated incorrectly".to_string();            
         }
