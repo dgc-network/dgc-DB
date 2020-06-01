@@ -361,11 +361,12 @@ pub async fn create_agent(
 */
 
     //batch_submitter: Box<dyn BatchSubmitter + 'static>,
+    let state = AppState::new(Box<dyn BatchSubmitter + 'static>);
 
-    //state
-    //    .batch_submitter
-    Box<dyn BatchSubmitter + 'static>::.submit_batches(SubmitBatches {
-        //.submit_batches(SubmitBatches {
+    state
+        .batch_submitter
+    //Box<dyn BatchSubmitter + 'static>::.submit_batches(SubmitBatches {
+        .submit_batches(SubmitBatches {
             batch_list,
             //response_url,
             //service_id: query_service_id.into_inner().service_id,
