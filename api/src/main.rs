@@ -27,7 +27,7 @@ pub struct AppState {
     batch_submitter: Box<dyn BatchSubmitter + 'static>,
     //database_connection: Addr<DbExecutor>,
 }
-/*
+
 impl AppState {
     pub fn new(
         //batch_submitter: Box<dyn BatchSubmitter + 'static>,
@@ -37,14 +37,15 @@ impl AppState {
         //    DbExecutor::new(connection_pool.clone())
         //});
 
-        AppState {
-            batch_submitter: Box<dyn BatchSubmitter + 'static>,
+        //AppState {
             //batch_submitter,
             //database_connection,
-        }
+        //}
+
+        AppState::default()
     }
 }
-*/
+
 async fn index() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
 }
@@ -64,15 +65,16 @@ async fn main(
     //});
 
     //let state = AppState::new(batch_submitter);
+    let state = AppState::new();
     //HttpServer::new(move || {
     HttpServer::new(|| {
         App::new()
-            //.data(state.clone())
-            .data(AppState {
+            .data(state.clone())
+            //.data(AppState {
                 //batch_submitter: Box<dyn BatchSubmitter + 'static>::from("Actix-web"),
                 //batch_submitter: Box<dyn BatchSubmitter + 'static>,
-                batch_submitter: Box<BatchSubmitter + 'static>,
-            })
+                //batch_submitter: Box<BatchSubmitter + 'static>,
+            //})
             //.data(batch_submitter.clone())
             .route("/", web::get().to(index))
             .service(web::resource("/batches").route(web::post().to(submit_batches)))

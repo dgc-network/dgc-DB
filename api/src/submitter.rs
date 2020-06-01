@@ -33,6 +33,7 @@ impl Clone for Box<dyn BatchSubmitter> {
         self.clone_box()
     }
 }
+
 pub struct SubmitBatches {
     pub batch_list: BatchList,
     //pub response_url: Url,
