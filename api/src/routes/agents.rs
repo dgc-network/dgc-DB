@@ -362,10 +362,10 @@ pub async fn create_agent(
 
     //let batch_submitter: Box<dyn BatchSubmitter + 'static>::clone_box();
     //let state = AppState::new(batch_submitter);
+    let state = AppState::new();
 
     state
         .batch_submitter
-    //Box<dyn BatchSubmitter + 'static>::.submit_batches(SubmitBatches {
         .submit_batches(SubmitBatches {
             batch_list,
             //response_url,
