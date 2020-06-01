@@ -14,7 +14,6 @@ use crate::error::RestApiResponseError;
 
 pub const DEFAULT_TIME_OUT: u32 = 300; // Max timeout 300 seconds == 5 minutes
 
-#[derive(Default, Clone)]
 pub trait BatchSubmitter: Send + 'static {
     fn submit_batches(
         &self,
