@@ -59,11 +59,15 @@ async fn main(
 //    RestApiServerError,> {
 //) -> Result {
 
+    let state = web::Data::new(AppState {
+        state: Box<dyn BatchSubmitter + 'static>,
+    });
+
     //let state = AppState::new(batch_submitter);
-    //HttpServer::new(move || {
-    HttpServer::new(|| {
+    HttpServer::new(move || {
+    //HttpServer::new(|| {
         App::new()
-            //.data(state.clone())
+            .data(state.clone())
             .route("/", web::get().to(index))
             .service(web::resource("/batches").route(web::post().to(submit_batches)))
             .service(
