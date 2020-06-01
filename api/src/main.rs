@@ -22,7 +22,8 @@ use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent
 use crate::submitter::BatchSubmitter;
 pub use crate::error::RestApiServerError;
 
-#[derive(Clone)]
+//#[derive(Clone)]
+#[derive(Default, Clone)]
 pub struct AppState {
     batch_submitter: Box<dyn BatchSubmitter + 'static>,
     //database_connection: Addr<DbExecutor>,
