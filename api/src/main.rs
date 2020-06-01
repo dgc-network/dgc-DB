@@ -27,7 +27,7 @@ pub struct AppState {
     batch_submitter: Box<dyn BatchSubmitter + 'static>,
     //database_connection: Addr<DbExecutor>,
 }
-
+/*
 impl AppState {
     pub fn new(
         //batch_submitter: Box<dyn BatchSubmitter + 'static>,
@@ -44,7 +44,7 @@ impl AppState {
         }
     }
 }
-
+*/
 async fn index() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
 }
@@ -59,15 +59,16 @@ async fn main(
 //    RestApiServerError,> {
 //) -> Result {
 
-    let state = web::Data::new(AppState {
-        state: Box<dyn BatchSubmitter + 'static>,
+    let batch_submitter = web::Data::new(AppState {
+        batch_submitter: Box<dyn BatchSubmitter + 'static>,
     });
 
     //let state = AppState::new(batch_submitter);
     HttpServer::new(move || {
     //HttpServer::new(|| {
         App::new()
-            .data(state.clone())
+            //.data(state.clone())
+            .data(batch_submitter.clone())
             .route("/", web::get().to(index))
             .service(web::resource("/batches").route(web::post().to(submit_batches)))
             .service(
