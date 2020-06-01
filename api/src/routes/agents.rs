@@ -203,7 +203,7 @@ pub async fn create_agent(
     //create_agent: web::Json<CreateAgentAction>,
     //new_agent: web::Json<NewAgent>,
     query: web::Query<HashMap<String, String>>,
-    state: web::Data<AppState>,
+    data: web::Data<AppState>,
     //batch_submitter: Box<dyn BatchSubmitter + 'static>,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
@@ -364,7 +364,8 @@ pub async fn create_agent(
     //let state = AppState::new(batch_submitter);
     //let state = AppState::new();
 
-    state
+    //state
+    &data
         .batch_submitter
         .submit_batches(SubmitBatches {
             batch_list,
