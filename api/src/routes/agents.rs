@@ -360,7 +360,7 @@ pub async fn create_agent(
     let response_url = req.url_for_static("batch_statuses")?;
 */
 
-    let batch_submitter: Box<dyn BatchSubmitter + 'static>::clone();
+    let batch_submitter: Box<dyn BatchSubmitter + 'static>::clone_box();
     let state = AppState::new(batch_submitter);
 
     state
