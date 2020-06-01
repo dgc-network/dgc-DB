@@ -30,7 +30,7 @@ pub struct AppState {
 
 impl AppState {
     pub fn new(
-        batch_submitter: Box<dyn BatchSubmitter + 'static>,
+        //batch_submitter: Box<dyn BatchSubmitter + 'static>,
         //connection_pool: ConnectionPool,
     ) -> Self {
         //let database_connection = SyncArbiter::start(SYNC_ARBITER_THREAD_COUNT, move || {
@@ -38,7 +38,8 @@ impl AppState {
         //});
 
         AppState {
-            batch_submitter,
+            batch_submitter: Box<dyn BatchSubmitter + 'static>,
+            //batch_submitter,
             //database_connection,
         }
     }
