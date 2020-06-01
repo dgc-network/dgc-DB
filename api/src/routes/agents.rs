@@ -203,8 +203,8 @@ pub async fn create_agent(
     //create_agent: web::Json<CreateAgentAction>,
     //new_agent: web::Json<NewAgent>,
     query: web::Query<HashMap<String, String>>,
-    //state: web::Data<AppState>,
-    batch_submitter: Box<dyn BatchSubmitter + 'static>,
+    state: web::Json<AppState>,
+    //batch_submitter: Box<dyn BatchSubmitter + 'static>,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
