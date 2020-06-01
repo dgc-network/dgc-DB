@@ -60,22 +60,12 @@ async fn main(
 //    RestApiServerError,> {
 //) -> Result {
 
-    //let batch_submitter = web::Data::new(AppState {
-    //    batch_submitter: Box<dyn BatchSubmitter + 'static>,
-    //});
-
     //let state = AppState::new(batch_submitter);
     let state = AppState::new();
-    //HttpServer::new(move || {
-    HttpServer::new(|| {
+    HttpServer::new(move || {
+    //HttpServer::new(|| {
         App::new()
             .data(state.clone())
-            //.data(AppState {
-                //batch_submitter: Box<dyn BatchSubmitter + 'static>::from("Actix-web"),
-                //batch_submitter: Box<dyn BatchSubmitter + 'static>,
-                //batch_submitter: Box<BatchSubmitter + 'static>,
-            //})
-            //.data(batch_submitter.clone())
             .route("/", web::get().to(index))
             .service(web::resource("/batches").route(web::post().to(submit_batches)))
             .service(
