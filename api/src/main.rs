@@ -70,7 +70,7 @@ async fn main(
             //.data(state.clone())
             .data(AppState {
                 //batch_submitter: Box<dyn BatchSubmitter + 'static>::from("Actix-web"),
-                batch_submitter,
+                batch_submitter: Box<dyn BatchSubmitter + 'static>,
             })
             //.data(batch_submitter.clone())
             .route("/", web::get().to(index))
