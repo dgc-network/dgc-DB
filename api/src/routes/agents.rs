@@ -365,7 +365,7 @@ pub async fn create_agent(
     //let state = AppState::new();
 
     //state
-    &data
+    data
         .batch_submitter
         .submit_batches(SubmitBatches {
             batch_list,
