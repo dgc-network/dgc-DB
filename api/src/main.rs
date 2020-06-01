@@ -43,7 +43,7 @@ impl AppState {
             //database_connection,
         //}
 
-        AppState::clone()
+        AppState::clone(batch_submitter)
     }
 }
 
