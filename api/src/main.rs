@@ -38,10 +38,12 @@ impl AppState {
         //    DbExecutor::new(connection_pool.clone())
         //});
 
-        AppState {
-            batch_submitter,
+        //AppState {
+            //batch_submitter,
             //database_connection,
-        }
+        //}
+
+        AppState::batch_submitter
 
     }
 }
