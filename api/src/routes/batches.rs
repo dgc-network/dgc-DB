@@ -36,7 +36,7 @@ pub async fn submit_batches(
         .batch_submitter
         .submit_batches(SubmitBatches {
             batch_list,
-            //response_url,
+            response_url,
             //service_id: query_service_id.into_inner().service_id,
         })
         .await

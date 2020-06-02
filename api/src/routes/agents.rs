@@ -357,9 +357,9 @@ pub async fn create_agent(
             )));
         }
     };
-
-    let response_url = req.url_for_static("batch_statuses")?;
 */
+    let response_url = req.url_for_static("batch_statuses")?;
+
 
     //let batch_submitter: Box<dyn BatchSubmitter + 'static>::clone_box();
     //let state = AppState::new(batch_submitter);
@@ -370,7 +370,7 @@ pub async fn create_agent(
     batch_submitter
         .submit_batches(SubmitBatches {
             batch_list,
-            //response_url,
+            response_url,
             //service_id: query_service_id.into_inner().service_id,
         })
         .await
