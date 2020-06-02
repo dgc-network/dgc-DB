@@ -24,7 +24,7 @@ use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent
 //use crate::submitter::BatchSubmitter;
 use crate::batch_submitter::SawtoothBatchSubmitter;
 pub use crate::error::RestApiServerError;
-
+/*
 #[derive(Clone)]
 //#[derive(Default, Clone)]
 pub struct AppState {
@@ -48,7 +48,7 @@ impl AppState {
 
     }
 }
-
+*/
 async fn index() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
 }
