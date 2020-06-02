@@ -369,18 +369,18 @@ pub async fn create_agent(
     //let state = AppState::new(batch_submitter);
     //let state = AppState::new();
 
-    let sender= ZmqMessageSender.default();
+    let sender= ZmqMessageSender::default();
 
     //state
     //    .batch_submitter
-    let batch_submitter= SawtoothBatchSubmitter.new(sender)
+    let batch_submitter= SawtoothBatchSubmitter::new(sender)
         .submit_batches(SubmitBatches {
             batch_list,
             response_url,
             //service_id: query_service_id.into_inner().service_id,
         })
         .await
-        .map(|link| HttpResponse::Ok().json(link))
+        .map(|link| HttpResponse::Ok().json(link));
 
 
     //Ok(HttpResponse::Ok().body("Hello world! create_agent"))
