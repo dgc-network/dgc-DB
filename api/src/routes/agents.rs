@@ -12,7 +12,8 @@ use crate::submitter::BatchSubmitter;
 use crate::batch_submitter::SawtoothBatchSubmitter;
 
 use actix::{Handler, Message, SyncContext};
-use actix_web::{web, HttpResponse};
+//use actix_web::{web, HttpResponse};
+use actix_web::{web, HttpRequest, HttpResponse};
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 
