@@ -198,6 +198,7 @@ pub async fn fetch_agent(
 }
 
 pub async fn create_agent(
+    req: HttpRequest,
     //url: &str,
     //secret_key: Option<String>,
     //wait: u64,
