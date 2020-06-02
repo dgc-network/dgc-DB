@@ -56,7 +56,7 @@ async fn index() -> impl Responder {
 async fn main(
     //bind_url: &str,
     //batch_submitter: Box<dyn BatchSubmitter + 'static>,
-    sender: ZmqMessageSender,
+    //sender: ZmqMessageSender,
 ) -> std::io::Result<()> {
 //) -> Result<(RestApiShutdownHandle,
 //    thread::JoinHandle<Result<(), RestApiServerError>>,),
@@ -64,7 +64,8 @@ async fn main(
 //) -> Result {
 
     //let state = AppState::new(batch_submitter);
-    let state = SawtoothBatchSubmitter::new(sender);
+    //let state = SawtoothBatchSubmitter::new(sender);
+    let state = SawtoothBatchSubmitter::new(ZmqMessageSender);
     HttpServer::new(move || {
     //HttpServer::new(|| {
         App::new()
