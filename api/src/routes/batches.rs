@@ -17,7 +17,6 @@ pub async fn submit_batches(
     req: HttpRequest,
     body: web::Bytes,
     state: web::Data<AppState>,
-    //batch_submitter: Box<dyn BatchSubmitter + 'static>,
     //query_service_id: web::Query<QueryServiceId>,
     //_: AcceptServiceIdParam,
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -35,7 +34,6 @@ pub async fn submit_batches(
 
     state
         .batch_submitter
-    //batch_submitter
         .submit_batches(SubmitBatches {
             batch_list,
             //response_url,
@@ -53,7 +51,6 @@ struct Params {
 pub async fn get_batch_statuses(
     req: HttpRequest,
     state: web::Data<AppState>,
-    //batch_submitter: Box<dyn BatchSubmitter + 'static>,
     query: web::Query<HashMap<String, String>>,
     //query_service_id: web::Query<QueryServiceId>,
     //_: AcceptServiceIdParam,
@@ -106,7 +103,6 @@ pub async fn get_batch_statuses(
 
     state
         .batch_submitter
-    //batch_submitter
         .batch_status(BatchStatuses {
             batch_ids,
             wait,

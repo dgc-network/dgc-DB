@@ -21,7 +21,7 @@ info:
   title: Grid REST API
   description: _An API providing HTTP/JSON interface to Hyperledger Grid._
 paths:
-  /batches:
+  /submit_batches:
     post:
       tags:
         - Sawtooth Validator

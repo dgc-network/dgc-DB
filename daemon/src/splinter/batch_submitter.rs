@@ -61,7 +61,7 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         let service_info = try_fut!(SplinterService::from_str(&service_arg));
 
         let url = format!(
-            "{}/scabbard/{}/{}/batches",
+            "{}/scabbard/{}/{}/submit_batches",
             self.node_url, service_info.circuit_id, service_info.service_id
         );
 

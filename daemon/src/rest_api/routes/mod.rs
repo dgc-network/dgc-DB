@@ -302,7 +302,7 @@ mod test {
                 .app_data(Endpoint::from(
                     format!("{}tcp://localhost:9090", endpoint_backend).as_str(),
                 ))
-                .service(web::resource("/batches").route(web::post().to(submit_batches)))
+                .service(web::resource("/submit_batches").route(web::post().to(submit_batches)))
                 .service(
                     web::resource("/batch_statuses")
                         .name("batch_statuses")
@@ -518,7 +518,7 @@ mod test {
     }
 
     ///
-    /// Verifies a POST /batches with an OK response.
+    /// Verifies a POST /submit_batches with an OK response.
     ///
     ///    The TestServer will receive a request with :
     ///        - an serialized batch list
@@ -531,7 +531,7 @@ mod test {
         let srv = create_test_server(Backend::Sawtooth, ResponseType::ClientBatchSubmitResponseOK);
 
         let mut response = srv
-            .request(http::Method::POST, srv.url("/batches"))
+            .request(http::Method::POST, srv.url("/submit_batches"))
             .send_body(get_batch_list())
             .await
             .unwrap();
@@ -547,7 +547,7 @@ mod test {
     }
 
     ///
-    /// Verifies a POST /batches with an INVALID_BATCH response.
+    /// Verifies a POST /submit_batches with an INVALID_BATCH response.
     ///
     ///    The TestServer will receive a request with :
     ///        - an serialized batch list
@@ -562,7 +562,7 @@ mod test {
         );
 
         let response = srv
-            .request(http::Method::POST, srv.url("/batches"))
+            .request(http::Method::POST, srv.url("/submit_batches"))
             .send_body(get_batch_list())
             .await
             .unwrap();
@@ -571,7 +571,7 @@ mod test {
     }
 
     ///
-    /// Verifies a POST /batches responds with InternalError when the validator returns an error.
+    /// Verifies a POST /submit_batches responds with InternalError when the validator returns an error.
     ///
     ///    The TestServer will receive a request with :
     ///        - an serialized batch list
@@ -586,7 +586,7 @@ mod test {
         );
 
         let response = srv
-            .request(http::Method::POST, srv.url("/batches"))
+            .request(http::Method::POST, srv.url("/submit_batches"))
             .send_body(get_batch_list())
             .await
             .unwrap();

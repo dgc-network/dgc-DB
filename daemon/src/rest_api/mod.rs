@@ -137,7 +137,7 @@ pub fn run(
                 App::new()
                     .data(state.clone())
                     .app_data(endpoint.clone())
-                    .service(web::resource("/batches").route(web::post().to(submit_batches)))
+                    .service(web::resource("/submit_batches").route(web::post().to(submit_batches)))
                     .service(
                         web::resource("/batch_statuses")
                             .name("batch_statuses")

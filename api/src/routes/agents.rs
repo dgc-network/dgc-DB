@@ -9,6 +9,7 @@ use crate::error::RestApiResponseError;
 use crate::AppState;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 use crate::submitter::BatchSubmitter;
+use crate::batch_submitter::SawtoothBatchSubmitter;
 
 use actix::{Handler, Message, SyncContext};
 use actix_web::{web, HttpResponse};
@@ -203,8 +204,8 @@ pub async fn create_agent(
     //create_agent: web::Json<CreateAgentAction>,
     //new_agent: web::Json<NewAgent>,
     query: web::Query<HashMap<String, String>>,
-    state: web::Data<AppState>,
-    //batch_submitter: Box<dyn BatchSubmitter + 'static>,
+    //state: web::Data<AppState>,
+    batch_submitter: web::Data<SawtoothBatchSubmitter>,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -364,8 +365,9 @@ pub async fn create_agent(
     //let state = AppState::new(batch_submitter);
     //let state = AppState::new();
 
-    state
-        .batch_submitter
+    //state
+    //    .batch_submitter
+    batch_submitter
         .submit_batches(SubmitBatches {
             batch_list,
             //response_url,
