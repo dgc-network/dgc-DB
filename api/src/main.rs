@@ -21,10 +21,10 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
 //};
 use crate::routes::batches::{submit_batches, get_batch_statuses};
 use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};
-//use crate::submitter::BatchSubmitter;
+use crate::submitter::BatchSubmitter;
 use crate::batch_submitter::SawtoothBatchSubmitter;
 pub use crate::error::RestApiServerError;
-/*
+
 #[derive(Clone)]
 //#[derive(Default, Clone)]
 pub struct AppState {
@@ -34,21 +34,20 @@ pub struct AppState {
 
 impl AppState {
     pub fn new(
-        //batch_submitter: Box<dyn BatchSubmitter + 'static>,
+        batch_submitter: Box<dyn BatchSubmitter + 'static>,
         //connection_pool: ConnectionPool,
     ) -> Self {
         //let database_connection = SyncArbiter::start(SYNC_ARBITER_THREAD_COUNT, move || {
         //    DbExecutor::new(connection_pool.clone())
         //});
 
-        //AppState {
-            //batch_submitter,
+        AppState {
+            batch_submitter,
             //database_connection,
-        //}
-
+        }
     }
 }
-*/
+
 async fn index() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
 }
