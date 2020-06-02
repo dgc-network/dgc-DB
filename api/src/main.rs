@@ -21,7 +21,7 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
 //};
 use crate::routes::batches::{submit_batches, get_batch_statuses};
 use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};
-use crate::submitter::BatchSubmitter;
+//use crate::submitter::BatchSubmitter;
 use crate::batch_submitter::SawtoothBatchSubmitter;
 pub use crate::error::RestApiServerError;
 

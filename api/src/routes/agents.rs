@@ -8,7 +8,7 @@
 use crate::error::RestApiResponseError;
 use crate::AppState;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
-use crate::submitter::BatchSubmitter;
+//use crate::submitter::BatchSubmitter;
 use crate::batch_submitter::SawtoothBatchSubmitter;
 
 use actix::{Handler, Message, SyncContext};
