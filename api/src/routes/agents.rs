@@ -5,6 +5,8 @@
 //use crate::rest_api::{
 //    error::RestApiResponseError, routes::DbExecutor, AcceptServiceIdParam, AppState, QueryServiceId,
 //};
+use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
+
 use crate::error::RestApiResponseError;
 use crate::AppState;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
@@ -207,7 +209,7 @@ pub async fn create_agent(
     //new_agent: web::Json<NewAgent>,
     query: web::Query<HashMap<String, String>>,
     //state: web::Data<AppState>,
-    batch_submitter: web::Data<SawtoothBatchSubmitter>,
+    //batch_submitter: web::Data<SawtoothBatchSubmitter>,
     //service_id: Option<String>,
 //) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -367,9 +369,11 @@ pub async fn create_agent(
     //let state = AppState::new(batch_submitter);
     //let state = AppState::new();
 
+    let sender= ZmqMessageSender.default();
+
     //state
     //    .batch_submitter
-    batch_submitter
+    let batch_submitter= SawtoothBatchSubmitter.new(sender)
         .submit_batches(SubmitBatches {
             batch_list,
             response_url,

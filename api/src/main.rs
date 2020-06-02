@@ -65,11 +65,11 @@ async fn main(
 
     //let state = AppState::new(batch_submitter);
     //let state = SawtoothBatchSubmitter::new(sender);
-    let state = SawtoothBatchSubmitter::new(ZmqMessageSender);
-    HttpServer::new(move || {
-    //HttpServer::new(|| {
+    //let state = SawtoothBatchSubmitter::new(ZmqMessageSender);
+    //HttpServer::new(move || {
+    HttpServer::new(|| {
         App::new()
-            .data(state.clone())
+            //.data(state.clone())
             .route("/", web::get().to(index))
             .service(web::resource("/submit_batches").route(web::post().to(submit_batches)))
             .service(
