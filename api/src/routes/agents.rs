@@ -5,13 +5,14 @@
 //use crate::rest_api::{
 //    error::RestApiResponseError, routes::DbExecutor, AcceptServiceIdParam, AppState, QueryServiceId,
 //};
-use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
+//use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
 
 use crate::error::RestApiResponseError;
 use crate::AppState;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 use crate::submitter::BatchSubmitter;
-use crate::batch_submitter::SawtoothBatchSubmitter;
+//use crate::batch_submitter::SawtoothBatchSubmitter;
+use crate::{batch_submitter::SawtoothBatchSubmitter, connection::SawtoothConnection};
 
 use actix::{Handler, Message, SyncContext};
 //use actix_web::{web, HttpResponse};
@@ -369,18 +370,22 @@ pub async fn create_agent(
     //let state = AppState::new(batch_submitter);
     //let state = AppState::new();
 
-    let sender= ZmqMessageSender::default();
+    let sawtooth_connection = SawtoothConnection::new(&config.endpoint().url());
+    let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
+        sawtooth_connection.get_sender(),
+    ));
+
 
     //state
     //    .batch_submitter
-    let batch_submitter= SawtoothBatchSubmitter::new(sender)
+    batch_submitter
         .submit_batches(SubmitBatches {
             batch_list,
             response_url,
             //service_id: query_service_id.into_inner().service_id,
         })
         .await
-        .map(|link| HttpResponse::Ok().json(link));
+        .map(|link| HttpResponse::Ok().json(link))
 
 
     //Ok(HttpResponse::Ok().body("Hello world! create_agent"))

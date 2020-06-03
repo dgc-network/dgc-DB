@@ -5,6 +5,8 @@
 
 mod routes;
 mod error;
+mod config;
+mod connection;
 mod batch_submitter;
 mod submitter;
 mod transaction;
