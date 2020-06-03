@@ -372,7 +372,7 @@ pub async fn create_agent(
     //let state = AppState::new();
 
     //let sawtooth_connection = SawtoothConnection::new(&config.endpoint().url());
-    let sawtooth_connection = SawtoothConnection::new(Endpoint::url());
+    let sawtooth_connection = SawtoothConnection::new(&Endpoint::url());
     let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
         sawtooth_connection.get_sender(),
     ));
