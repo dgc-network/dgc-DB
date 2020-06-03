@@ -13,7 +13,7 @@ mod transaction;
 mod key;
 mod http;
 
-use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
+//use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
 use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
 //use actix_web::{web, App, HttpResponse, HttpServer, Responder, Result,};
 //use crate::routes::{
@@ -24,7 +24,7 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
 use crate::routes::batches::{submit_batches, get_batch_statuses};
 use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};
 use crate::submitter::BatchSubmitter;
-use crate::batch_submitter::SawtoothBatchSubmitter;
+//use crate::batch_submitter::SawtoothBatchSubmitter;
 pub use crate::error::RestApiServerError;
 
 #[derive(Clone)]

@@ -8,17 +8,18 @@
 //use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
 
 use crate::error::RestApiResponseError;
-use crate::AppState;
+//use crate::AppState;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 use crate::submitter::BatchSubmitter;
 //use crate::batch_submitter::SawtoothBatchSubmitter;
 use crate::{batch_submitter::SawtoothBatchSubmitter, connection::SawtoothConnection};
+use crate::config;
 
 use actix::{Handler, Message, SyncContext};
 //use actix_web::{web, HttpResponse};
 use actix_web::{web, HttpRequest, HttpResponse};
 use serde::{Deserialize, Serialize};
-use serde_json::Value as JsonValue;
+//use serde_json::Value as JsonValue;
 
 //use crate::error::CliError;
 //use crate::http::submit_batches;
@@ -35,7 +36,7 @@ use grid_sdk::protocol::pike::payload::{
 use grid_sdk::protos::IntoProto;
 use std::collections::HashMap;
 
-use validator::Validate;
+//use validator::Validate;
 
 const GRID_DAEMON_KEY: &str = "GRID_DAEMON_KEY";
 const GRID_DAEMON_ENDPOINT: &str = "GRID_DAEMON_ENDPOINT";
