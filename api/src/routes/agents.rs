@@ -374,7 +374,7 @@ pub async fn create_agent(
     //let sawtooth_connection = SawtoothConnection::new(&config.endpoint().url());
     let endpoint = Endpoint::from("sawtooth:tcp://localhost:8080");
     //let sawtooth_connection = SawtoothConnection::new(&Endpoint::url());
-    let sawtooth_connection = SawtoothConnection::new(&endpoint::url());
+    let sawtooth_connection = SawtoothConnection::new(&endpoint.url());
     let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
         sawtooth_connection.get_sender(),
     ));
