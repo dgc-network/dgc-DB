@@ -74,7 +74,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
                 }
             }),
         )
-        .boxed()
+        //.boxed()
     }
 
     fn batch_status(
@@ -99,7 +99,8 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
             &batch_status_request,
         ));
 
-        future::ready(process_batch_status_response(response_status)).boxed()
+        future::ready(process_batch_status_response(response_status))
+        //.boxed()
     }
 
     fn clone_box(&self) -> Box<dyn BatchSubmitter> {
