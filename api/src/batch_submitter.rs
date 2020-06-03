@@ -35,7 +35,7 @@ macro_rules! try_fut {
     ($try_expr:expr) => {
         match $try_expr {
             Ok(res) => res,
-            Err(err) => return futures::future::err(err).boxed(),
+            //Err(err) => return futures::future::err(err).boxed(),
         }
     };
 }
