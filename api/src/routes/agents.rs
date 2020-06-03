@@ -13,7 +13,7 @@ use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAUL
 use crate::submitter::BatchSubmitter;
 //use crate::batch_submitter::SawtoothBatchSubmitter;
 use crate::{batch_submitter::SawtoothBatchSubmitter, connection::SawtoothConnection};
-use crate::config;
+use crate::config::Endpoint;
 
 use actix::{Handler, Message, SyncContext};
 //use actix_web::{web, HttpResponse};
@@ -371,7 +371,8 @@ pub async fn create_agent(
     //let state = AppState::new(batch_submitter);
     //let state = AppState::new();
 
-    let sawtooth_connection = SawtoothConnection::new(&config.endpoint().url());
+    //let sawtooth_connection = SawtoothConnection::new(&config.endpoint().url());
+    let sawtooth_connection = SawtoothConnection::new(Endpoint::url());
     let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
         sawtooth_connection.get_sender(),
     ));
