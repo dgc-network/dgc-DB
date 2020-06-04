@@ -37,7 +37,8 @@ macro_rules! try_fut {
     ($try_expr:expr) => {
         match $try_expr {
             Ok(res) => res,
-            Err(err) => return futures::future::err(err).boxed(),
+            //Err(err) => return futures::future::err(err).boxed(),
+
             //Err(err) => return Box::pin(<dyn futures::future::err(err) + Send>),
             //Err(err) => return Pin<Box<dyn futures::future::err(err)+ Send>>,
         }
@@ -106,7 +107,9 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
             &batch_status_request,
         ));
 
-        future::ready(process_batch_status_response(response_status)).boxed()
+        //future::ready(process_batch_status_response(response_status)).boxed()
+        Box::pin(<dyn futures::future::ready(
+            process_batch_status_response(response_status)) + Send>)
     }
 
     fn clone_box(&self) -> Box<dyn BatchSubmitter> {
