@@ -5,7 +5,7 @@ use std::pin::Pin;
 use std::time::Duration;
 
 use futures::prelude::*;
-use futures::future::BoxFuture;
+//use futures::future::BoxFuture;
 use sawtooth_sdk::messages::batch::Batch;
 use sawtooth_sdk::messages::client_batch_submit::{
     ClientBatchStatusRequest, ClientBatchStatusResponse, ClientBatchStatusResponse_Status,
@@ -36,8 +36,8 @@ macro_rules! try_fut {
     ($try_expr:expr) => {
         match $try_expr {
             Ok(res) => res,
-            //Err(err) => return futures::future::err(err).boxed(),
-            Err(err) => return Box::pin(futures::future::err(err)),
+            Err(err) => return futures::future::err(err).boxed(),
+            //Err(err) => return Box::pin(futures::future::err(err)),
         }
     };
 }
@@ -76,7 +76,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
                 }
             }),
         )
-        //.boxed()
+        .boxed()
     }
 
     fn batch_status(
