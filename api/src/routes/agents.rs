@@ -10,7 +10,7 @@ use crate::error::RestApiResponseError;
 //use crate::AppState;
 //use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 use crate::submitter::{SubmitBatches, DEFAULT_TIME_OUT};
-//use crate::submitter::BatchSubmitter;
+use crate::submitter::BatchSubmitter;
 //use crate::batch_submitter::SawtoothBatchSubmitter;
 use crate::{batch_submitter::SawtoothBatchSubmitter, connection::SawtoothConnection};
 use crate::config::Endpoint;
@@ -18,7 +18,8 @@ use crate::config::Endpoint;
 //use actix::{Handler, Message, SyncContext};
 //use actix_web::{web, HttpResponse};
 use actix_web::{web, HttpRequest, HttpResponse};
-use serde::{Deserialize, Serialize};
+//use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 //use serde_json::Value as JsonValue;
 
 //use crate::error::CliError;
