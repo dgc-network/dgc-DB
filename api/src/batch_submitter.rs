@@ -109,7 +109,8 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
 
         //future::ready(process_batch_status_response(response_status)).boxed()
         Box::pin(<dyn futures::future::ready(
-            process_batch_status_response(response_status)) + Send>)
+            process_batch_status_response(response_status),
+        ) + Send>)
     }
 
     fn clone_box(&self) -> Box<dyn BatchSubmitter> {
