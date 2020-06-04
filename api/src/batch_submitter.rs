@@ -37,7 +37,7 @@ macro_rules! try_fut {
         match $try_expr {
             Ok(res) => res,
             //Err(err) => return futures::future::err(err).boxed(),
-            Err(err) => return BoxFuture::err(err).boxed(),
+            Err(err) => return BoxFuture::future::err(err).boxed(),
         }
     };
 }
@@ -59,7 +59,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
         ));
 
         //future::ready(
-        BoxFuture::ready(
+        BoxFuture::future::ready(
             process_validator_response(response_status.get_status()).map(|_| {
                 let batch_query = msg
                     .batch_list
@@ -103,7 +103,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
         ));
 
         //future::ready(process_batch_status_response(response_status)).boxed()
-        BoxFuture::ready(process_batch_status_response(response_status)).boxed()
+        BoxFuture::future::ready(process_batch_status_response(response_status)).boxed()
     }
 
     fn clone_box(&self) -> Box<dyn BatchSubmitter> {
