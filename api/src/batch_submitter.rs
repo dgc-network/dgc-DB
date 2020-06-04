@@ -5,7 +5,8 @@ use std::pin::Pin;
 use std::time::Duration;
 
 use futures::prelude::*;
-//use futures::future::BoxFuture;
+use actix_web::client::SendRequestError::Send;
+
 use sawtooth_sdk::messages::batch::Batch;
 use sawtooth_sdk::messages::client_batch_submit::{
     ClientBatchStatusRequest, ClientBatchStatusResponse, ClientBatchStatusResponse_Status,
