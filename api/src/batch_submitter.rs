@@ -37,8 +37,8 @@ macro_rules! try_fut {
     ($try_expr:expr) => {
         match $try_expr {
             Ok(res) => res,
-            //Err(err) => return futures::future::err(err).boxed(),
-            Err(err) => return Box::pin(<dyn futures::future::err(err) + Send>),
+            Err(err) => return futures::future::err(err).boxed(),
+            //Err(err) => return Box::pin(<dyn futures::future::err(err) + Send>),
             //Err(err) => return Pin<Box<dyn futures::future::err(err)+ Send>>,
         }
     };
@@ -61,7 +61,8 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
             &client_submit_request,
         ));
 
-        future::ready(
+        //future::ready(
+        Box::pin(<dyn futures::future::ready(
             process_validator_response(response_status.get_status()).map(|_| {
                 let batch_query = msg
                     .batch_list
@@ -78,8 +79,8 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
                     link: response_url.to_string(),
                 }
             }),
-        )
-        .boxed()
+        ) + Send>)
+        //.boxed()
     }
 
     fn batch_status(
