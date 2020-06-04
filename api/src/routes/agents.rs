@@ -5,17 +5,17 @@
 //use crate::rest_api::{
 //    error::RestApiResponseError, routes::DbExecutor, AcceptServiceIdParam, AppState, QueryServiceId,
 //};
-//use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
 
 use crate::error::RestApiResponseError;
 //use crate::AppState;
-use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
-use crate::submitter::BatchSubmitter;
+//use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
+use crate::submitter::{SubmitBatches, DEFAULT_TIME_OUT};
+//use crate::submitter::BatchSubmitter;
 //use crate::batch_submitter::SawtoothBatchSubmitter;
 use crate::{batch_submitter::SawtoothBatchSubmitter, connection::SawtoothConnection};
 use crate::config::Endpoint;
 
-use actix::{Handler, Message, SyncContext};
+//use actix::{Handler, Message, SyncContext};
 //use actix_web::{web, HttpResponse};
 use actix_web::{web, HttpRequest, HttpResponse};
 use serde::{Deserialize, Serialize};
@@ -30,8 +30,8 @@ use grid_sdk::protocol::pike::state::{
 };
 use grid_sdk::protocol::pike::payload::{
     Action, PikePayloadBuilder, 
-    CreateAgentAction, CreateAgentActionBuilder, 
-    UpdateAgentAction, UpdateAgentActionBuilder, 
+    CreateAgentActionBuilder, 
+    //CreateAgentAction, UpdateAgentAction, UpdateAgentActionBuilder, 
 };
 use grid_sdk::protos::IntoProto;
 use std::collections::HashMap;

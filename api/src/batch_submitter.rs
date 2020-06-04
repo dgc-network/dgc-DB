@@ -5,6 +5,7 @@ use std::pin::Pin;
 use std::time::Duration;
 
 use futures::prelude::*;
+use futures::future::BoxFuture;
 use sawtooth_sdk::messages::batch::Batch;
 use sawtooth_sdk::messages::client_batch_submit::{
     ClientBatchStatusRequest, ClientBatchStatusResponse, ClientBatchStatusResponse_Status,
@@ -35,7 +36,8 @@ macro_rules! try_fut {
     ($try_expr:expr) => {
         match $try_expr {
             Ok(res) => res,
-            Err(err) => return futures::future::err(err).boxed(),
+            //Err(err) => return futures::future::err(err).boxed(),
+            Err(err) => return BoxFuture::err(err).boxed(),
         }
     };
 }
@@ -56,7 +58,8 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
             &client_submit_request,
         ));
 
-        future::ready(
+        //future::ready(
+        BoxFuture::ready(
             process_validator_response(response_status.get_status()).map(|_| {
                 let batch_query = msg
                     .batch_list
@@ -74,7 +77,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
                 }
             }),
         )
-        //.boxed()
+        .boxed()
     }
 
     fn batch_status(
@@ -99,8 +102,8 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
             &batch_status_request,
         ));
 
-        future::ready(process_batch_status_response(response_status))
-        //.boxed()
+        //future::ready(process_batch_status_response(response_status)).boxed()
+        BoxFuture::ready(process_batch_status_response(response_status)).boxed()
     }
 
     fn clone_box(&self) -> Box<dyn BatchSubmitter> {
