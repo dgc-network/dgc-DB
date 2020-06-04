@@ -5,7 +5,7 @@ use std::pin::Pin;
 use std::time::Duration;
 
 use futures::prelude::*;
-use actix_web::client::SendRequestError::Send;
+//use actix_web::client::SendRequestError::Send;
 
 use sawtooth_sdk::messages::batch::Batch;
 use sawtooth_sdk::messages::client_batch_submit::{
@@ -38,7 +38,7 @@ macro_rules! try_fut {
         match $try_expr {
             Ok(res) => res,
             //Err(err) => return futures::future::err(err).boxed(),
-            Err(err) => return Box::pin(futures::future::err(err) + Send),
+            Err(err) => return Pin<Box<dyn futures::future::err(err)+ Send>>,
         }
     };
 }
