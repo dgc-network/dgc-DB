@@ -114,8 +114,8 @@ impl fmt::Display for RestApiResponseError {
 
 // impl ResponseError trait allows to convert our errors into http responses with appropriate data
 impl RestApiResponseError {
-    pub fn future_box(self) -> Box<dyn Future<Output = Result<HttpResponse, ActixError>>> {
-    //pub fn future_box(self) -> Box<dyn Future<Output = Result<HttpResponse, ActixError>> + Send> {
+    //pub fn future_box(self) -> Box<dyn Future<Output = Result<HttpResponse, ActixError>>> {
+    pub fn future_box(self) -> Box<dyn Future<Output = Result<HttpResponse, ActixError>> + Send> {
         match self {
             RestApiResponseError::BadRequest(ref message) => {
                 Box::new(HttpResponse::BadRequest().json(message).into_future())
