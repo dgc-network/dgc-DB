@@ -36,7 +36,8 @@ macro_rules! try_fut {
     ($try_expr:expr) => {
         match $try_expr {
             Ok(res) => res,
-            Err(err) => return futures::future::err(err).boxed(),
+            //Err(err) => return futures::future::err(err).boxed(),
+            Err(err) => return futures::future::err(err),
         }
     };
 }
@@ -77,7 +78,8 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
                 }
             }),
         //) + Send>)
-        ).boxed()
+        )
+        //.boxed()
     }
 
     fn batch_status(
@@ -103,7 +105,8 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
             &batch_status_request,
         ));
 
-        future::ready(process_batch_status_response(response_status)).boxed()
+        //future::ready(process_batch_status_response(response_status)).boxed()
+        future::ready(process_batch_status_response(response_status))
         //Box::pin(<dyn futures::future::ready(
         //    process_batch_status_response(response_status),
         //) + Send>)
@@ -119,7 +122,7 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
     message_type: Message_MessageType,
     message: &C,
 //) -> Result<T, RestApiResponseError> {
-) -> Pin<Box<dyn Future<Output = Result<T, RestApiResponseError> + Send>> {
+) -> Pin<Box<dyn Future<Output = Result<T, RestApiResponseError>> + Send>> {
     let content = protobuf::Message::write_to_bytes(message).map_err(|err| {
         RestApiResponseError::RequestHandlerError(format!(
             "Failed to serialize batch submit request. {}",
@@ -154,7 +157,8 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
 
 pub fn process_validator_response(
     status: ClientBatchSubmitResponse_Status,
-) -> Result<(), RestApiResponseError> {
+//) -> Result<(), RestApiResponseError> {
+) -> Pin<Box<dyn Future<Output = Result<(), RestApiResponseError>> + Send>> {
     match status {
         ClientBatchSubmitResponse_Status::OK => Ok(()),
         ClientBatchSubmitResponse_Status::INVALID_BATCH => Err(RestApiResponseError::BadRequest(
@@ -170,7 +174,8 @@ pub fn process_validator_response(
 
 pub fn process_batch_status_response(
     response: ClientBatchStatusResponse,
-) -> Result<Vec<BatchStatus>, RestApiResponseError> {
+//) -> Result<Vec<BatchStatus>, RestApiResponseError> {
+) -> Pin<Box<dyn Future<Output = Result<Vec<BatchStatus>, RestApiResponseError>> + Send>> {
     let status = response.get_status();
     match status {
         ClientBatchStatusResponse_Status::OK => Ok(response
