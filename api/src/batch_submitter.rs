@@ -60,6 +60,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
         ));
 
         future::ready(
+        Box::pin(future::ready(
         //Box::pin(<dyn futures::future::ready(
             process_validator_response(response_status.get_status()).map(|_| {
                 let batch_query = msg
@@ -78,7 +79,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
                 }
             }),
         //) + Send>)
-        )
+        ))
         //.boxed()
     }
 
@@ -106,7 +107,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
         ));
 
         //future::ready(process_batch_status_response(response_status)).boxed()
-        future::ready(process_batch_status_response(response_status))
+        Box::pin(future::ready(process_batch_status_response(response_status)))
         //Box::pin(<dyn futures::future::ready(
         //    process_batch_status_response(response_status),
         //) + Send>)
