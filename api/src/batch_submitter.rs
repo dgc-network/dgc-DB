@@ -60,7 +60,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
         ));
 
         //future::ready(
-        Box::pin(future::ready(
+        Box::new(future::ready(
         //Box::pin(<dyn futures::future::ready(
             process_validator_response(response_status.get_status()).map(|_| {
                 let batch_query = msg
