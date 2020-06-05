@@ -31,8 +31,8 @@ impl From<std::io::Error> for RestApiServerError {
 }
 
 impl Error for RestApiServerError {
-    fn source(&self) -> Option<&(dyn Error + 'static)> {
-    //fn source(&self) -> Option<&(dyn Error + 'static + Send)> {
+    //fn source(&self) -> Option<&(dyn Error + 'static)> {
+    fn source(&self) -> Option<&(dyn Error + 'static + Send)> {
         match self {
             RestApiServerError::StartUpError(_) => None,
             RestApiServerError::StdError(err) => Some(err),
