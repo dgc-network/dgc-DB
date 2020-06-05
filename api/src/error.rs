@@ -67,8 +67,8 @@ pub enum RestApiResponseError {
 }
 
 impl Error for RestApiResponseError {
-    //fn source(&self) -> Option<&(dyn Error + 'static)> {
-    fn source(&self) -> Option<&(dyn Error + 'static + Send)> {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+    //fn source(&self) -> Option<&(dyn Error + 'static + Send)> {
         match self {
             RestApiResponseError::BadRequest(_) => None,
             RestApiResponseError::SawtoothConnectionError(_) => None,
