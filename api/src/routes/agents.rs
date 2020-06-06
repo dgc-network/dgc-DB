@@ -11,9 +11,11 @@ use crate::error::RestApiResponseError;
 //use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 use crate::submitter::{SubmitBatches, DEFAULT_TIME_OUT};
 use crate::submitter::BatchSubmitter;
-//use crate::batch_submitter::SawtoothBatchSubmitter;
-use crate::{batch_submitter::SawtoothBatchSubmitter, connection::SawtoothConnection};
-use crate::config::Endpoint;
+use crate::submitter::SawtoothBatchSubmitter;
+//use crate::{batch_submitter::SawtoothBatchSubmitter, connection::SawtoothConnection};
+use crate::connection::SawtoothConnection;
+//use crate::config::Endpoint;
+use crate::Endpoint;
 
 //use actix::{Handler, Message, SyncContext};
 //use actix_web::{web, HttpResponse};

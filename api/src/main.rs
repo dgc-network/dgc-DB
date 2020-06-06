@@ -5,7 +5,7 @@
 
 mod routes;
 mod error;
-mod config;
+//mod config;
 mod connection;
 mod batch_submitter;
 mod submitter;
@@ -19,6 +19,27 @@ use crate::routes::batches::{submit_batches, get_batch_statuses};
 use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};
 use crate::submitter::BatchSubmitter;
 pub use crate::error::RestApiServerError;
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct Endpoint {
+    url: String,
+}
+
+impl Endpoint {
+    pub fn url(&self) -> String {
+        self.url.clone()
+    }
+}
+
+impl From<&str> for Endpoint {
+    fn from(s: &str) -> Self {
+        let s = s.to_lowercase();
+
+        Endpoint {
+            url: s,
+        }
+    }
+}
 
 #[derive(Clone)]
 pub struct AppState {

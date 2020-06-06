@@ -57,8 +57,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
             &client_submit_request,
         ));
 
-        //future::ready(
-        Box::pin(future::ready(
+        future::ready(
             process_validator_response(response_status.get_status()).map(|_| {
                 let batch_query = msg
                     .batch_list
@@ -75,8 +74,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
                     link: response_url.to_string(),
                 }
             }),
-        ))
-        //.boxed()
+        ).boxed()
     }
 
     fn batch_status(
