@@ -14,6 +14,7 @@ use std::error::Error;
 
 use std::fmt;
 use std::io;
+//use std::marker::Send;
 
 use grid_sdk::protos;
 use sawtooth_sdk::signing;
@@ -65,6 +66,8 @@ pub enum RestApiResponseError {
     GridProtoError(protos::ProtoConversionError),
     SabreProtoError(sabre_sdk::protos::ProtoConversionError),
 }
+
+impl Send for RestApiResponseError {}
 
 impl Error for RestApiResponseError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
