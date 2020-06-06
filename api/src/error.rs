@@ -67,7 +67,7 @@ pub enum RestApiResponseError {
     SabreProtoError(sabre_sdk::protos::ProtoConversionError),
 }
 
-impl Send for RestApiResponseError {}
+unsafe impl Send for RestApiResponseError {}
 
 impl Error for RestApiResponseError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
