@@ -107,7 +107,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
         ));
 
         //future::ready(process_batch_status_response(response_status)).boxed()
-        BoxFuture(future::ready(process_batch_status_response(response_status)))
+        //(future::ready(process_batch_status_response(response_status)))
         //Box::pin(<dyn futures::future::ready(
         //    process_batch_status_response(response_status),
         //) + Send>)
