@@ -5,13 +5,9 @@
 
 mod routes;
 mod error;
-//mod config;
 mod connection;
-mod batch_submitter;
 mod submitter;
 mod transaction;
-mod key;
-//mod http;
 
 use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
 

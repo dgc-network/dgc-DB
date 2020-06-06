@@ -3,56 +3,26 @@
 
 use std::collections::HashMap;
 use std::pin::Pin;
-
-use futures::prelude::*;
-use sawtooth_sdk::messages::batch::BatchList;
-use sawtooth_sdk::messages::client_batch_submit::ClientBatchStatus;
-use serde::{Deserialize, Serialize};
-use url::Url;
-
-//use std::pin::Pin;
 use std::time::Duration;
 
-//use futures::prelude::*;
+use futures::prelude::*;
+use serde::{Deserialize, Serialize};
+use url::Url;
+use uuid::Uuid;
 
-use sawtooth_sdk::messages::batch::Batch;
+use sawtooth_sdk::messages::batch::{Batch, BatchList};
 use sawtooth_sdk::messages::client_batch_submit::{
+    ClientBatchStatus,
     ClientBatchStatusRequest, ClientBatchStatusResponse, ClientBatchStatusResponse_Status,
     ClientBatchSubmitRequest, ClientBatchSubmitResponse, ClientBatchSubmitResponse_Status,
 };
 use sawtooth_sdk::messages::validator::Message_MessageType;
 use sawtooth_sdk::messaging::stream::MessageSender;
 use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
-use uuid::Uuid;
 
 use crate::error::RestApiResponseError;
-//use crate::submitter::{
-//    BatchStatus, BatchStatusLink, BatchStatuses, BatchSubmitter, SubmitBatches, DEFAULT_TIME_OUT,
-//};
-
-//use crate::error::RestApiResponseError;
 
 pub const DEFAULT_TIME_OUT: u32 = 300; // Max timeout 300 seconds == 5 minutes
-
-pub trait BatchSubmitter: Send + 'static {
-    fn submit_batches(
-        &self,
-        submit_batches: SubmitBatches,
-    ) -> Pin<Box<dyn Future<Output = Result<BatchStatusLink, RestApiResponseError>> + Send>>;
-
-    fn batch_status(
-        &self,
-        batch_statuses: BatchStatuses,
-    ) -> Pin<Box<dyn Future<Output = Result<Vec<BatchStatus>, RestApiResponseError>> + Send>>;
-
-    fn clone_box(&self) -> Box<dyn BatchSubmitter>;
-}
-
-impl Clone for Box<dyn BatchSubmitter> {
-    fn clone(&self) -> Box<dyn BatchSubmitter> {
-        self.clone_box()
-    }
-}
 
 pub struct SubmitBatches {
     pub batch_list: BatchList,
@@ -108,27 +78,27 @@ pub struct BatchStatusResponse {
 pub struct BatchStatusLink {
     pub link: String,
 }
-/*
-use std::pin::Pin;
-use std::time::Duration;
 
-use futures::prelude::*;
+pub trait BatchSubmitter: Send + 'static {
+    fn submit_batches(
+        &self,
+        submit_batches: SubmitBatches,
+    ) -> Pin<Box<dyn Future<Output = Result<BatchStatusLink, RestApiResponseError>> + Send>>;
 
-use sawtooth_sdk::messages::batch::Batch;
-use sawtooth_sdk::messages::client_batch_submit::{
-    ClientBatchStatusRequest, ClientBatchStatusResponse, ClientBatchStatusResponse_Status,
-    ClientBatchSubmitRequest, ClientBatchSubmitResponse, ClientBatchSubmitResponse_Status,
-};
-use sawtooth_sdk::messages::validator::Message_MessageType;
-use sawtooth_sdk::messaging::stream::MessageSender;
-use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
-use uuid::Uuid;
+    fn batch_status(
+        &self,
+        batch_statuses: BatchStatuses,
+    ) -> Pin<Box<dyn Future<Output = Result<Vec<BatchStatus>, RestApiResponseError>> + Send>>;
 
-use crate::error::RestApiResponseError;
-use crate::submitter::{
-    BatchStatus, BatchStatusLink, BatchStatuses, BatchSubmitter, SubmitBatches, DEFAULT_TIME_OUT,
-};
-*/
+    fn clone_box(&self) -> Box<dyn BatchSubmitter>;
+}
+
+impl Clone for Box<dyn BatchSubmitter> {
+    fn clone(&self) -> Box<dyn BatchSubmitter> {
+        self.clone_box()
+    }
+}
+
 #[derive(Clone)]
 pub struct SawtoothBatchSubmitter {
     sender: ZmqMessageSender,
