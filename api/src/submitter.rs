@@ -30,7 +30,7 @@ use crate::error::RestApiResponseError;
 //    BatchStatus, BatchStatusLink, BatchStatuses, BatchSubmitter, SubmitBatches, DEFAULT_TIME_OUT,
 //};
 
-use crate::error::RestApiResponseError;
+//use crate::error::RestApiResponseError;
 
 pub const DEFAULT_TIME_OUT: u32 = 300; // Max timeout 300 seconds == 5 minutes
 
