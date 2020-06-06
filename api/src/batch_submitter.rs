@@ -107,7 +107,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
         ));
 
         //future::ready(process_batch_status_response(response_status)).boxed()
-        Box::pin(future::ok(process_batch_status_response(response_status)))
+        Box::pin(future::ready(process_batch_status_response(response_status)))
     }
 
     fn clone_box(&self) -> Box<dyn BatchSubmitter> {
@@ -172,7 +172,8 @@ pub fn process_validator_response(
 
 pub fn process_batch_status_response(
     response: ClientBatchStatusResponse,
-) -> Result<Vec<BatchStatus>, RestApiResponseError> {
+//) -> Result<Vec<BatchStatus>, RestApiResponseError> {
+) -> Result<<Vec<BatchStatus>, RestApiResponseError> + Send> {
 //) -> Pin<Box<dyn Future<Output = Result<Vec<BatchStatus>, RestApiResponseError>> + Send>> {
     let status = response.get_status();
     match status {
