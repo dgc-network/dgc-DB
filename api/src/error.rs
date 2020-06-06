@@ -1,8 +1,6 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
-//use crate::database::DatabaseError;
-
 use actix::MailboxError;
 use actix_web::error::{PayloadError, UrlGenerationError};
 use actix_web::{
@@ -10,14 +8,9 @@ use actix_web::{
     HttpResponse,
 };
 use futures::future::{Future, TryFutureExt};
-use std::error::Error;
-
-use std::fmt;
-use std::io;
-//use std::marker::Send;
-
-use grid_sdk::protos;
+use std::{error::Error, fmt, io};
 use sawtooth_sdk::signing;
+use grid_sdk::protos;
 
 #[derive(Debug)]
 pub enum RestApiServerError {
@@ -33,7 +26,6 @@ impl From<std::io::Error> for RestApiServerError {
 
 impl Error for RestApiServerError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
-    //fn source(&self) -> Option<&(dyn Error + 'static + Send)> {
         match self {
             RestApiServerError::StartUpError(_) => None,
             RestApiServerError::StdError(err) => Some(err),
@@ -71,7 +63,6 @@ unsafe impl Send for RestApiResponseError {}
 
 impl Error for RestApiResponseError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
-    //fn source(&self) -> Option<&(dyn Error + 'static + Send)> {
         match self {
             RestApiResponseError::BadRequest(_) => None,
             RestApiResponseError::SawtoothConnectionError(_) => None,
@@ -119,7 +110,6 @@ impl fmt::Display for RestApiResponseError {
 // impl ResponseError trait allows to convert our errors into http responses with appropriate data
 impl RestApiResponseError {
     pub fn future_box(self) -> Box<dyn Future<Output = Result<HttpResponse, ActixError>>> {
-    //pub fn future_box(self) -> Box<dyn Future<Output = Result<HttpResponse, ActixError>> + Send> {
         match self {
             RestApiResponseError::BadRequest(ref message) => {
                 Box::new(HttpResponse::BadRequest().json(message).into_future())

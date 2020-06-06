@@ -44,25 +44,6 @@ const GRID_DAEMON_ENDPOINT: &str = "GRID_DAEMON_ENDPOINT";
 const GRID_SERVICE_ID: &str = "GRID_SERVICE_ID";
 //const DEFAULT_TIME_OUT: u32 = 300; // Max timeout 300 seconds == 5 minutes
 
-/*
-let url = matches
-    .value_of("url")
-    .map(String::from)
-    .or_else(|| env::var(GRID_DAEMON_ENDPOINT).ok())
-    .unwrap_or_else(|| String::from("http://localhost:8000"));
-
-let key = matches
-    .value_of("key")
-    .map(String::from)
-    .or_else(|| env::var(GRID_DAEMON_KEY).ok());
-
-let wait = value_t!(matches, "wait", u64).unwrap_or(0);
-
-let service_id = matches
-    .value_of("service_id")
-    .map(String::from)
-    .or_else(|| env::var(GRID_SERVICE_ID).ok());
-*/
 #[derive(Deserialize)]
 pub struct NewAgent {
     agent: NewAgentData,
@@ -205,29 +186,9 @@ pub async fn fetch_agent(
 
 pub async fn create_agent(
     req: HttpRequest,
-    //url: &str,
-    //secret_key: Option<String>,
-    //wait: u64,
-    //create_agent: web::Json<CreateAgentAction>,
-    //new_agent: web::Json<NewAgent>,
     query: web::Query<HashMap<String, String>>,
-    //state: web::Data<AppState>,
-    //batch_submitter: web::Data<SawtoothBatchSubmitter>,
-    //service_id: Option<String>,
-//) -> Result<(), CliError> {
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    //let new_agent = new_agent.into_inner().agent;
-/*
-    let mut extractor = FieldValidator::validate(&new_agent);
-    let org_id = extractor.extract("org_id", new_agent.org_id);
-    let roles_as_strings = extractor.extract("roles", new_agent.roles);
-    let metadata_as_strings = extractor.extract("metadata", new_agent.metadata);
-    //let private_key_hex_string = extractor.extract("private_key", new_agent.private_key);
-    extractor.check()?;
-*/
-
-    //let org_id: String = new_agent.org_id.unwrap();
     let org_id = match query.get("org_id") {
         Some(org_id) => org_id.to_string(),
         None => "".to_string(),
@@ -244,14 +205,12 @@ pub async fn create_agent(
     };
 
     let mut roles = Vec::<String>::new();
-    //for role in new_agent.roles {
     for role in roles_as_string.chars() {
         let entry: String = role.to_string().split(",").collect();
         roles.push(entry.clone());
     }
 
     let mut metadata = Vec::<KeyValueEntry>::new();
-    //for meta in new_agent.metadata {
     for meta in metadata_as_string.chars() {
         let meta_as_string = meta.to_string();
         let key_val: Vec<&str> = meta_as_string.split(",").collect();
@@ -287,10 +246,8 @@ pub async fn create_agent(
 
     let payload = PikePayloadBuilder::new()
         .with_action(Action::CreateAgent)
-        //.with_create_agent(create_agent)
         .with_create_agent(action)
         .build()
-        //.map_err(|err| CliError::UserError(format!("{}", err)))?;
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
 
     let private_key = match query.get("private_key") {
@@ -298,7 +255,6 @@ pub async fn create_agent(
         None => Some("".to_string()),
     };
     
-    //let batch_list = pike_batch_builder(secret_key)
     let batch_list = pike_batch_builder(private_key)
         .add_transaction(
             &payload.into_proto()?,
@@ -329,10 +285,8 @@ pub async fn create_agent(
                     Ok(wait_time) => {
                         if wait_time > max_wait_time {
                             Some(max_wait_time)
-                            //max_wait_time
                         } else {
                             Some(wait_time)
-                            //wait_time
                         }
                     }
                     Err(_) => {
@@ -347,42 +301,16 @@ pub async fn create_agent(
         }
 
         None => Some(max_wait_time),
-        //None => max_wait_time,
     };
 
-    //submit_batches(url, wait, &batch_list, service_id.as_deref());
-//    submit_batches(url, wait.unwrap().into(), &batch_list, service_id);
-/*
-    let bytes = batch_list.write_to_bytes()?;
-
-    let batch_list: BatchList = match protobuf::parse_from_bytes(&*body) {
-        Ok(batch_list) => batch_list,
-        Err(err) => {
-            return Err(RestApiResponseError::BadRequest(format!(
-                "Protobuf message was badly formatted. {}",
-                err.to_string()
-            )));
-        }
-    };
-*/
     let response_url = req.url_for_static("batch_statuses")?;
 
-
-    //let batch_submitter: Box<dyn BatchSubmitter + 'static>::clone_box();
-    //let state = AppState::new(batch_submitter);
-    //let state = AppState::new();
-
-    //let sawtooth_connection = SawtoothConnection::new(&config.endpoint().url());
     let endpoint = Endpoint::from("sawtooth:tcp://localhost:8080");
-    //let sawtooth_connection = SawtoothConnection::new(&Endpoint::url());
     let sawtooth_connection = SawtoothConnection::new(&endpoint.url());
     let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
         sawtooth_connection.get_sender(),
     ));
 
-
-    //state
-    //    .batch_submitter
     batch_submitter
         .submit_batches(SubmitBatches {
             batch_list,

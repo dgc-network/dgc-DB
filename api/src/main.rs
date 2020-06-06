@@ -11,24 +11,16 @@ mod batch_submitter;
 mod submitter;
 mod transaction;
 mod key;
-mod http;
+//mod http;
 
-//use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
 use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
-//use actix_web::{web, App, HttpResponse, HttpServer, Responder, Result,};
-//use crate::routes::{
-//    fetch_agent, fetch_grid_schema, fetch_organization, fetch_product, fetch_record,
-//    fetch_record_property, list_agents, list_grid_schemas, list_organizations,
-//    list_products, list_records, submit_batches, get_batch_statuses, 
-//};
+
 use crate::routes::batches::{submit_batches, get_batch_statuses};
 use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};
 use crate::submitter::BatchSubmitter;
-//use crate::batch_submitter::SawtoothBatchSubmitter;
 pub use crate::error::RestApiServerError;
 
 #[derive(Clone)]
-//#[derive(Default, Clone)]
 pub struct AppState {
     batch_submitter: Box<dyn BatchSubmitter + 'static>,
     //database_connection: Addr<DbExecutor>,
@@ -55,19 +47,7 @@ async fn index() -> impl Responder {
 }
 
 #[actix_rt::main]
-async fn main(
-    //bind_url: &str,
-    //batch_submitter: Box<dyn BatchSubmitter + 'static>,
-    //sender: ZmqMessageSender,
-) -> std::io::Result<()> {
-//) -> Result<(RestApiShutdownHandle,
-//    thread::JoinHandle<Result<(), RestApiServerError>>,),
-//    RestApiServerError,> {
-//) -> Result {
-
-    //let state = AppState::new(batch_submitter);
-    //let state = SawtoothBatchSubmitter::new(sender);
-    //let state = SawtoothBatchSubmitter::new(ZmqMessageSender);
+async fn main() -> std::io::Result<()> {
     //HttpServer::new(move || {
     HttpServer::new(|| {
         App::new()
