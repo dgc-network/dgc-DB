@@ -344,7 +344,7 @@ pub async fn create_agent(
 */
     let response_url = req.url_for_static("agent")?;
     
-    let sawtooth_connection = SawtoothConnection::new(&response_url);
+    let sawtooth_connection = SawtoothConnection::new(&response_url.to_string());
 
     let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
         sawtooth_connection.get_sender(),
