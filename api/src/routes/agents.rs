@@ -334,14 +334,16 @@ pub async fn create_agent(
             &[PIKE_NAMESPACE.to_string()],
         )?
         .create_batch_list();
-
+/*
     let response_url = match req.url_for_static("agent") {
         Ok(url) => format!("{}?{}", url, req.query_string()),
         Err(err) => {
             return Err(err.into());
         }
     };
-
+*/
+    let response_url = req.url_for_static("agent")?;
+    
     let sawtooth_connection = SawtoothConnection::new(&response_url);
 
     let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
