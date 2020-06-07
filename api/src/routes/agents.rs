@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use std::collections::HashMap;
+use actix_web::{web, HttpRequest, HttpResponse};
 //use actix::{Handler, Message, SyncContext};
 //use actix_web::{web, HttpResponse};
-use actix_web::{web, HttpRequest, HttpResponse};
 //use serde::{Deserialize, Serialize};
-use serde::Deserialize;
+//use serde::Deserialize;
 //use serde_json::Value as JsonValue;
 
 //use crate::AppState;
@@ -304,7 +304,7 @@ pub async fn create_agent(
 
     let response_url = req.url_for_static("agent")?;
 
-    let endpoint = Endpoint::from(response_url);
+    let endpoint = Endpoint::from("tcp://localhost:8088");
 
     let sawtooth_connection = SawtoothConnection::new(&endpoint.url());
     let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
