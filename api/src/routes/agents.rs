@@ -133,15 +133,18 @@ pub async fn list_agents(
         .await?
         .map(|agents| HttpResponse::Ok().json(agents))
 */
-
-    let batch_ids = match query.get("id") {
-        Some(ids) => ids.split(',').map(ToString::to_string).collect(),
-        None => {
-            return Err(RestApiResponseError::BadRequest(
-                "Request for statuses missing id query.".to_string(),
-            ));
+    let response_url = match req.url_for_static("agent") {
+        Ok(url) => format!("{}?{}", url, req.query_string()),
+        Err(err) => {
+            return Err(err.into());
         }
     };
+
+    let sawtooth_connection = SawtoothConnection::new(&response_url);
+
+    let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
+        sawtooth_connection.get_sender(),
+    ));
 
     // Max wait time allowed is 95% of network's configured timeout
     let max_wait_time = (DEFAULT_TIME_OUT * 95) / 100;
@@ -173,18 +176,14 @@ pub async fn list_agents(
         None => Some(max_wait_time),
     };
 
-    let response_url = match req.url_for_static("agent") {
-        Ok(url) => format!("{}?{}", url, req.query_string()),
-        Err(err) => {
-            return Err(err.into());
+    let batch_ids = match query.get("id") {
+        Some(ids) => ids.split(',').map(ToString::to_string).collect(),
+        None => {
+            return Err(RestApiResponseError::BadRequest(
+                "Request for statuses missing id query.".to_string(),
+            ));
         }
     };
-
-    let sawtooth_connection = SawtoothConnection::new(&response_url);
-
-    let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
-        sawtooth_connection.get_sender(),
-    ));
 
     batch_submitter
         .batch_status(BatchStatuses {
