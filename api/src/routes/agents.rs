@@ -180,11 +180,6 @@ pub async fn list_agents(
         }
     };
 
-    //let response_url = req.url_for_static("agent")?;
-
-    //let endpoint = Endpoint::from("tcp://localhost:8088");
-
-    //let sawtooth_connection = SawtoothConnection::new(&endpoint.url());
     let sawtooth_connection = SawtoothConnection::new(&response_url);
 
     let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
@@ -192,9 +187,6 @@ pub async fn list_agents(
     ));
 
     batch_submitter
-
-//    state
-//        .batch_submitter
         .batch_status(BatchStatuses {
             batch_ids,
             wait,
@@ -335,7 +327,6 @@ pub async fn create_agent(
         None => Some("".to_string()),
     };
     
-    //let batch_list = pike_batch_builder(private_key)
     let batch_list = BatchBuilder::new(PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, private_key)
         .add_transaction(
             &payload.into_proto()?,
@@ -343,56 +334,16 @@ pub async fn create_agent(
             &[PIKE_NAMESPACE.to_string()],
         )?
         .create_batch_list();
-/*
-    let url = match query.get("url") {
-        Some(url) => url,
-        None => GRID_DAEMON_ENDPOINT,
-    };
 
-    let service_id = match query.get("service_id") {
-        Some(service_id) => Some(service_id.as_str()),
-        None => Some(GRID_SERVICE_ID),
-    };
-
-    // Max wait time allowed is 95% of network's configured timeout
-    let max_wait_time = (DEFAULT_TIME_OUT * 95) / 100;
-
-    let wait = match query.get("wait") {
-        Some(wait_time) => {
-            if wait_time == "false" {
-                None
-            } else {
-                match wait_time.parse::<u32>() {
-                    Ok(wait_time) => {
-                        if wait_time > max_wait_time {
-                            Some(max_wait_time)
-                        } else {
-                            Some(wait_time)
-                        }
-                    }
-                    Err(_) => {
-                        return Err(RestApiResponseError::BadRequest(format!(
-                            "Query wait has invalid value {}. \
-                             It should set to false or a time in seconds to wait for the commit",
-                            wait_time
-                        )));
-                    }
-                }
-            }
+    let response_url = match req.url_for_static("agent") {
+        Ok(url) => format!("{}?{}", url, req.query_string()),
+        Err(err) => {
+            return Err(err.into());
         }
-
-        None => Some(max_wait_time),
     };
-*/
-    //let response_url = req.url_for_static("batch_statuses")?;
 
-    //let endpoint = Endpoint::from("sawtooth:tcp://localhost:8088");
+    let sawtooth_connection = SawtoothConnection::new(&response_url);
 
-    let response_url = req.url_for_static("agent")?;
-
-    let endpoint = Endpoint::from("tcp://localhost:8088");
-
-    let sawtooth_connection = SawtoothConnection::new(&endpoint.url());
     let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
         sawtooth_connection.get_sender(),
     ));
