@@ -18,15 +18,20 @@ use crate::submitter::SawtoothBatchSubmitter;
 use crate::connection::SawtoothConnection;
 //use crate::config::Endpoint;
 use crate::Endpoint;
-
-use crate::transaction::{pike_batch_builder, PIKE_NAMESPACE};
-use grid_sdk::protocol::pike::state::{
-    KeyValueEntry, KeyValueEntryBuilder,
-};
-use grid_sdk::protocol::pike::payload::{
-    Action, PikePayloadBuilder, 
-    CreateAgentActionBuilder, 
-    //CreateAgentAction, UpdateAgentAction, UpdateAgentActionBuilder, 
+use crate::transaction::BatchBuilder;
+//use crate::transaction::{pike_batch_builder, PIKE_NAMESPACE};
+//use grid_sdk::protocol::pike::state::{
+//    KeyValueEntry, KeyValueEntryBuilder,
+//};
+use grid_sdk::protocol::pike::{
+    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
+    state::{
+        KeyValueEntry, KeyValueEntryBuilder,
+    },
+    payload::{
+        Action, PikePayloadBuilder, CreateAgentActionBuilder, 
+        //CreateAgentAction, UpdateAgentAction, UpdateAgentActionBuilder, 
+    },
 };
 use grid_sdk::protos::IntoProto;
 
@@ -250,7 +255,8 @@ pub async fn create_agent(
         None => Some("".to_string()),
     };
     
-    let batch_list = pike_batch_builder(private_key)
+    //let batch_list = pike_batch_builder(private_key)
+    let batch_list = BatchBuilder::new(PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, private_key)
         .add_transaction(
             &payload.into_proto()?,
             &[PIKE_NAMESPACE.to_string()],
