@@ -10,10 +10,10 @@ use actix_web::{web, HttpRequest, HttpResponse};
 //use serde_json::Value as JsonValue;
 
 //use crate::AppState;
-//use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
+use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 //use crate::submitter::{SubmitBatches, DEFAULT_TIME_OUT};
-use crate::submitter::{SubmitBatches, BatchSubmitter, DEFAULT_TIME_OUT};
-use crate::submitter::SawtoothBatchSubmitter;
+//use crate::submitter::{SubmitBatches, BatchSubmitter, DEFAULT_TIME_OUT};
+use crate::submitter::{BatchSubmitter, SawtoothBatchSubmitter};
 //use crate::{batch_submitter::SawtoothBatchSubmitter, connection::SawtoothConnection};
 use crate::connection::SawtoothConnection;
 //use crate::config::Endpoint;
