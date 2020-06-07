@@ -28,7 +28,7 @@ use protobuf::Message;
 use users::get_current_username;
 
 use crate::error::RestApiResponseError as CliError;
-
+/*
 pub const PIKE_NAMESPACE: &str = "cad11d";
 const PIKE_FAMILY_NAME: &str = "pike";
 const PIKE_FAMILY_VERSION: &str = "0.1";
@@ -40,13 +40,13 @@ const GRID_SCHEMA_FAMILY_VERSION: &str = "1.0";
 pub const GRID_PRODUCT_NAMESPACE: &str = "621dee02";
 const GRID_PRODUCT_FAMILY_NAME: &str = "grid_product";
 const GRID_PRODUCT_FAMILY_VERSION: &str = "1.0";
-
+*/
 const SABRE_FAMILY_NAME: &str = "sabre";
 const SABRE_FAMILY_VERSION: &str = "0.5";
 const SABRE_NAMESPACE_REGISTRY_PREFIX: &str = "00ec00";
 const SABRE_CONTRACT_REGISTRY_PREFIX: &str = "00ec01";
 const SABRE_CONTRACT_PREFIX: &str = "00ec02";
-
+/*
 pub fn schema_batch_builder(key: Option<String>) -> BatchBuilder {
     BatchBuilder::new(GRID_SCHEMA_FAMILY_NAME, GRID_SCHEMA_FAMILY_VERSION, key)
 }
@@ -58,7 +58,7 @@ pub fn pike_batch_builder(key: Option<String>) -> BatchBuilder {
 pub fn product_batch_builder(key: Option<String>) -> BatchBuilder {
     BatchBuilder::new(GRID_PRODUCT_FAMILY_NAME, GRID_PRODUCT_FAMILY_VERSION, key)
 }
-
+*/
 #[derive(Clone)]
 pub struct BatchBuilder {
     family_name: String,

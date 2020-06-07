@@ -12,7 +12,7 @@ use actix_web::{web, HttpRequest, HttpResponse};
 //use crate::AppState;
 //use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 //use crate::submitter::{SubmitBatches, DEFAULT_TIME_OUT};
-use crate::submitter::{SubmitBatches, BatchSubmitter};
+use crate::submitter::{SubmitBatches, BatchSubmitter, DEFAULT_TIME_OUT};
 use crate::submitter::SawtoothBatchSubmitter;
 //use crate::{batch_submitter::SawtoothBatchSubmitter, connection::SawtoothConnection};
 use crate::connection::SawtoothConnection;
@@ -115,6 +115,11 @@ impl Handler<ListAgents> for DbExecutor {
 }
 */
 pub async fn list_agents(
+    req: HttpRequest,
+    //state: web::Data<AppState>,
+    query: web::Query<HashMap<String, String>>,
+    //query_service_id: web::Query<QueryServiceId>,
+    //_: AcceptServiceIdParam,
     //state: web::Data<AppState>,
     //query: web::Query<QueryServiceId>,
     //_: AcceptServiceIdParam,
@@ -127,8 +132,82 @@ pub async fn list_agents(
         })
         .await?
         .map(|agents| HttpResponse::Ok().json(agents))
-*/        
-    Ok(HttpResponse::Ok().body("Hello world! list_agents"))
+*/
+    let batch_ids = match query.get("id") {
+        Some(ids) => ids.split(',').map(ToString::to_string).collect(),
+        None => {
+            return Err(RestApiResponseError::BadRequest(
+                "Request for statuses missing id query.".to_string(),
+            ));
+        }
+    };
+
+    // Max wait time allowed is 95% of network's configured timeout
+    let max_wait_time = (DEFAULT_TIME_OUT * 95) / 100;
+
+    let wait = match query.get("wait") {
+        Some(wait_time) => {
+            if wait_time == "false" {
+                None
+            } else {
+                match wait_time.parse::<u32>() {
+                    Ok(wait_time) => {
+                        if wait_time > max_wait_time {
+                            Some(max_wait_time)
+                        } else {
+                            Some(wait_time)
+                        }
+                    }
+                    Err(_) => {
+                        return Err(RestApiResponseError::BadRequest(format!(
+                            "Query wait has invalid value {}. \
+                             It should set to false or a time in seconds to wait for the commit",
+                            wait_time
+                        )));
+                    }
+                }
+            }
+        }
+
+        None => Some(max_wait_time),
+    };
+
+    let response_url = match req.url_for_static("agent") {
+        Ok(url) => format!("{}?{}", url, req.query_string()),
+        Err(err) => {
+            return Err(err.into());
+        }
+    };
+
+    //let response_url = req.url_for_static("agent")?;
+
+    //let endpoint = Endpoint::from("tcp://localhost:8088");
+
+    //let sawtooth_connection = SawtoothConnection::new(&endpoint.url());
+    let sawtooth_connection = SawtoothConnection::new(&response_url);
+
+    let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
+        sawtooth_connection.get_sender(),
+    ));
+
+    batch_submitter
+
+//    state
+//        .batch_submitter
+        .batch_status(BatchStatuses {
+            batch_ids,
+            wait,
+            //service_id: query_service_id.into_inner().service_id,
+        })
+        .await
+        .map(|batch_statuses| {
+            HttpResponse::Ok().json(BatchStatusResponse {
+                data: batch_statuses,
+                link: response_url,
+            })
+        })
+
+    //Ok(HttpResponse::Ok().body("Hello world! list_agents"))
 
 }
 /*
