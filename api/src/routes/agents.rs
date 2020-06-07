@@ -133,6 +133,7 @@ pub async fn list_agents(
         .await?
         .map(|agents| HttpResponse::Ok().json(agents))
 */
+/*
     let batch_ids = match query.get("id") {
         Some(ids) => ids.split(',').map(ToString::to_string).collect(),
         None => {
@@ -141,7 +142,7 @@ pub async fn list_agents(
             ));
         }
     };
-
+*/
     // Max wait time allowed is 95% of network's configured timeout
     let max_wait_time = (DEFAULT_TIME_OUT * 95) / 100;
 
