@@ -9,15 +9,12 @@ use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 
-use users::get_current_username;
-
 use crypto::digest::Digest;
 use crypto::sha2::Sha512;
 
-use protobuf::Message;
-
 use sabre_sdk::protocol::payload::ExecuteContractActionBuilder;
 use sabre_sdk::protos::IntoBytes;
+
 use sawtooth_sdk::messages::batch::Batch;
 use sawtooth_sdk::messages::batch::BatchHeader;
 use sawtooth_sdk::messages::batch::BatchList;
@@ -26,12 +23,10 @@ use sawtooth_sdk::messages::transaction::TransactionHeader;
 use sawtooth_sdk::signing;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 
-//use crate::key;
+use protobuf::Message;
 
-//use crate::error::CliError;
-//use crate::error::RestApiResponseError as CliError;
+use users::get_current_username;
 
-//use crate::CliError;
 use crate::error::RestApiResponseError as CliError;
 
 pub const PIKE_NAMESPACE: &str = "cad11d";
@@ -73,7 +68,11 @@ pub struct BatchBuilder {
 }
 
 impl BatchBuilder {
-    pub fn new(family_name: &str, family_version: &str, key_name: Option<String>) -> BatchBuilder {
+    pub fn new(
+        family_name: &str, 
+        family_version: &str, 
+        key_name: Option<String>
+    ) -> BatchBuilder {
         BatchBuilder {
             family_name: family_name.to_string(),
             family_version: family_version.to_string(),

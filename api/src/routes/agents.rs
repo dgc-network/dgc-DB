@@ -1,22 +1,7 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
-//use crate::database::{helpers as db, models::Agent};
-//use crate::rest_api::{
-//    error::RestApiResponseError, routes::DbExecutor, AcceptServiceIdParam, AppState, QueryServiceId,
-//};
-
-use crate::error::RestApiResponseError;
-//use crate::AppState;
-//use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
-use crate::submitter::{SubmitBatches, DEFAULT_TIME_OUT};
-use crate::submitter::BatchSubmitter;
-use crate::submitter::SawtoothBatchSubmitter;
-//use crate::{batch_submitter::SawtoothBatchSubmitter, connection::SawtoothConnection};
-use crate::connection::SawtoothConnection;
-//use crate::config::Endpoint;
-use crate::Endpoint;
-
+use std::collections::HashMap;
 //use actix::{Handler, Message, SyncContext};
 //use actix_web::{web, HttpResponse};
 use actix_web::{web, HttpRequest, HttpResponse};
@@ -24,12 +9,19 @@ use actix_web::{web, HttpRequest, HttpResponse};
 use serde::Deserialize;
 //use serde_json::Value as JsonValue;
 
-//use crate::error::CliError;
-//use crate::http::submit_batches;
+//use crate::AppState;
+//use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
+//use crate::submitter::{SubmitBatches, DEFAULT_TIME_OUT};
+use crate::submitter::{SubmitBatches, BatchSubmitter};
+use crate::submitter::SawtoothBatchSubmitter;
+//use crate::{batch_submitter::SawtoothBatchSubmitter, connection::SawtoothConnection};
+use crate::connection::SawtoothConnection;
+//use crate::config::Endpoint;
+use crate::Endpoint;
+
 use crate::transaction::{pike_batch_builder, PIKE_NAMESPACE};
 use grid_sdk::protocol::pike::state::{
     KeyValueEntry, KeyValueEntryBuilder,
-    //Agent,
 };
 use grid_sdk::protocol::pike::payload::{
     Action, PikePayloadBuilder, 
@@ -37,13 +29,13 @@ use grid_sdk::protocol::pike::payload::{
     //CreateAgentAction, UpdateAgentAction, UpdateAgentActionBuilder, 
 };
 use grid_sdk::protos::IntoProto;
-use std::collections::HashMap;
 
+use crate::error::RestApiResponseError;
 //use validator::Validate;
 
-const GRID_DAEMON_KEY: &str = "GRID_DAEMON_KEY";
-const GRID_DAEMON_ENDPOINT: &str = "GRID_DAEMON_ENDPOINT";
-const GRID_SERVICE_ID: &str = "GRID_SERVICE_ID";
+//const GRID_DAEMON_KEY: &str = "GRID_DAEMON_KEY";
+//const GRID_DAEMON_ENDPOINT: &str = "GRID_DAEMON_ENDPOINT";
+//const GRID_SERVICE_ID: &str = "GRID_SERVICE_ID";
 //const DEFAULT_TIME_OUT: u32 = 300; // Max timeout 300 seconds == 5 minutes
 /*
 #[derive(Deserialize)]
