@@ -1,8 +1,8 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
-//! Contains functions which assist with the creation of Batches and
-//! Transactions
+//! Contains functions which assist with the creation of Batches and Transactions
+//! Contains functions which assist with signing key management
 
 use std::time::Instant;
 use std::env;
@@ -275,7 +275,6 @@ fn compute_namespace_registry_address(namespace: &str) -> Result<String, CliErro
     Ok(String::from(SABRE_NAMESPACE_REGISTRY_PREFIX) + &bytes_to_hex_str(hash)[..64])
 }
 
-//! Contains functions which assist with signing key management
 /*
 use std::env;
 use std::fs::File;
