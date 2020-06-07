@@ -264,7 +264,7 @@ pub async fn create_agent(
             &[PIKE_NAMESPACE.to_string()],
         )?
         .create_batch_list();
-
+/*
     let url = match query.get("url") {
         Some(url) => url,
         None => GRID_DAEMON_ENDPOINT,
@@ -304,10 +304,11 @@ pub async fn create_agent(
 
         None => Some(max_wait_time),
     };
-
+*/
     let response_url = req.url_for_static("batch_statuses")?;
 
-    let endpoint = Endpoint::from("sawtooth:tcp://localhost:8080");
+    let endpoint = Endpoint::from("sawtooth:tcp://localhost:8088");
+
     let sawtooth_connection = SawtoothConnection::new(&endpoint.url());
     let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
         sawtooth_connection.get_sender(),

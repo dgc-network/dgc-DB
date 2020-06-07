@@ -276,18 +276,6 @@ fn compute_namespace_registry_address(namespace: &str) -> Result<String, CliErro
     Ok(String::from(SABRE_NAMESPACE_REGISTRY_PREFIX) + &bytes_to_hex_str(hash)[..64])
 }
 
-/*
-use std::env;
-use std::fs::File;
-use std::io::prelude::*;
-
-use users::get_current_username;
-
-use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
-
-//use crate::error::CliError;
-use crate::error::RestApiResponseError as CliError;
-*/
 /// Return a signing key loaded from the user's environment
 ///
 /// This method attempts to load the user's key from a file.  The filename

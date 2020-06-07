@@ -1,7 +1,7 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
-#[macro_use] extern crate log;
+//#[macro_use] extern crate log;
 
 mod routes;
 mod error;
@@ -14,7 +14,8 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
 use crate::routes::batches::{submit_batches, get_batch_statuses};
 use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};
 use crate::submitter::BatchSubmitter;
-pub use crate::error::RestApiServerError;
+//pub use crate::error::RestApiServerError;
+use crate::error::RestApiServerError;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Endpoint {
