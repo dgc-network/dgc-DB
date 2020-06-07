@@ -298,9 +298,13 @@ pub async fn create_agent(
         None => Some(max_wait_time),
     };
 */
-    let response_url = req.url_for_static("batch_statuses")?;
+    //let response_url = req.url_for_static("batch_statuses")?;
 
-    let endpoint = Endpoint::from("sawtooth:tcp://localhost:8088");
+    //let endpoint = Endpoint::from("sawtooth:tcp://localhost:8088");
+
+    let response_url = req.url_for_static("agent")?;
+
+    let endpoint = Endpoint::from(response_url);
 
     let sawtooth_connection = SawtoothConnection::new(&endpoint.url());
     let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
