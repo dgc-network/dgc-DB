@@ -45,7 +45,7 @@ const GRID_DAEMON_KEY: &str = "GRID_DAEMON_KEY";
 const GRID_DAEMON_ENDPOINT: &str = "GRID_DAEMON_ENDPOINT";
 const GRID_SERVICE_ID: &str = "GRID_SERVICE_ID";
 //const DEFAULT_TIME_OUT: u32 = 300; // Max timeout 300 seconds == 5 minutes
-
+/*
 #[derive(Deserialize)]
 pub struct NewAgent {
     agent: NewAgentData,
@@ -58,15 +58,16 @@ struct NewAgentData {
     org_id: Option<String>, 
     roles: Option<String>, 
     metadata: Option<String>
-/*
+
     #[validate(length(min = 1))]
     username: Option<String>,
     #[validate(email)]
     email: Option<String>,
     #[validate(length(min = 8))]
     password: Option<String>,
-*/
+
 }
+*/
 /*
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AgentSlice {
