@@ -26,7 +26,8 @@ pub const DEFAULT_TIME_OUT: u32 = 300; // Max timeout 300 seconds == 5 minutes
 
 pub struct SubmitBatches {
     pub batch_list: BatchList,
-    pub response_url: Url,
+    //pub response_url: Url,
+    pub response_url: String,
     //pub service_id: Option<String>,
 }
 
@@ -149,7 +150,8 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
                 response_url.set_query(Some(&format!("id={}", batch_query)));
 
                 BatchStatusLink {
-                    link: response_url.to_string(),
+                    //link: response_url.to_string(),
+                    link: response_url,
                 }
             }),
         ).boxed()
