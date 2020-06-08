@@ -30,8 +30,7 @@ pub async fn list_agents(
 
     //let response_url = req.url_for_static("agent")?;
 
-    let response = req.uri()?;
-    Ok(HttpResponse::Ok().body(response.to_string()))
+    Ok(HttpResponse::Ok().body(req.uri().to_string()))
 /*
     // Get the URL
     let response_url = match req.url_for_static("agent") {
