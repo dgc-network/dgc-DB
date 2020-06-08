@@ -58,7 +58,7 @@ pub async fn list_agents(
         None => Some(max_wait_time),
     };
 
-    Ok(HttpResponse::Ok().body(wait.to_string()))
+    Ok(HttpResponse::Ok().body(wait.unwrap().to_string()))
 /*
     // Get the Batch ID
     let batch_ids = match query.get("id") {
