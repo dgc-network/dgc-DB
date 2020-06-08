@@ -28,9 +28,9 @@ pub async fn list_agents(
     query: web::Query<HashMap<String, String>>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    //let response_url = req.url_for_static("agent")?;
+    //Ok(HttpResponse::Ok().body(req.uri().to_string()))
+    Ok(HttpResponse::Ok().body(req.match_info().to_string()))
 
-    Ok(HttpResponse::Ok().body(req.uri().to_string()))
 /*
     // Get the URL
     let response_url = match req.url_for_static("agent") {
@@ -88,6 +88,8 @@ pub async fn list_agents(
     Ok(HttpResponse::Ok().body(wait.unwrap().to_string()))
 */    
 /*
+    let response_url = req.url_for_static("agent")?;
+
     let sawtooth_connection = SawtoothConnection::new(&response_url);
 
     let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
