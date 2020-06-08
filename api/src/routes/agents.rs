@@ -28,18 +28,7 @@ pub async fn list_agents(
     query: web::Query<HashMap<String, String>>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    /// Get the Batch ID
-    let batch_ids = match query.get("id") {
-        Some(ids) => ids.split(',').map(ToString::to_string).collect(),
-        None => "I am here!".to_string(),
-        //None => {
-        //    return Err(RestApiResponseError::BadRequest(
-        //        "Request for statuses missing id query.".to_string(),
-        //    ));
-        //}
-    };
-
-    /// Max wait time allowed is 95% of network's configured timeout
+    // Max wait time allowed is 95% of network's configured timeout
     let max_wait_time = (DEFAULT_TIME_OUT * 95) / 100;
 
     let wait = match query.get("wait") {
@@ -69,13 +58,24 @@ pub async fn list_agents(
         None => Some(max_wait_time),
     };
 
-    /// Get the URL
+    // Get the Batch ID
+    let batch_ids = match query.get("id") {
+        Some(ids) => ids.split(',').map(ToString::to_string).collect(),
+        None => {
+            return Err(RestApiResponseError::BadRequest(
+                "Request for statuses missing id query.".to_string(),
+            ));
+        }
+    };
+
+    // Get the URL
     let response_url = match req.url_for_static("agent") {
         Ok(url) => format!("{}?{}", url, req.query_string()),
         Err(err) => {
             //return Err(err.into());
+            return Err("I am here.".to_string());
             //return Err(RestApiResponseError::BadRequest("I am here.".to_string(),));
-            return Err(RestApiResponseError::BadRequest(req.query_string().to_string(),));
+            //return Err(RestApiResponseError::BadRequest(req.query_string().to_string(),));
         }
     };
 
