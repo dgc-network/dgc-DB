@@ -28,6 +28,9 @@ pub async fn list_agents(
     query: web::Query<HashMap<String, String>>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
+    let response_url = req.url_for_static("agent")?;
+    Ok(HttpResponse::Ok().body(response_url.to_string()))
+/*
     // Get the URL
     let response_url = match req.url_for_static("agent") {
         Ok(url) => format!("{}?{}", url, req.query_string()),
@@ -38,6 +41,7 @@ pub async fn list_agents(
         }
     };
     Ok(HttpResponse::Ok().body(response_url))
+*/    
 /*
     // Get the Batch ID
     let batch_ids = match query.get("id") {
