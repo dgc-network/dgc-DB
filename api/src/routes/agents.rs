@@ -31,11 +31,12 @@ pub async fn list_agents(
     /// Get the Batch ID
     let batch_ids = match query.get("id") {
         Some(ids) => ids.split(',').map(ToString::to_string).collect(),
-        None => {
-            return Err(RestApiResponseError::BadRequest(
-                "Request for statuses missing id query.".to_string(),
-            ));
-        }
+        None => "I am here!".to_string(),
+        //None => {
+        //    return Err(RestApiResponseError::BadRequest(
+        //        "Request for statuses missing id query.".to_string(),
+        //    ));
+        //}
     };
 
     /// Max wait time allowed is 95% of network's configured timeout
@@ -101,57 +102,11 @@ pub async fn list_agents(
     //Ok(HttpResponse::Ok().body("Hello world! list_agents"))
 
 }
-/*
-struct FetchAgent {
-    public_key: String,
-    service_id: Option<String>,
-}
 
-impl Message for FetchAgent {
-    type Result = Result<AgentSlice, RestApiResponseError>;
-}
-*/
-/*
-impl Handler<FetchAgent> for DbExecutor {
-    type Result = Result<AgentSlice, RestApiResponseError>;
-
-    fn handle(&mut self, msg: FetchAgent, _: &mut SyncContext<Self>) -> Self::Result {
-        let fetched_agent = match db::get_agent(
-            &*self.connection_pool.get()?,
-            &msg.public_key,
-            msg.service_id.as_deref(),
-        )? {
-            Some(agent) => AgentSlice::from_agent(&agent),
-            None => {
-                return Err(RestApiResponseError::NotFoundError(format!(
-                    "Could not find agent with public key: {}",
-                    msg.public_key
-                )));
-            }
-        };
-
-        Ok(fetched_agent)
-    }
-}
-*/
 pub async fn fetch_agent(
-    //state: web::Data<AppState>,
     public_key: web::Path<String>,
-//    query: web::Query<QueryServiceId>,
-//    _: AcceptServiceIdParam,
 ) -> Result<HttpResponse, RestApiResponseError> {
-/*    
-    state
-        .database_connection
-        .send(FetchAgent {
-            public_key: public_key.into_inner(),
-            service_id: query.into_inner().service_id,
-        })
-        .await?
-        .map(|agent| HttpResponse::Ok().json(agent))
-*/        
     Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
-
 }
 
 pub async fn create_agent(
