@@ -37,7 +37,7 @@ pub async fn list_agents(
             ));
         }
     };
-    Ok(HttpResponse::Ok().body(batch_ids.unwrap().to_string()))
+    Ok(HttpResponse::Ok().body(batch_ids.unwrap()))
 /*
     // Max wait time allowed is 95% of network's configured timeout
     let max_wait_time = (DEFAULT_TIME_OUT * 95) / 100;
