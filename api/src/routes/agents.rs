@@ -58,6 +58,8 @@ pub async fn list_agents(
         None => Some(max_wait_time),
     };
 
+    Ok(HttpResponse::Ok().body(wait.to_string()))
+/*
     // Get the Batch ID
     let batch_ids = match query.get("id") {
         Some(ids) => ids.split(',').map(ToString::to_string).collect(),
@@ -73,8 +75,7 @@ pub async fn list_agents(
         Ok(url) => format!("{}?{}", url, req.query_string()),
         Err(err) => {
             //return Err(err.into());
-            return "I am here.".to_string();
-            //return Err(RestApiResponseError::BadRequest("I am here.".to_string(),));
+            return Err(RestApiResponseError::BadRequest("I am here.".to_string(),));
             //return Err(RestApiResponseError::BadRequest(req.query_string().to_string(),));
         }
     };
@@ -98,7 +99,7 @@ pub async fn list_agents(
                 link: response_url,
             })
         })
-
+*/
     //Ok(HttpResponse::Ok().body("Hello world! list_agents"))
 
 }
