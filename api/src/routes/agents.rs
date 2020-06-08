@@ -73,7 +73,7 @@ pub async fn list_agents(
         Ok(url) => format!("{}?{}", url, req.query_string()),
         Err(err) => {
             //return Err(err.into());
-            return Err("I am here.".to_string());
+            return "I am here.".to_string();
             //return Err(RestApiResponseError::BadRequest("I am here.".to_string(),));
             //return Err(RestApiResponseError::BadRequest(req.query_string().to_string(),));
         }
