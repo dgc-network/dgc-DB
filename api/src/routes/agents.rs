@@ -28,6 +28,17 @@ pub async fn list_agents(
     query: web::Query<HashMap<String, String>>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
+    // Get the URL
+    let response_url = match req.url_for_static("agent") {
+        Ok(url) => format!("{}?{}", url, req.query_string()),
+        Err(err) => {
+            return Err(err.into());
+            //return Err(RestApiResponseError::BadRequest("I am here.".to_string(),));
+            //return Err(RestApiResponseError::BadRequest(req.query_string().to_string(),));
+        }
+    };
+    Ok(HttpResponse::Ok().body(response_url))
+/*
     // Get the Batch ID
     let batch_ids = match query.get("id") {
         Some(ids) => ids.split(',').map(ToString::to_string).collect(),
@@ -38,6 +49,7 @@ pub async fn list_agents(
         }
     };
     Ok(HttpResponse::Ok().body(batch_ids.unwrap()))
+*/
 /*
     // Max wait time allowed is 95% of network's configured timeout
     let max_wait_time = (DEFAULT_TIME_OUT * 95) / 100;
@@ -71,16 +83,6 @@ pub async fn list_agents(
     Ok(HttpResponse::Ok().body(wait.unwrap().to_string()))
 */    
 /*
-    // Get the URL
-    let response_url = match req.url_for_static("agent") {
-        Ok(url) => format!("{}?{}", url, req.query_string()),
-        Err(err) => {
-            //return Err(err.into());
-            return Err(RestApiResponseError::BadRequest("I am here.".to_string(),));
-            //return Err(RestApiResponseError::BadRequest(req.query_string().to_string(),));
-        }
-    };
-
     let sawtooth_connection = SawtoothConnection::new(&response_url);
 
     let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
