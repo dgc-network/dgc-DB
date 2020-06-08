@@ -3,26 +3,14 @@
 
 use std::collections::HashMap;
 use actix_web::{web, HttpRequest, HttpResponse};
-//use actix::{Handler, Message, SyncContext};
-//use actix_web::{web, HttpResponse};
-//use serde::{Deserialize, Serialize};
-//use serde::Deserialize;
-//use serde_json::Value as JsonValue;
 
-//use crate::AppState;
-use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
-//use crate::submitter::{SubmitBatches, DEFAULT_TIME_OUT};
-//use crate::submitter::{SubmitBatches, BatchSubmitter, DEFAULT_TIME_OUT};
-use crate::submitter::{BatchSubmitter, SawtoothBatchSubmitter};
-//use crate::{batch_submitter::SawtoothBatchSubmitter, connection::SawtoothConnection};
-use crate::connection::SawtoothConnection;
-//use crate::config::Endpoint;
 use crate::Endpoint;
 use crate::transaction::BatchBuilder;
-//use crate::transaction::{pike_batch_builder, PIKE_NAMESPACE};
-//use grid_sdk::protocol::pike::state::{
-//    KeyValueEntry, KeyValueEntryBuilder,
-//};
+use crate::connection::SawtoothConnection;
+use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
+use crate::submitter::{BatchSubmitter, SawtoothBatchSubmitter};
+use crate::error::RestApiResponseError;
+
 use grid_sdk::protocol::pike::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
     state::{
@@ -35,105 +23,11 @@ use grid_sdk::protocol::pike::{
 };
 use grid_sdk::protos::IntoProto;
 
-use crate::error::RestApiResponseError;
-//use validator::Validate;
-
-//const GRID_DAEMON_KEY: &str = "GRID_DAEMON_KEY";
-//const GRID_DAEMON_ENDPOINT: &str = "GRID_DAEMON_ENDPOINT";
-//const GRID_SERVICE_ID: &str = "GRID_SERVICE_ID";
-//const DEFAULT_TIME_OUT: u32 = 300; // Max timeout 300 seconds == 5 minutes
-/*
-#[derive(Deserialize)]
-pub struct NewAgent {
-    agent: NewAgentData,
-}
-
-//#[derive(Deserialize, Validate)]
-#[derive(Deserialize)]
-struct NewAgentData {
-    //private_key: Option<String>,
-    org_id: Option<String>, 
-    roles: Option<String>, 
-    metadata: Option<String>
-
-    #[validate(length(min = 1))]
-    username: Option<String>,
-    #[validate(email)]
-    email: Option<String>,
-    #[validate(length(min = 8))]
-    password: Option<String>,
-
-}
-*/
-/*
-#[derive(Debug, Serialize, Deserialize)]
-pub struct AgentSlice {
-    pub public_key: String,
-    pub org_id: String,
-    pub active: bool,
-    pub roles: Vec<String>,
-    pub metadata: JsonValue,
-    #[serde(default)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub service_id: Option<String>,
-}
-
-impl AgentSlice {
-    pub fn from_agent(agent: &Agent) -> Self {
-        Self {
-            public_key: agent.public_key.clone(),
-            org_id: agent.org_id.clone(),
-            active: agent.active,
-            roles: agent.roles.clone(),
-            metadata: agent.metadata.clone(),
-            service_id: agent.service_id.clone(),
-        }
-    }
-}
-
-struct ListAgents {
-    service_id: Option<String>,
-}
-
-impl Message for ListAgents {
-    type Result = Result<Vec<AgentSlice>, RestApiResponseError>;
-}
-*/
-/*
-impl Handler<ListAgents> for DbExecutor {
-    type Result = Result<Vec<AgentSlice>, RestApiResponseError>;
-
-    fn handle(&mut self, msg: ListAgents, _: &mut SyncContext<Self>) -> Self::Result {
-        let fetched_agents =
-            db::get_agents(&*self.connection_pool.get()?, msg.service_id.as_deref())?
-                .iter()
-                .map(|agent| AgentSlice::from_agent(agent))
-                .collect::<Vec<AgentSlice>>();
-
-        Ok(fetched_agents)
-    }
-}
-*/
 pub async fn list_agents(
     req: HttpRequest,
-    //state: web::Data<AppState>,
     query: web::Query<HashMap<String, String>>,
-    //query_service_id: web::Query<QueryServiceId>,
-    //_: AcceptServiceIdParam,
-    //state: web::Data<AppState>,
-    //query: web::Query<QueryServiceId>,
-    //_: AcceptServiceIdParam,
 ) -> Result<HttpResponse, RestApiResponseError> {
-/*
-    state
-        .database_connection
-        .send(ListAgents {
-            service_id: query.into_inner().service_id,
-        })
-        .await?
-        .map(|agents| HttpResponse::Ok().json(agents))
-*/
-    
+
     /// Max wait time allowed is 95% of network's configured timeout
     let max_wait_time = (DEFAULT_TIME_OUT * 95) / 100;
 
@@ -164,6 +58,16 @@ pub async fn list_agents(
         None => Some(max_wait_time),
     };
 
+    /// 
+    let batch_ids = match query.get("id") {
+        Some(ids) => ids.split(',').map(ToString::to_string).collect(),
+        None => {
+            return Err(RestApiResponseError::BadRequest(
+                "Request for statuses missing id query.".to_string(),
+            ));
+        }
+    };
+
     ///
     let response_url = match req.url_for_static("agent") {
         Ok(url) => format!("{}?{}", url, req.query_string()),
@@ -179,16 +83,6 @@ pub async fn list_agents(
     let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
         sawtooth_connection.get_sender(),
     ));
-
-    /// 
-    let batch_ids = match query.get("id") {
-        Some(ids) => ids.split(',').map(ToString::to_string).collect(),
-        None => {
-            return Err(RestApiResponseError::BadRequest(
-                "Request for statuses missing id query.".to_string(),
-            ));
-        }
-    };
 
     batch_submitter
         .batch_status(BatchStatuses {
