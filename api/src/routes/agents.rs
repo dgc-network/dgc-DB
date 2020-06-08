@@ -28,8 +28,10 @@ pub async fn list_agents(
     query: web::Query<HashMap<String, String>>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let response_url = req.url_for_static("agent")?;
-    Ok(HttpResponse::Ok().body(response_url.to_string()))
+    //let response_url = req.url_for_static("agent")?;
+
+    let response = req.uri()?;
+    Ok(HttpResponse::Ok().body(response.to_string()))
 /*
     // Get the URL
     let response_url = match req.url_for_static("agent") {
