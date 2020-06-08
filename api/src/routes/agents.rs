@@ -136,7 +136,8 @@ pub async fn list_agents(
     let response_url = match req.url_for_static("agent") {
         Ok(url) => format!("{}?{}", url, req.query_string()),
         Err(err) => {
-            return Err(err.into());
+            //return Err(err.into());
+            return Err(RestApiResponseError::BadRequest("I am here.".to_string(),));
         }
     };
 
