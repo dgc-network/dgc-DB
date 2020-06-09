@@ -29,7 +29,7 @@ pub async fn list_agents(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     //Ok(HttpResponse::Ok().body(req.uri().to_string()))
-    let response_url = req.url_for_static("list_agents")?;
+    let response_url = req.url_for_static("agent")?;
     Ok(HttpResponse::Ok().body(response_url.to_string()))
 
 /*

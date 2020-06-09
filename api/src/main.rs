@@ -71,17 +71,27 @@ async fn main() -> std::io::Result<()> {
         App::new()
             //.data(state.clone())
             .route("/", web::get().to(index))
-            .service(web::resource("/submit_batches").route(web::post().to(submit_batches)))
-            .service(
-                web::resource("/batch_statuses")
-                    .name("batch_statuses")
-                    .route(web::get().to(get_batch_statuses)),
-            )
             
+            .service(web::resource("/submit_batches")
+                .route(web::post().to(submit_batches)))
+
+            .service(web::resource("/batch_statuses")
+                .name("batch_statuses")
+                .route(web::get().to(get_batch_statuses)))            
+            
+            .service(web::resource("/agent")
+                .name("agent")
+                .route(web::post().to(create_agent))
+                .route(web::put().to(update_agent))
+                .route(web::get().to(list_agents)))
+
+            .service(web::resource("/agent/{public_key}")
+                .route(web::get().to(fetch_agent)))
+        
+/*
             .service(
                 web::scope("/agent")
                     .service(web::resource("")
-                        .name("list_agents")
                         .route(web::post().to(create_agent))
                         .route(web::put().to(update_agent))
                         .route(web::get().to(list_agents)))
@@ -89,7 +99,7 @@ async fn main() -> std::io::Result<()> {
                         web::resource("/{public_key}").route(web::get().to(fetch_agent)),
                     ),
             )
-/*            
+            
             .service(
                 web::scope("/organization")
                     .service(web::resource("").route(web::get().to(list_organizations)))
