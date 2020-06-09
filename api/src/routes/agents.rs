@@ -29,7 +29,7 @@ pub async fn list_agents(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     //Ok(HttpResponse::Ok().body(req.uri().to_string()))
-    Ok(HttpResponse::Ok().body(req.match_info().path().to_string()))
+    Ok(HttpResponse::Ok().body(req.match_info()))
 
 /*
     // Get the URL
