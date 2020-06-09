@@ -29,21 +29,19 @@ pub async fn list_agents(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     //Ok(HttpResponse::Ok().body(req.uri().to_string()))
-    let response_url = req.url_for_static("agent")?;
-    Ok(HttpResponse::Ok().body(response_url.to_string()))
+    //
+    //Ok(HttpResponse::Ok().body(response_url.to_string()))
 
-/*
+
     // Get the URL
     let response_url = match req.url_for_static("agent") {
         Ok(url) => format!("{}?{}", url, req.query_string()),
         Err(err) => {
             return Err(err.into());
-            //return Err(RestApiResponseError::BadRequest("I am here.".to_string(),));
-            //return Err(RestApiResponseError::BadRequest(req.query_string().to_string(),));
         }
     };
     Ok(HttpResponse::Ok().body(response_url))
-*/    
+    
 /*
     // Get the Batch ID
     let batch_ids = match query.get("id") {
