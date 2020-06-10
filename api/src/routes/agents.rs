@@ -135,12 +135,12 @@ pub async fn create_agent(
 
     let org_id = match info.org_id {
         Some(org_id) => org_id.to_string(),
-        //None => "".to_string(),
-        None => {
-            return Err(RestApiResponseError::BadRequest(
-                "Request for agents missing org_id query.".to_string(),
-            ));
-        }
+        None => "Missing org_id request.".to_string(),
+        //None => {
+        //    return Err(RestApiResponseError::BadRequest(
+        //        "Request for agents missing org_id query.".to_string(),
+        //    ));
+        //}
     };
 /*
     let org_id = match query.get("org_id") {
