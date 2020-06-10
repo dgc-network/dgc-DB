@@ -26,14 +26,15 @@ use grid_sdk::protos::IntoProto;
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-struct Info {
+struct Agent {
     org_id: String,
+    roles: String,
+    metadata: String,
 }
 
 pub async fn list_agents(
     req: HttpRequest,
     query: web::Query<HashMap<String, String>>,
-    info: web::Json<Info>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     //Ok(HttpResponse::Ok().body(req.uri().to_string()))
@@ -130,24 +131,9 @@ pub async fn fetch_agent(
 pub async fn create_agent(
     req: HttpRequest,
     query: web::Query<HashMap<String, String>>,
-    info: web::Json<Info>,
+    agend: web::Json<Agent>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let org_id = match info.org_id {
-        //Ok(org_id) => format!("{}", org_id),
-        Ok(org_id) => org_id,
-        Err(err) => {
-            return Err(err.into());
-        }
-        //Some(org_id) => org_id.to_string(),
-        //None => "Missing org_id request.".to_string(),
-        //Some(org_id) => org_id.unwarp(),
-        //None => {
-        //    return Err(RestApiResponseError::BadRequest(
-        //        "Request for agents missing org_id query.".to_string().unwrap(),
-        //    ));
-        //}
-    };
 /*
     let org_id = match query.get("org_id") {
         Some(org_id) => org_id.to_string(),
@@ -158,7 +144,7 @@ pub async fn create_agent(
             ));
         }
     };
-*/
+
     let roles_as_string = match query.get("roles_as_string") {
         Some(roles_as_string) => roles_as_string.to_string(),
         None => "".to_string(),
@@ -168,6 +154,11 @@ pub async fn create_agent(
         Some(metadata_as_string) => metadata_as_string.to_string(),
         None => "".to_string(),
     };
+*/
+
+    let org_id = agent.org_id;
+    let roles_as_string = agent.roles;
+    let metadata_as_string = agent.metadata;
 
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
