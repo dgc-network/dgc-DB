@@ -26,7 +26,7 @@ use grid_sdk::protos::IntoProto;
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-struct AgentInput {
+pub struct AgentInput {
     org_id: String,
     roles: String,
     metadata: String,
