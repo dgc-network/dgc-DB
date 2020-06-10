@@ -109,7 +109,7 @@ pub async fn list_agents(
             })
         })
 */
-    //Ok(HttpResponse::Ok().body("Hello world! list_agents"))
+    Ok(HttpResponse::Ok().body("Hello world! list_agents"))
 
 }
 
