@@ -191,6 +191,8 @@ pub async fn create_agent(
         metadata.push(key_value.clone());
     }
 
+    Ok(HttpResponse::Ok().body("Hello world! I am here"))
+/*
     let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
         .with_public_key("public_key".to_string())
@@ -218,14 +220,7 @@ pub async fn create_agent(
             &[PIKE_NAMESPACE.to_string()],
         )?
         .create_batch_list();
-/*
-    let response_url = match req.url_for_static("agent") {
-        Ok(url) => format!("{}?{}", url, req.query_string()),
-        Err(err) => {
-            return Err(err.into());
-        }
-    };
-*/
+
     let response_url = req.url_for_static("agent")?;
     
     let sawtooth_connection = SawtoothConnection::new(&response_url.to_string());
@@ -243,7 +238,7 @@ pub async fn create_agent(
         .await
         .map(|link| HttpResponse::Ok().json(link))
 
-
+*/
     //Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
 
