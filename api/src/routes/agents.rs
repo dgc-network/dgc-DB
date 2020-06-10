@@ -156,7 +156,7 @@ pub async fn create_agent(
     };
 */
 
-    let org_id = &agent_input.org_id.to_string();
+    let org_id = &agent_input.org_id;
     let roles_as_string = &agent_input.roles;
     let metadata_as_string = &agent_input.metadata;
 
@@ -192,7 +192,7 @@ pub async fn create_agent(
     }
 
     let action = CreateAgentActionBuilder::new()
-        .with_org_id(org_id)
+        .with_org_id(org_id.to_string())
         .with_public_key("public_key".to_string())
         .with_active(true)
         .with_roles(roles)
