@@ -26,7 +26,7 @@ use grid_sdk::protos::IntoProto;
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-struct Agent {
+struct AgentInput {
     org_id: String,
     roles: String,
     metadata: String,
@@ -131,7 +131,7 @@ pub async fn fetch_agent(
 pub async fn create_agent(
     req: HttpRequest,
     query: web::Query<HashMap<String, String>>,
-    agend: web::Json<Agent>,
+    agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
 /*
@@ -156,9 +156,9 @@ pub async fn create_agent(
     };
 */
 
-    let org_id = agent.org_id;
-    let roles_as_string = agent.roles;
-    let metadata_as_string = agent.metadata;
+    let org_id = agent_input.org_id;
+    let roles_as_string = agent_input.roles;
+    let metadata_as_string = agent_input.metadata;
 
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
