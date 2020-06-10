@@ -133,7 +133,7 @@ pub async fn create_agent(
     info: web::Json<Info>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let org_id = match info.get("org_id") {
+    let org_id = match info.org_id {
         Some(org_id) => org_id.to_string(),
         //None => "".to_string(),
         None => {
