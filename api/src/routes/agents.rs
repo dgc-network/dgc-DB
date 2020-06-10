@@ -23,9 +23,17 @@ use grid_sdk::protocol::pike::{
 };
 use grid_sdk::protos::IntoProto;
 
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+struct Info {
+    org_id: String,
+}
+
 pub async fn list_agents(
     req: HttpRequest,
     query: web::Query<HashMap<String, String>>,
+    info: web::Json<Info>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     //Ok(HttpResponse::Ok().body(req.uri().to_string()))
@@ -122,8 +130,19 @@ pub async fn fetch_agent(
 pub async fn create_agent(
     req: HttpRequest,
     query: web::Query<HashMap<String, String>>,
+    info: web::Json<Info>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
+    let org_id = match info.get("org_id") {
+        Some(org_id) => org_id.to_string(),
+        //None => "".to_string(),
+        None => {
+            return Err(RestApiResponseError::BadRequest(
+                "Request for agents missing org_id query.".to_string(),
+            ));
+        }
+    };
+/*
     let org_id = match query.get("org_id") {
         Some(org_id) => org_id.to_string(),
         //None => "".to_string(),
@@ -133,7 +152,7 @@ pub async fn create_agent(
             ));
         }
     };
-
+*/
     let roles_as_string = match query.get("roles_as_string") {
         Some(roles_as_string) => roles_as_string.to_string(),
         None => "".to_string(),

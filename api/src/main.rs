@@ -66,7 +66,7 @@ async fn index() -> impl Responder {
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
-    let endpoint = "0.0.0.0:8080";
+    let endpoint = "0.0.0.0:8088";
     //HttpServer::new(move || {
     HttpServer::new(|| {
         App::new()
@@ -134,8 +134,8 @@ async fn main() -> std::io::Result<()> {
             )
 */            
     })
-    //.bind(endpoint)?
-    .bind("0.0.0.0:8088")?
+    .bind(endpoint)?
+    //.bind("0.0.0.0:8088")?
     .run()
     .await
 }
