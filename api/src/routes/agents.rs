@@ -156,9 +156,9 @@ pub async fn create_agent(
     };
 */
 
-    let org_id = agent_input.org_id;
-    let roles_as_string = agent_input.roles;
-    let metadata_as_string = agent_input.metadata;
+    let org_id = &agent_input.org_id;
+    let roles_as_string = &agent_input.roles;
+    let metadata_as_string = &agent_input.metadata;
 
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
