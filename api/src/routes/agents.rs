@@ -156,7 +156,7 @@ pub async fn create_agent(
     };
 */
 
-    let org_id = &agent_input.org_id;
+    let org_id = &agent_input.org_id.to_string();
     let roles_as_string = &agent_input.roles;
     let metadata_as_string = &agent_input.metadata;
 
