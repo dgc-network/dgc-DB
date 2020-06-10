@@ -134,7 +134,8 @@ async fn main() -> std::io::Result<()> {
             )
 */            
     })
-    .bind(endpoint)?
+    //.bind(endpoint)?
+    .bind("0.0.0.0:8088")?
     .run()
     .await
 }
