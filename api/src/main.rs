@@ -66,12 +66,13 @@ async fn index() -> impl Responder {
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
+    let endpoint = "0.0.0.0:8080";
     //HttpServer::new(move || {
     HttpServer::new(|| {
         App::new()
             //.data(state.clone())
             .route("/", web::get().to(index))
-            
+
             .service(web::resource("/submit_batches")
                 .route(web::post().to(submit_batches)))
 
@@ -132,10 +133,8 @@ async fn main() -> std::io::Result<()> {
                     ),
             )
 */            
-})
-//    .bind("127.0.0.1:8088")?
-//    .bind(bind_url)?
-    .bind("0.0.0.0:8088")?
+    })
+    .bind(endpoint)?
     .run()
     .await
 }

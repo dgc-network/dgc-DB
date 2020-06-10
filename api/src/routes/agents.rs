@@ -84,7 +84,7 @@ pub async fn list_agents(
 
         None => Some(max_wait_time),
     };
-    Ok(HttpResponse::Ok().body(wait.unwrap().to_string()))
+    //Ok(HttpResponse::Ok().body(wait.unwrap().to_string()))
 
 /*
     let response_url = req.url_for_static("agent")?;
@@ -126,7 +126,12 @@ pub async fn create_agent(
 
     let org_id = match query.get("org_id") {
         Some(org_id) => org_id.to_string(),
-        None => "".to_string(),
+        //None => "".to_string(),
+        None => {
+            return Err(RestApiResponseError::BadRequest(
+                "Request for statuses missing org_id query.".to_string(),
+            ));
+        }
     };
 
     let roles_as_string = match query.get("roles_as_string") {
