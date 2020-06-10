@@ -191,7 +191,7 @@ pub async fn create_agent(
         metadata.push(key_value.clone());
     }
 
-    Ok(HttpResponse::Ok().body("Hello world! I am here"))
+    Ok(HttpResponse::Ok().body(org_id))
 /*
     let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
