@@ -128,12 +128,19 @@ pub async fn fetch_agent(
     Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 }
 
+#[derive(Deserialize)]
+struct Info {
+    username: String,
+}
+
 pub async fn create_agent(
     req: HttpRequest,
     query: web::Query<HashMap<String, String>>,
-    agent_input: web::Json<AgentInput>,
+    //agent_input: web::Json<AgentInput>,
+    info: web::Json<Info>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
+    Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 /*
     let org_id = match query.get("org_id") {
         Some(org_id) => org_id.to_string(),
@@ -156,7 +163,6 @@ pub async fn create_agent(
     };
 */
 
-    Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 /*
     let org_id = &agent_input.org_id;
     let roles_as_string = &agent_input.roles;
