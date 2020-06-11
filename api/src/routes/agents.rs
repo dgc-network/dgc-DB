@@ -23,12 +23,12 @@ use grid_sdk::protocol::pike::{
 };
 use grid_sdk::protos::IntoProto;
 
-use serde::{Deserialize, Serialize};
+//use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
-//use serde::Deserialize;
+//#[derive(Debug, Serialize, Deserialize)]
+use serde::Deserialize;
 
-//#[derive(Deserialize)]
+#[derive(Deserialize)]
 pub struct AgentInput {
     org_id: String,
     roles: String,
@@ -131,19 +131,12 @@ pub async fn fetch_agent(
     Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 }
 
-#[derive(Deserialize)]
-pub struct Info {
-    username: String,
-}
-
 pub async fn create_agent(
     req: HttpRequest,
     query: web::Query<HashMap<String, String>>,
     agent_input: web::Json<AgentInput>,
     //info: web::Json<Info>,
 ) -> Result<HttpResponse, RestApiResponseError> {
-
-    Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 /*
     let org_id = match query.get("org_id") {
         Some(org_id) => org_id.to_string(),
@@ -154,6 +147,8 @@ pub async fn create_agent(
             ));
         }
     };
+    Ok(HttpResponse::Ok().body("Hello world! create_agent"))
+
 
     let roles_as_string = match query.get("roles_as_string") {
         Some(roles_as_string) => roles_as_string.to_string(),
@@ -166,12 +161,12 @@ pub async fn create_agent(
     };
 */
 
-/*
+
     let org_id = &agent_input.org_id;
     let roles_as_string = &agent_input.roles;
     let metadata_as_string = &agent_input.metadata;
     Ok(HttpResponse::Ok().body(org_id))
-
+/*
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
         let entry: String = role.to_string().split(",").collect();
