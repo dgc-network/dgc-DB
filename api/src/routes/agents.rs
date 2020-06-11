@@ -139,8 +139,8 @@ pub struct Info {
 pub async fn create_agent(
     req: HttpRequest,
     query: web::Query<HashMap<String, String>>,
-    //agent_input: web::Json<AgentInput>,
-    info: web::Json<Info>,
+    agent_input: web::Json<AgentInput>,
+    //info: web::Json<Info>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     Ok(HttpResponse::Ok().body("Hello world! create_agent"))
