@@ -205,9 +205,6 @@ pub async fn create_agent(
         )?
         .create_batch_list();
 
-        Ok(HttpResponse::Ok().body("Hello world! I am here to create_agent"))
-
-/*
     let response_url = req.url_for_static("agent")?;
     
     let sawtooth_connection = SawtoothConnection::new(&response_url.to_string());
@@ -216,6 +213,9 @@ pub async fn create_agent(
         sawtooth_connection.get_sender(),
     ));
 
+    Ok(HttpResponse::Ok().body("Hello world! I am here to create_agent"))
+
+/*
     batch_submitter
         .submit_batches(SubmitBatches {
             batch_list,
