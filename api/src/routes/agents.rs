@@ -129,7 +129,7 @@ pub async fn fetch_agent(
 }
 
 #[derive(Deserialize)]
-struct Info {
+pub struct Info {
     username: String,
 }
 
