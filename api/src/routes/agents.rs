@@ -165,8 +165,8 @@ pub async fn create_agent(
     let org_id = &agent_input.org_id;
     let roles_as_string = &agent_input.roles;
     let metadata_as_string = &agent_input.metadata;
-    Ok(HttpResponse::Ok().body(org_id))
-/*
+    //Ok(HttpResponse::Ok().body(org_id))
+
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
         let entry: String = role.to_string().split(",").collect();
@@ -197,8 +197,9 @@ pub async fn create_agent(
 
         metadata.push(key_value.clone());
     }
+    Ok(HttpResponse::Ok().body(roles))
 
-
+/*
     let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
         .with_public_key("public_key".to_string())
