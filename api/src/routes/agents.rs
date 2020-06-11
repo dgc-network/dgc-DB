@@ -23,9 +23,12 @@ use grid_sdk::protocol::pike::{
 };
 use grid_sdk::protos::IntoProto;
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
+//use serde::Deserialize;
+
+//#[derive(Deserialize)]
 pub struct AgentInput {
     org_id: String,
     roles: String,
