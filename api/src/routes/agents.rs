@@ -30,6 +30,7 @@ use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct AgentInput {
+    private_key: String,
     org_id: String,
     roles: String,
     metadata: String,
@@ -137,31 +138,8 @@ pub async fn create_agent(
     agent_input: web::Json<AgentInput>,
     //info: web::Json<Info>,
 ) -> Result<HttpResponse, RestApiResponseError> {
-/*
-    let org_id = match query.get("org_id") {
-        Some(org_id) => org_id.to_string(),
-        //None => "".to_string(),
-        None => {
-            return Err(RestApiResponseError::BadRequest(
-                "Request for statuses missing org_id query.".to_string(),
-            ));
-        }
-    };
-    Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 
-
-    let roles_as_string = match query.get("roles_as_string") {
-        Some(roles_as_string) => roles_as_string.to_string(),
-        None => "".to_string(),
-    };
-
-    let metadata_as_string = match query.get("metadata_as_string") {
-        Some(metadata_as_string) => metadata_as_string.to_string(),
-        None => "".to_string(),
-    };
-*/
-
-
+    let private_key = &agent_input.private_key;
     let org_id = &agent_input.org_id;
     let roles_as_string = &agent_input.roles;
     let metadata_as_string = &agent_input.metadata;
@@ -212,15 +190,13 @@ pub async fn create_agent(
         .with_create_agent(action)
         .build()
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
-
-        Ok(HttpResponse::Ok().body("Hello world! I am here to create_agent"))
-
 /*
     let private_key = match query.get("private_key") {
         Some(private_key) => Some(private_key.as_str().to_string()),
         None => Some("".to_string()),
     };
-    
+*/
+
     let batch_list = BatchBuilder::new(PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, private_key)
         .add_transaction(
             &payload.into_proto()?,
@@ -229,6 +205,9 @@ pub async fn create_agent(
         )?
         .create_batch_list();
 
+        Ok(HttpResponse::Ok().body("Hello world! I am here to create_agent"))
+
+/*
     let response_url = req.url_for_static("agent")?;
     
     let sawtooth_connection = SawtoothConnection::new(&response_url.to_string());
