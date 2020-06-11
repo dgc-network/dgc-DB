@@ -197,9 +197,8 @@ pub async fn create_agent(
 
         metadata.push(key_value.clone());
     }
-    Ok(HttpResponse::Ok().body(roles))
 
-/*
+
     let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
         .with_public_key("public_key".to_string())
@@ -245,7 +244,7 @@ pub async fn create_agent(
         .await
         .map(|link| HttpResponse::Ok().json(link))
 
-*/
+
     //Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
 
