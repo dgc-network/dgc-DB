@@ -207,15 +207,15 @@ pub async fn create_agent(
         .build()
         .unwrap();
 
-    Ok(HttpResponse::Ok().body("Hello world! I am here to create_agent"))
-
-/*
     let payload = PikePayloadBuilder::new()
         .with_action(Action::CreateAgent)
         .with_create_agent(action)
         .build()
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
 
+        Ok(HttpResponse::Ok().body("Hello world! I am here to create_agent"))
+
+/*
     let private_key = match query.get("private_key") {
         Some(private_key) => Some(private_key.as_str().to_string()),
         None => Some("".to_string()),
