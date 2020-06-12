@@ -142,9 +142,6 @@ impl BatchBuilder {
         }
         output_addresses.append(&mut outputs.to_vec());
 
-        Ok(self.clone())
-
-/*
         //let private_key = key::load_signing_key(self.key_name.clone())?;
         //let private_key = load_signing_key(self.key_name.clone())?;
         let private_key = Secp256k1PrivateKey::from_hex(&self.key_str)?;
@@ -153,6 +150,9 @@ impl BatchBuilder {
         let factory = signing::CryptoFactory::new(&*context);
         let signer = factory.new_signer(&private_key);
 
+        Ok(self.clone())
+
+/*
         let mut txn = Transaction::new();
         let mut txn_header = TransactionHeader::new();
 
