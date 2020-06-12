@@ -219,9 +219,9 @@ pub async fn create_agent(
         sawtooth_connection.get_sender(),
     ));
 
-    Ok(HttpResponse::Ok().body("Hello world! I am here to create_agent"))
+    //Ok(HttpResponse::Ok().body("Hello world! I am here to create_agent"))
 
-/*
+
     batch_submitter
         .submit_batches(SubmitBatches {
             batch_list,
@@ -230,7 +230,7 @@ pub async fn create_agent(
         })
         .await
         .map(|link| HttpResponse::Ok().json(link))
-*/
+
 
     //Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
