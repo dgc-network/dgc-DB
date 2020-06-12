@@ -90,8 +90,6 @@ impl BatchBuilder {
         inputs: &[String],
         outputs: &[String],
     ) -> Result<Self, CliError> {
-        Ok(self.clone())
-/*
         // create execute contract action for sabre payload
         let sabre_payload = ExecuteContractActionBuilder::new()
             .with_name(self.family_name.to_string())
@@ -144,6 +142,9 @@ impl BatchBuilder {
         }
         output_addresses.append(&mut outputs.to_vec());
 
+        Ok(self.clone())
+
+/*
         //let private_key = key::load_signing_key(self.key_name.clone())?;
         //let private_key = load_signing_key(self.key_name.clone())?;
         let private_key = Secp256k1PrivateKey::from_hex(&self.key_str)?;
