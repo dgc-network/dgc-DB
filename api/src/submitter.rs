@@ -126,7 +126,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
     ) -> Pin<Box<dyn Future<Output = Result<BatchStatusLink, RestApiResponseError>> + Send>> {
         
         return futures::future::err("I am here").boxed();
-
+/*
         let mut client_submit_request = ClientBatchSubmitRequest::new();
         client_submit_request.set_batches(protobuf::RepeatedField::from_vec(
             msg.batch_list.get_batches().to_vec(),
@@ -156,6 +156,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
                 }
             }),
         ).boxed()
+*/        
     }
 
     fn batch_status(
