@@ -79,7 +79,7 @@ impl BatchBuilder {
             family_name: family_name.to_string(),
             family_version: family_version.to_string(),
             //key_name,
-            key_str,
+            key_str: key_str.to_string(),
             batches: Vec::new(),
         }
     }
