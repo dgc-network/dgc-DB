@@ -63,7 +63,8 @@ pub fn product_batch_builder(key: Option<String>) -> BatchBuilder {
 pub struct BatchBuilder {
     family_name: String,
     family_version: String,
-    key_name: Option<String>,
+    key_str: String,
+    //key_name: Option<String>,
     batches: Vec<Batch>,
 }
 
@@ -71,12 +72,14 @@ impl BatchBuilder {
     pub fn new(
         family_name: &str, 
         family_version: &str, 
-        key_name: Option<String>
+        key_str: &str, 
+        //key_name: Option<String>
     ) -> BatchBuilder {
         BatchBuilder {
             family_name: family_name.to_string(),
             family_version: family_version.to_string(),
-            key_name,
+            //key_name,
+            key_str,
             batches: Vec::new(),
         }
     }
@@ -140,7 +143,8 @@ impl BatchBuilder {
         output_addresses.append(&mut outputs.to_vec());
 
         //let private_key = key::load_signing_key(self.key_name.clone())?;
-        let private_key = load_signing_key(self.key_name.clone())?;
+        //let private_key = load_signing_key(self.key_name.clone())?;
+        let private_key = Secp256k1PrivateKey::from_hex(&key_str)?;
         let context = signing::create_context("secp256k1")?;
         let public_key = context.get_public_key(&private_key)?.as_hex();
         let factory = signing::CryptoFactory::new(&*context);
