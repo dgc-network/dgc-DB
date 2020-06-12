@@ -3,6 +3,8 @@
 
 use std::collections::HashMap;
 use actix_web::{web, HttpRequest, HttpResponse};
+use sawtooth_sdk::signing::CryptoFactory;
+use sawtooth_sdk::signing::create_context;
 
 use crate::Endpoint;
 use crate::transaction::BatchBuilder;
@@ -139,7 +141,10 @@ pub async fn create_agent(
     //info: web::Json<Info>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let private_key = &agent_input.private_key;
+    let context = create_context("secp256k1")?;
+    let private_key = context.new_random_private_key();
+
+    //let private_key = &agent_input.private_key;
     let org_id = &agent_input.org_id;
     let roles_as_string = &agent_input.roles;
     let metadata_as_string = &agent_input.metadata;
