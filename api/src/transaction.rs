@@ -145,12 +145,12 @@ impl BatchBuilder {
         //let private_key = key::load_signing_key(self.key_name.clone())?;
         //let private_key = load_signing_key(self.key_name.clone())?;
         let private_key = Secp256k1PrivateKey::from_hex(&self.key_str)?;
+        let context = signing::create_context("secp256k1")?;
+        let public_key = context.get_public_key(&private_key)?.as_hex();
 
         Ok(self.clone())
 
 /*        
-        let context = signing::create_context("secp256k1")?;
-        let public_key = context.get_public_key(&private_key)?.as_hex();
         let factory = signing::CryptoFactory::new(&*context);
         let signer = factory.new_signer(&private_key);
 
