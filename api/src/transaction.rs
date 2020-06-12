@@ -90,6 +90,8 @@ impl BatchBuilder {
         inputs: &[String],
         outputs: &[String],
     ) -> Result<Self, CliError> {
+        Ok(self.clone())
+/*
         // create execute contract action for sabre payload
         let sabre_payload = ExecuteContractActionBuilder::new()
             .with_name(self.family_name.to_string())
@@ -193,6 +195,7 @@ impl BatchBuilder {
         self.batches.push(batch);
 
         Ok(self.clone())
+*/        
     }
 
     pub fn create_batch_list(&mut self) -> BatchList {
