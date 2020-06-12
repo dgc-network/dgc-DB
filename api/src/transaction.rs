@@ -150,9 +150,8 @@ impl BatchBuilder {
         let factory = signing::CryptoFactory::new(&*context);
         let signer = factory.new_signer(&private_key);
 
-        Ok(self.clone())
+        //Ok(self.clone())
 
-/*        
 
         let mut txn = Transaction::new();
         let mut txn_header = TransactionHeader::new();
@@ -197,7 +196,7 @@ impl BatchBuilder {
         self.batches.push(batch);
 
         Ok(self.clone())
-*/        
+      
     }
 
     pub fn create_batch_list(&mut self) -> BatchList {
