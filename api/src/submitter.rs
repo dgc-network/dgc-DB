@@ -128,9 +128,9 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
         //let mut response_url = msg.response_url;
         //response_url.set_query(Some(&format!("id={}", batch_query)));
 
-        future::ready(BatchStatusLink {
+        Box::pin(future::ready(BatchStatusLink {
             link: msg.response_url.to_string(),
-        }).boxed()
+        }))
 /*        
         let mut client_submit_request = ClientBatchSubmitRequest::new();
         client_submit_request.set_batches(protobuf::RepeatedField::from_vec(
