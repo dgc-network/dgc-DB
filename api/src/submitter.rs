@@ -125,13 +125,6 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
         msg: SubmitBatches,
     ) -> Pin<Box<dyn Future<Output = Result<BatchStatusLink, RestApiResponseError>> + Send>> {
         
-        //let mut response_url = msg.response_url;
-        //response_url.set_query(Some(&format!("id={}", batch_query)));
-
-        Box::pin(future::ready(BatchStatusLink {
-            link: msg.response_url.to_string(),
-        }))
-/*        
         let mut client_submit_request = ClientBatchSubmitRequest::new();
         client_submit_request.set_batches(protobuf::RepeatedField::from_vec(
             msg.batch_list.get_batches().to_vec(),
@@ -142,7 +135,6 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
             Message_MessageType::CLIENT_BATCH_SUBMIT_REQUEST,
             &client_submit_request,
         ));
-
 
         future::ready(
             process_validator_response(response_status.get_status()).map(|_| {
@@ -162,7 +154,6 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
                 }
             }),
         ).boxed()
-*/        
     }
 
     fn batch_status(
@@ -200,6 +191,7 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
     message_type: Message_MessageType,
     message: &C,
 ) -> Result<T, RestApiResponseError> {
+/*    
     let content = protobuf::Message::write_to_bytes(message).map_err(|err| {
         RestApiResponseError::RequestHandlerError(format!(
             "Failed to serialize batch submit request. {}",
@@ -230,6 +222,7 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
             err.to_string()
         ))
     })
+*/    
 }
 
 pub fn process_validator_response(
