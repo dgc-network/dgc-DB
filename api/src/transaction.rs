@@ -150,9 +150,6 @@ impl BatchBuilder {
         let factory = signing::CryptoFactory::new(&*context);
         let signer = factory.new_signer(&private_key);
 
-        //Ok(self.clone())
-
-
         let mut txn = Transaction::new();
         let mut txn_header = TransactionHeader::new();
 
