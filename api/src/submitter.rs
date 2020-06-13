@@ -231,7 +231,7 @@ pub fn process_validator_response(
     status: ClientBatchSubmitResponse_Status,
 ) -> Result<(), RestApiResponseError> {
 
-    Ok()
+    Ok(())
 /*
     match status {
         ClientBatchSubmitResponse_Status::OK => Ok(()),
