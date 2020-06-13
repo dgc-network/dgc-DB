@@ -129,14 +129,15 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
         client_submit_request.set_batches(protobuf::RepeatedField::from_vec(
             msg.batch_list.get_batches().to_vec(),
         ));
-        Box::pin(client_submit_request)
-/*
+
         let response_status: ClientBatchSubmitResponse = try_fut!(query_validator(
             &self.sender,
             Message_MessageType::CLIENT_BATCH_SUBMIT_REQUEST,
             &client_submit_request,
         ));
 
+        Box::pin(response_status)
+/*
         future::ready(
             process_validator_response(response_status.get_status()).map(|_| {
                 let batch_query = msg
