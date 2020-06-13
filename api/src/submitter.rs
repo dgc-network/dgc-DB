@@ -191,9 +191,9 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
     message_type: Message_MessageType,
     message: &C,
 ) -> Result<T, RestApiResponseError> {
-    Ok(T: "I am here")
+    //Ok("I am here")
     
-/*    
+    
     let content = protobuf::Message::write_to_bytes(message).map_err(|err| {
         RestApiResponseError::RequestHandlerError(format!(
             "Failed to serialize batch submit request. {}",
@@ -224,12 +224,15 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
             err.to_string()
         ))
     })
-*/    
+
 }
 
 pub fn process_validator_response(
     status: ClientBatchSubmitResponse_Status,
 ) -> Result<(), RestApiResponseError> {
+
+    Ok("I am here")
+/*
     match status {
         ClientBatchSubmitResponse_Status::OK => Ok(()),
         ClientBatchSubmitResponse_Status::INVALID_BATCH => Err(RestApiResponseError::BadRequest(
@@ -241,6 +244,7 @@ pub fn process_validator_response(
             format!("Validator responded with error {:?}", status),
         )),
     }
+*/
 }
 
 pub fn process_batch_status_response(
