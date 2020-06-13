@@ -191,7 +191,7 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
     message_type: Message_MessageType,
     message: &C,
 ) -> Result<T, RestApiResponseError> {
-    Ok(protobuf::Message)
+    Ok(message_type)
     
 /*    
     let content = protobuf::Message::write_to_bytes(message).map_err(|err| {
