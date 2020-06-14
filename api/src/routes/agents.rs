@@ -40,13 +40,14 @@ pub struct AgentInput {
 
 pub async fn list_agents(
     req: HttpRequest,
-    query: web::Query<HashMap<String, String>>,
+    //query: web::Query<HashMap<String, String>>,
+    agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    //Ok(HttpResponse::Ok().body(req.uri().to_string()))
-    //
-    //Ok(HttpResponse::Ok().body(response_url.to_string()))
-
+    let private_key = &agent_input.private_key;
+    //let org_id = &agent_input.org_id;
+    //let roles_as_string = &agent_input.roles;
+    //let metadata_as_string = &agent_input.metadata;
 
     // Get the URL
     let response_url = match req.url_for_static("agent") {
@@ -136,7 +137,7 @@ pub async fn fetch_agent(
 
 pub async fn create_agent(
     req: HttpRequest,
-    query: web::Query<HashMap<String, String>>,
+    //query: web::Query<HashMap<String, String>>,
     agent_input: web::Json<AgentInput>,
     //info: web::Json<Info>,
 ) -> Result<HttpResponse, RestApiResponseError> {
