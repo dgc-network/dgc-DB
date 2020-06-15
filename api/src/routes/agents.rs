@@ -69,9 +69,9 @@ pub async fn fetch_agent(
 
     let mut transaction_context = MockTransactionContext::default();
     let state = State::new(&mut transaction_context);
+    let result = state.get_agent(&public_key).unwrap();
     Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 /*
-    let result = state.get_agent(&public_key).unwrap();
     let agent = result.unwrap();
 
     Ok(HttpResponse::Ok().json(agent.org_id()))
