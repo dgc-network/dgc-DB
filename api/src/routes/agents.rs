@@ -72,8 +72,8 @@ pub async fn fetch_agent(
     let result = state.get_agent(&public_key).unwrap();
     let agent = result.unwrap();
     let org_id = match agent.org_id() {
-        Some(org_id) => agent.org_id(),
-        None => "Hello world! fetch_agent"
+        Some(org_id) => agent.org_id().to_string(),
+        None => "Hello world! fetch_agent".to_string()
     };
     Ok(HttpResponse::Ok().body(org_id))
     //let org_id = agent.org_id();
