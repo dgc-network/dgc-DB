@@ -70,7 +70,7 @@ pub async fn fetch_agent(
     let state = State::new(&mut transaction_context);
 
     let result = state.get_agent(&public_key).unwrap();
-    let agent = result.unwrap();
+    let agent = result.unwrap().into_bytes();
 
     Ok(HttpResponse::Ok().body(agent))
 
