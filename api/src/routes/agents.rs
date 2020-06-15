@@ -71,7 +71,7 @@ pub async fn fetch_agent(
     let state = State::new(&mut transaction_context);
     let result = state.get_agent(&public_key).unwrap();
     let agent = result.unwrap();
-    let org_id = match agent.get_org_id() {
+    let org_id = match agent.org_id() {
         Some(org_id) => agent.org_id(),
         None => "Hello world! fetch_agent"
     };
