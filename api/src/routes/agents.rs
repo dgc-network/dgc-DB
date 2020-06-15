@@ -40,7 +40,6 @@ pub struct AgentInput {
 
 pub async fn list_agents(
     req: HttpRequest,
-    //query: web::Query<HashMap<String, String>>,
     //agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
@@ -56,76 +55,7 @@ pub async fn list_agents(
             return Err(err.into());
         }
     };
-    //Ok(HttpResponse::Ok().body(response_url))
-    
-/*
-    // Get the Batch ID
-    let batch_ids = match query.get("id") {
-        Some(ids) => ids.split(',').map(ToString::to_string).collect(),
-        None => {
-            return Err(RestApiResponseError::BadRequest(
-                "Request for statuses missing id query.".to_string(),
-            ));
-        }
-    };
-    Ok(HttpResponse::Ok().body(batch_ids.unwrap()))
-*/
-/*
-    // Max wait time allowed is 95% of network's configured timeout
-    let max_wait_time = (DEFAULT_TIME_OUT * 95) / 100;
 
-    let wait = match query.get("wait") {
-        Some(wait_time) => {
-            if wait_time == "false" {
-                None
-            } else {
-                match wait_time.parse::<u32>() {
-                    Ok(wait_time) => {
-                        if wait_time > max_wait_time {
-                            Some(max_wait_time)
-                        } else {
-                            Some(wait_time)
-                        }
-                    }
-                    Err(_) => {
-                        return Err(RestApiResponseError::BadRequest(format!(
-                            "Query wait has invalid value {}. \
-                             It should set to false or a time in seconds to wait for the commit",
-                            wait_time
-                        )));
-                    }
-                }
-            }
-        }
-
-        None => Some(max_wait_time),
-    };
-*/    
-    //Ok(HttpResponse::Ok().body(wait.unwrap().to_string()))
-
-/*
-    let response_url = req.url_for_static("agent")?;
-
-    let sawtooth_connection = SawtoothConnection::new(&response_url);
-
-    let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
-        sawtooth_connection.get_sender(),
-    ));
-
-    batch_submitter
-        .batch_status(BatchStatuses {
-            batch_ids,
-            wait,
-            //service_id: query_service_id.into_inner().service_id,
-        })
-        .await
-        .map(|batch_statuses| {
-            HttpResponse::Ok().json(BatchStatusResponse {
-                data: batch_statuses,
-                link: response_url,
-            })
-        })
-*/
     Ok(HttpResponse::Ok().body("Hello world! list_agents"))
 
 }
@@ -141,7 +71,9 @@ pub async fn fetch_agent(
 
     let result = state.get_agent(&public_key).unwrap();
 
-    Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
+    Ok(HttpResponse::Ok().body(result))
+
+    //Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 }
 
 pub async fn create_agent(
