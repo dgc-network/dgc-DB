@@ -41,10 +41,10 @@ pub struct AgentInput {
 pub async fn list_agents(
     req: HttpRequest,
     //query: web::Query<HashMap<String, String>>,
-    agent_input: web::Json<AgentInput>,
+    //agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let private_key = &agent_input.private_key;
+    //let private_key = &agent_input.private_key;
     //let org_id = &agent_input.org_id;
     //let roles_as_string = &agent_input.roles;
     //let metadata_as_string = &agent_input.metadata;

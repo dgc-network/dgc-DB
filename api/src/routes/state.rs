@@ -50,6 +50,26 @@ impl<'a> State<'a> {
     }
 
     /// Gets a Pike Agent. Handles retrieving the correct agent from an AgentList.
+    pub fn get_agents(&self, public_key: &str) -> Result<Option<Agent>, ApplyError> {
+        let address = compute_agent_address(public_key);
+        let d = self.context.get_state_entry(&address)?;
+        match d {
+            Some(packed) => {
+                let agents = match AgentList::from_bytes(packed.as_slice()) {
+                    Ok(agents) => agents,
+                    Err(err) => {
+                        return Err(ApplyError::InvalidTransaction(format!(
+                            "Cannot deserialize agent list: {:?}",
+                            err,
+                        )));
+                    }
+                };
+            }
+            None => Ok(None),
+        }
+    }
+
+    /// Gets a Pike Agent. Handles retrieving the correct agent from an AgentList.
     pub fn get_agent(&self, public_key: &str) -> Result<Option<Agent>, ApplyError> {
         let address = compute_agent_address(public_key);
         let d = self.context.get_state_entry(&address)?;
