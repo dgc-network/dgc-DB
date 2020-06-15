@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 //#[macro_use] extern crate log;
-#[macro_use] extern crate cfg_if;
+//#[macro_use] extern crate cfg_if;
 
 mod routes;
 mod error;

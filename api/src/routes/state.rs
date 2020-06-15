@@ -7,15 +7,15 @@ use grid_sdk::protocol::pike::state::{Agent, AgentList};
 use grid_sdk::protocol::schema::state::{Schema, SchemaList, SchemaListBuilder};
 use grid_sdk::protos::{FromBytes, IntoBytes};
 
-cfg_if! {
-    if #[cfg(target_arch = "wasm32")] {
-        use sabre_sdk::ApplyError;
-        use sabre_sdk::TransactionContext;
-    } else {
+//cfg_if! {
+//    if #[cfg(target_arch = "wasm32")] {
+//        use sabre_sdk::ApplyError;
+//        use sabre_sdk::TransactionContext;
+//    } else {
         use sawtooth_sdk::processor::handler::ApplyError;
         use sawtooth_sdk::processor::handler::TransactionContext;
-    }
-}
+//    }
+//}
 
 pub const GRID_NAMESPACE: &str = "621dee";
 pub const GRID_SCHEMA_NAMESPACE: &str = "01";
@@ -164,8 +164,8 @@ impl<'a> State<'a> {
     }
 }
 
-#[cfg(test)]
-mod tests {
+//#[cfg(test)]
+//mod tests {
     use super::*;
 
     use std::cell::RefCell;
@@ -321,4 +321,4 @@ mod tests {
         let schema = schema_result.unwrap();
         assert_eq!(schema.description(), "New Description");
     }
-}
+//}
