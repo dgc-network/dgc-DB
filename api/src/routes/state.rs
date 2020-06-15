@@ -166,18 +166,19 @@ impl<'a> State<'a> {
 
 //#[cfg(test)]
 //mod tests {
-    use super::*;
+    //use super::*;
 
     use std::cell::RefCell;
     use std::collections::HashMap;
 
     use grid_sdk::protocol::pike::state::{AgentBuilder, AgentListBuilder};
     use grid_sdk::protocol::schema::state::{DataType, PropertyDefinitionBuilder, SchemaBuilder};
-    use sawtooth_sdk::processor::handler::{ContextError, TransactionContext};
+    //use sawtooth_sdk::processor::handler::{ContextError, TransactionContext};
+    use sawtooth_sdk::processor::handler::ContextError;
 
     #[derive(Default)]
     /// A MockTransactionContext that can be used to test GridSchemaState
-    struct MockTransactionContext {
+    pub struct MockTransactionContext {
         state: RefCell<HashMap<String, Vec<u8>>>,
     }
 
