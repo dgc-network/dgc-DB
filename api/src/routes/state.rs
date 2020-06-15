@@ -48,7 +48,7 @@ impl<'a> State<'a> {
     pub fn new(context: &'a dyn TransactionContext) -> State {
         State { context }
     }
-
+/*
     /// Gets a Pike Agent. Handles retrieving the correct agent from an AgentList.
     pub fn get_agents(&self, public_key: &str) -> Result<Option<Agent>, ApplyError> {
         let address = compute_agent_address(public_key);
@@ -68,7 +68,7 @@ impl<'a> State<'a> {
             None => Ok(None),
         }
     }
-
+*/
     /// Gets a Pike Agent. Handles retrieving the correct agent from an AgentList.
     pub fn get_agent(&self, public_key: &str) -> Result<Option<Agent>, ApplyError> {
         let address = compute_agent_address(public_key);
