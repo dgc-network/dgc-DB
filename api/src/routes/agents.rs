@@ -73,7 +73,7 @@ pub async fn fetch_agent(
     let result = state.get_agent(&public_key).unwrap();
     let agent = result.unwrap();
 
-    Ok(HttpResponse::Ok().json(agent.org_id))
+    Ok(HttpResponse::Ok().json(agent.org_id()))
 
     //Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 }
