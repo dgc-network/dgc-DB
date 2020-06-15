@@ -24,6 +24,7 @@ use grid_sdk::protocol::pike::{
     },
 };
 use grid_sdk::protos::IntoProto;
+use grid_sdk::protos::IntoBytes;
 
 //use serde::{Deserialize, Serialize};
 
