@@ -70,7 +70,7 @@ pub async fn list_agents(
     };
     Ok(HttpResponse::Ok().body(batch_ids.unwrap()))
 */
-
+/*
     // Max wait time allowed is 95% of network's configured timeout
     let max_wait_time = (DEFAULT_TIME_OUT * 95) / 100;
 
@@ -100,6 +100,7 @@ pub async fn list_agents(
 
         None => Some(max_wait_time),
     };
+*/    
     //Ok(HttpResponse::Ok().body(wait.unwrap().to_string()))
 
 /*
@@ -129,14 +130,14 @@ pub async fn list_agents(
 
 }
 
-use state::{MockTransactionContext, State};
+use super::state::{MockTransactionContext, State};
 
 pub async fn fetch_agent(
     public_key: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     let mut transaction_context = MockTransactionContext::default();
-    let state = ProductState::new(&mut transaction_context);
+    let state = State::new(&mut transaction_context);
 
     let result = state.get_agent(public_key).unwrap();
 
