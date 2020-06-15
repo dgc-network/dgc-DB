@@ -129,9 +129,17 @@ pub async fn list_agents(
 
 }
 
+use state::{MockTransactionContext, State};
+
 pub async fn fetch_agent(
     public_key: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
+
+    let mut transaction_context = MockTransactionContext::default();
+    let state = ProductState::new(&mut transaction_context);
+
+    let result = state.get_agent(public_key).unwrap();
+
     Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 }
 
