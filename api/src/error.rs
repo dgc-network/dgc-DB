@@ -58,6 +58,7 @@ pub enum RestApiResponseError {
     ProtobufError(protobuf::ProtobufError),
     SigningError(signing::Error),
     ApplyError(handler::ApplyError),
+    InvalidTransaction(handler::ApplyError::InvalidTransaction),
     ContextError(handler::ContextError),
     ReqwestError(reqwest::Error),
     GridProtoError(protos::ProtoConversionError),
@@ -80,6 +81,7 @@ impl Error for RestApiResponseError {
             RestApiResponseError::ProtobufError(_) => None,
             RestApiResponseError::SigningError(_) => None,
             RestApiResponseError::ApplyError(_) => None,
+            RestApiResponseError::InvalidTransaction(_) => None,
             RestApiResponseError::ContextError(_) => None,
             RestApiResponseError::ReqwestError(_) => None,
             RestApiResponseError::GridProtoError(_) => None,
@@ -108,6 +110,7 @@ impl fmt::Display for RestApiResponseError {
             RestApiResponseError::ProtobufError(ref err) => write!(f, "ProtobufError: {}", err),
             RestApiResponseError::SigningError(ref err) => write!(f, "SigningError: {}", err),
             RestApiResponseError::ApplyError(ref err) => write!(f, "ApplyError: {}", err),
+            RestApiResponseError::InvalidTransaction(ref err) => write!(f, "InvalidTransaction: {}", err),
             RestApiResponseError::ContextError(ref err) => write!(f, "ContextError: {}", err),
             RestApiResponseError::ReqwestError(ref err) => write!(f, "Reqwest Error: {}", err),
             RestApiResponseError::GridProtoError(ref err) => write!(f, "Grid Proto Error: {}", err),
@@ -228,6 +231,12 @@ impl From<signing::Error> for RestApiResponseError {
 impl From<handler::ApplyError> for RestApiResponseError {
     fn from(err: handler::ApplyError) -> Self {
         RestApiResponseError::ApplyError(err)
+    }
+}
+
+impl From<handler::ApplyError::InvalidTransaction> for RestApiResponseError {
+    fn from(err: handler::ApplyError::InvalidTransaction) -> Self {
+        RestApiResponseError::InvalidTransaction(err)
     }
 }
 
