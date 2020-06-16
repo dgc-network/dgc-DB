@@ -81,7 +81,7 @@ impl<'a> State<'a> {
                     Ok(agents) => agents,
                     Err(err) => {
                         //return Err(ApplyError::InvalidTransaction(format!(
-                        return Err(RestApiResponseError::ApplyError::InvalidTransaction(format!(
+                        return Err(RestApiResponseError(format!(
                             "Cannot deserialize agent list: {:?}",
                             err,
                         )));
