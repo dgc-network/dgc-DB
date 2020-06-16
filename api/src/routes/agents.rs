@@ -70,10 +70,10 @@ pub async fn fetch_agent(
     let mut transaction_context = MockTransactionContext::default();
     let state = State::new(&mut transaction_context);
     //let result = state.get_agent(&public_key).unwrap();
-    let result = match state.get_agent(&public_key){
-        x = x.unwrap(),
+    let result:Agent = match state.get_agent(&public_key){
+        x => x.unwrap(),
         _ => Err(RestApiResponseError::SawtoothValidatorResponseError(
-            format!("responded with error"),
+            format!("responded with error"))),
     }
     let agent = result.unwrap();
     let org_id = agent.org_id();
