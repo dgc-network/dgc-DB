@@ -70,7 +70,7 @@ pub async fn fetch_agent(
     let mut transaction_context = MockTransactionContext::default();
     let state = State::new(&mut transaction_context);
     let result = state.get_agent(&public_key).unwrap();
-    let agent = match result.unwrap() {
+    let agent = match result.clone().unwrap() {
         x => result.unwrap(),
         //Err(e) => e,
     };
