@@ -16,6 +16,7 @@ use grid_sdk::protos::{FromBytes, IntoBytes};
         use sawtooth_sdk::processor::handler::TransactionContext;
 //    }
 //}
+use crate::error::RestApiResponseError;
 
 pub const GRID_NAMESPACE: &str = "621dee";
 pub const GRID_SCHEMA_NAMESPACE: &str = "01";
@@ -70,7 +71,8 @@ impl<'a> State<'a> {
     }
 */
     /// Gets a Pike Agent. Handles retrieving the correct agent from an AgentList.
-    pub fn get_agent(&self, public_key: &str) -> Result<Option<Agent>, ApplyError> {
+    //pub fn get_agent(&self, public_key: &str) -> Result<Option<Agent>, ApplyError> {
+    pub fn get_agent(&self, public_key: &str) -> Result<Option<Agent>, RestApiResponseError> {
         let address = compute_agent_address(public_key);
         let d = self.context.get_state_entry(&address)?;
         match d {
