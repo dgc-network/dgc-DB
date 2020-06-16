@@ -16,7 +16,7 @@ use crate::error::RestApiResponseError;
 use grid_sdk::protocol::pike::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
     state::{
-        KeyValueEntry, KeyValueEntryBuilder,
+        KeyValueEntry, KeyValueEntryBuilder, Agent,
     },
     payload::{
         Action, PikePayloadBuilder, CreateAgentActionBuilder, 
@@ -71,8 +71,8 @@ pub async fn fetch_agent(
     let state = State::new(&mut transaction_context);
     let result = state.get_agent(&public_key).unwrap();
     let agent = result.unwrap();
-    let org_id = match agent.org_id() {
-        org_id => agent.clone().org_id(),
+    let org_id = match Agent::org_id {
+        org_id => agent.org_id(),
         _ => "Hello world! fetch_agent",
         //Some(org_id) => agent.org_id().to_string(),
         //None => "Hello world! fetch_agent".to_string()
