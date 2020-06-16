@@ -73,7 +73,7 @@ pub async fn fetch_agent(
     let agent = result.unwrap();
     let org_id = Agent::org_id;
     match org_id {
-        org_id => agent.org_id(),
+        x => agent.org_id(),
         _ => "Hello world! fetch_agent",
         //Some(org_id) => agent.org_id().to_string(),
         //None => "Hello world! fetch_agent".to_string()
