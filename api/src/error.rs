@@ -10,7 +10,9 @@ use actix_web::{
 use futures::future::{Future, TryFutureExt};
 use std::{error::Error, fmt, io};
 use sawtooth_sdk::signing;
-use sawtooth_sdk::processor::handler::ApplyError;
+//use sawtooth_sdk::processor::handler::ApplyError;
+//use sawtooth_sdk::processor::handler::ContextError;
+use sawtooth_sdk::processor::handler;
 use grid_sdk::protos;
 
 #[derive(Debug)]
@@ -55,7 +57,8 @@ pub enum RestApiResponseError {
     IoError(io::Error),
     ProtobufError(protobuf::ProtobufError),
     SigningError(signing::Error),
-    ApplyError(ApplyError),
+    ApplyError(handler::ApplyError),
+    ContextError(handler::ContextError),
     ReqwestError(reqwest::Error),
     GridProtoError(protos::ProtoConversionError),
     SabreProtoError(sabre_sdk::protos::ProtoConversionError),
@@ -77,6 +80,7 @@ impl Error for RestApiResponseError {
             RestApiResponseError::ProtobufError(_) => None,
             RestApiResponseError::SigningError(_) => None,
             RestApiResponseError::ApplyError(_) => None,
+            RestApiResponseError::ContextError(_) => None,
             RestApiResponseError::ReqwestError(_) => None,
             RestApiResponseError::GridProtoError(_) => None,
             RestApiResponseError::SabreProtoError(_) => None,
@@ -104,6 +108,7 @@ impl fmt::Display for RestApiResponseError {
             RestApiResponseError::ProtobufError(ref err) => write!(f, "ProtobufError: {}", err),
             RestApiResponseError::SigningError(ref err) => write!(f, "SigningError: {}", err),
             RestApiResponseError::ApplyError(ref err) => write!(f, "ApplyError: {}", err),
+            RestApiResponseError::ContextError(ref err) => write!(f, "ContextError: {}", err),
             RestApiResponseError::ReqwestError(ref err) => write!(f, "Reqwest Error: {}", err),
             RestApiResponseError::GridProtoError(ref err) => write!(f, "Grid Proto Error: {}", err),
             RestApiResponseError::SabreProtoError(ref err) => write!(f, "Sabre Proto Error: {}", err),
@@ -220,9 +225,15 @@ impl From<signing::Error> for RestApiResponseError {
     }
 }
 
-impl From<ApplyError> for RestApiResponseError {
-    fn from(err: ApplyError) -> Self {
+impl From<handler::ApplyError> for RestApiResponseError {
+    fn from(err: handler::ApplyError) -> Self {
         RestApiResponseError::ApplyError(err)
+    }
+}
+
+impl From<handler::ContextError> for RestApiResponseError {
+    fn from(err: handler::ContextError) -> Self {
+        RestApiResponseError::ContextError(err)
     }
 }
 

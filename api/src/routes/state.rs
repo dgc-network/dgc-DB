@@ -80,7 +80,8 @@ impl<'a> State<'a> {
                 let agents = match AgentList::from_bytes(packed.as_slice()) {
                     Ok(agents) => agents,
                     Err(err) => {
-                        return Err(ApplyError::InvalidTransaction(format!(
+                        //return Err(ApplyError::InvalidTransaction(format!(
+                        return Err(RestApiResponseError::InvalidTransaction(format!(
                             "Cannot deserialize agent list: {:?}",
                             err,
                         )));
@@ -193,8 +194,8 @@ impl<'a> State<'a> {
     use std::cell::RefCell;
     use std::collections::HashMap;
 
-    use grid_sdk::protocol::pike::state::{AgentBuilder, AgentListBuilder};
-    use grid_sdk::protocol::schema::state::{DataType, PropertyDefinitionBuilder, SchemaBuilder};
+    //use grid_sdk::protocol::pike::state::{AgentBuilder, AgentListBuilder};
+    //use grid_sdk::protocol::schema::state::{DataType, PropertyDefinitionBuilder, SchemaBuilder};
     //use sawtooth_sdk::processor::handler::{ContextError, TransactionContext};
     use sawtooth_sdk::processor::handler::ContextError;
 

@@ -1,12 +1,12 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
-use std::collections::HashMap;
+//use std::collections::HashMap;
 use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::CryptoFactory;
 use sawtooth_sdk::signing::create_context;
 
-use crate::Endpoint;
+//use crate::Endpoint;
 use crate::transaction::BatchBuilder;
 use crate::connection::SawtoothConnection;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
@@ -24,7 +24,7 @@ use grid_sdk::protocol::pike::{
     },
 };
 use grid_sdk::protos::IntoProto;
-use grid_sdk::protos::IntoBytes;
+//use grid_sdk::protos::IntoBytes;
 
 //use serde::{Deserialize, Serialize};
 
