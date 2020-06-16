@@ -71,12 +71,12 @@ pub async fn fetch_agent(
     let state = State::new(&mut transaction_context);
     //let result = state.get_agent(&public_key).unwrap();
     let result:Agent = match state.get_agent(&public_key){
-        x => x.unwrap(),
+        x => x.unwrap().unwrap(),
         _ => Err(RestApiResponseError::SawtoothValidatorResponseError(
             format!("responded with error"))),
-    }
-    let agent = result.unwrap();
-    let org_id = agent.org_id();
+    };
+    //let agent = result.unwrap();
+    //let org_id = agent.org_id();
 
     Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 
