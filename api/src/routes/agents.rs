@@ -71,28 +71,16 @@ pub async fn fetch_agent(
     let state = State::new(&mut transaction_context);
     let result = state.get_agent(&public_key).unwrap();
     let agent = result.unwrap();
-    let org_id = Agent::org_id;
-    match org_id {
-        x => agent.org_id(),
-        _ => "Hello world! fetch_agent",
-        //Some(org_id) => agent.org_id().to_string(),
-        //None => "Hello world! fetch_agent".to_string()
-    };
-    Ok(HttpResponse::Ok().body(org_id))
-    //let org_id = agent.org_id();
-    //Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
-/*
+    let org_id = agent.org_id();
+    
+    Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 
-    Ok(HttpResponse::Ok().json(agent.org_id()))
-*/
-    //Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 }
 
 pub async fn create_agent(
     req: HttpRequest,
     //query: web::Query<HashMap<String, String>>,
     agent_input: web::Json<AgentInput>,
-    //info: web::Json<Info>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     let context = create_context("secp256k1")?;
@@ -149,14 +137,7 @@ pub async fn create_agent(
         .with_create_agent(action)
         .build()
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
-/*
-    let private_key = match query.get("private_key") {
-        Some(private_key) => Some(private_key.as_str().to_string()),
-        None => Some("".to_string()),
-    };
-*/
 
-    //let batch_list = BatchBuilder::new(PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, Some(private_key.to_string()))
     let batch_list = BatchBuilder::new(PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, &private_key)
         .add_transaction(
             &payload.into_proto()?,
