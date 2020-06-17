@@ -21,6 +21,7 @@ use sawtooth_sdk::messages::validator::{Message, Message_MessageType};
 //use sawtooth_sdk::messaging::stream::MessageSender;
 use sawtooth_sdk::messaging::stream::{MessageFuture, MessageSender, SendError};
 use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
+use std::sync::mpsc::channel;
 
 use crate::error::RestApiResponseError;
 
