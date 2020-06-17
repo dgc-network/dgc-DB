@@ -73,13 +73,9 @@ pub async fn fetch_agent(
     let result = match state.get_agent(&public_key){
         Ok(x)  => x,
         Err(e) => return Err(e),
-        //None => Err(RestApiResponseError::SawtoothValidatorResponseError(
-        //    format!("responded with error"))),
-        //Err => Err,
-        //x => Ok(x.unwrap().unwrap()),
     };
-    //let agent = result.unwrap();
-    //let org_id = agent.org_id();
+    let agent = result.unwrap();
+    let org_id = agent.org_id();
 
     Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 
