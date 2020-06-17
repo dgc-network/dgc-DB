@@ -172,7 +172,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
             }
         }
 
-        println!("I am here! {:?}", msg.wait);
+        println!("I am here! msg.wait= {:?}", msg.wait);
 
         let response_status: ClientBatchStatusResponse = try_fut!(query_validator(
             &self.sender,
@@ -180,7 +180,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
             &batch_status_request,
         ));
 
-        println!("I am here! {:?}", response_status);
+        println!("I am here! response_status= {:?}", response_status);
 
         future::ready(process_batch_status_response(response_status)).boxed()
     }
