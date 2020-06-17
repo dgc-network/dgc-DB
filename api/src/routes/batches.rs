@@ -12,6 +12,8 @@ use crate::error::RestApiResponseError;
 use crate::AppState;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 //use crate::submitter::BatchSubmitter;
+use crate::connection::SawtoothConnection;
+use crate::submitter::{BatchSubmitter, SawtoothBatchSubmitter};
 
 pub async fn submit_batches(
     req: HttpRequest,
