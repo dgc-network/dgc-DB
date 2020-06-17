@@ -195,8 +195,8 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
     message_type: Message_MessageType,
     message: &C,
 ) -> Result<T, RestApiResponseError> {
-    //Ok(message_type)
-    
+
+    println!("I am here! message={:?}", message);
 
     let content = protobuf::Message::write_to_bytes(message).map_err(|err| {
         RestApiResponseError::RequestHandlerError(format!(
@@ -205,7 +205,11 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
         ))
     })?;
 
+    println!("I am here! content= {:?}", content);
+
     let correlation_id = Uuid::new_v4().to_string();
+
+    println!("I am here! correlation_id= {:?}", correlation_id);
 
     let mut response_future = sender
         .send(message_type, &correlation_id, &content)
