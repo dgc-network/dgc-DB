@@ -11,7 +11,7 @@ use crate::transaction::BatchBuilder;
 use crate::connection::SawtoothConnection;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 //use crate::submitter::{BatchSubmitter, SawtoothBatchSubmitter};
-use crate::submitter::{BatchSubmitter, MockBatchSubmitter, ResponseType};
+use crate::submitter::{BatchSubmitter, MockBatchSubmitter, MockMessageSender, ResponseType};
 use crate::error::RestApiResponseError;
 
 use grid_sdk::protocol::pike::{

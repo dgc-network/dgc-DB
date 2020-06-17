@@ -14,7 +14,7 @@ use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAUL
 //use crate::submitter::BatchSubmitter;
 use crate::connection::SawtoothConnection;
 //use crate::submitter::{BatchSubmitter, SawtoothBatchSubmitter};
-use crate::submitter::{BatchSubmitter, MockBatchSubmitter};
+use crate::submitter::{BatchSubmitter, MockBatchSubmitter, MockMessageSender, ResponseType};
 
 pub async fn submit_batches(
     req: HttpRequest,
