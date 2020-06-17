@@ -177,6 +177,8 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
             Message_MessageType::CLIENT_BATCH_STATUS_REQUEST,
             &batch_status_request,
         ));
+        
+        println!("I am here! {:?}", response_status);
 
         future::ready(process_batch_status_response(response_status)).boxed()
     }
