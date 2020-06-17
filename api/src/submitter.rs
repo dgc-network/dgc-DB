@@ -223,7 +223,7 @@ macro_rules! try_fut {
 }
 
 pub struct MockBatchSubmitter {
-    sender: MockMessageSender,
+    pub sender: MockMessageSender,
 }
 
 impl BatchSubmitter for MockBatchSubmitter {
@@ -300,7 +300,7 @@ impl BatchSubmitter for MockBatchSubmitter {
 
 impl MessageSender for MockMessageSender {
 
-    pub fn send(
+    fn send(
         &self,
         destination: Message_MessageType,
         correlation_id: &str,
