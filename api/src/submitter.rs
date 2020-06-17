@@ -98,7 +98,7 @@ impl Clone for Box<dyn BatchSubmitter> {
         self.clone_box()
     }
 }
-
+/*
 #[derive(Clone)]
 pub struct SawtoothBatchSubmitter {
     sender: ZmqMessageSender,
@@ -187,6 +187,170 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
 
     fn clone_box(&self) -> Box<dyn BatchSubmitter> {
         Box::new(self.clone())
+    }
+}
+*/
+struct MockMessageSender {
+    response_type: ResponseType,
+}
+
+#[derive(Clone, Copy, Debug)]
+enum ResponseType {
+    ClientBatchStatusResponseOK,
+    ClientBatchStatusResponseInvalidId,
+    ClientBatchStatusResponseInternalError,
+    ClientBatchSubmitResponseOK,
+    ClientBatchSubmitResponseInvalidBatch,
+    ClientBatchSubmitResponseInternalError,
+}
+
+impl MockMessageSender {
+    fn new(response_type: ResponseType) -> Self {
+        MockMessageSender { response_type }
+    }
+}
+
+macro_rules! try_fut {
+    ($try_expr:expr) => {
+        match $try_expr {
+            Ok(res) => res,
+            Err(err) => return futures::future::err(err).boxed(),
+        }
+    };
+}
+
+struct MockBatchSubmitter {
+    sender: MockMessageSender,
+}
+
+impl BatchSubmitter for MockBatchSubmitter {
+    fn submit_batches(
+        &self,
+        msg: SubmitBatches,
+    ) -> Pin<Box<dyn Future<Output = Result<BatchStatusLink, RestApiResponseError>> + Send>>
+    {
+        let mut client_submit_request = ClientBatchSubmitRequest::new();
+        client_submit_request.set_batches(protobuf::RepeatedField::from_vec(
+            msg.batch_list.get_batches().to_vec(),
+        ));
+
+        let response_status: ClientBatchSubmitResponse = try_fut!(query_validator(
+            &self.sender,
+            Message_MessageType::CLIENT_BATCH_SUBMIT_REQUEST,
+            &client_submit_request,
+        ));
+
+        future::ready(
+            match process_validator_response(response_status.get_status()) {
+                Ok(_) => {
+                    let batch_query = msg
+                        .batch_list
+                        .get_batches()
+                        .iter()
+                        .map(Batch::get_header_signature)
+                        .collect::<Vec<_>>()
+                        .join(",");
+
+                    let mut response_url = msg.response_url.clone();
+                    response_url.set_query(Some(&format!("id={}", batch_query)));
+
+                    Ok(BatchStatusLink {
+                        link: response_url.to_string(),
+                    })
+                }
+                Err(err) => Err(err),
+            },
+        )
+        .boxed()
+    }
+
+    fn batch_status(
+        &self,
+        msg: BatchStatuses,
+    ) -> Pin<Box<dyn Future<Output = Result<Vec<BatchStatus>, RestApiResponseError>> + Send>>
+    {
+        let mut batch_status_request = ClientBatchStatusRequest::new();
+        batch_status_request.set_batch_ids(protobuf::RepeatedField::from_vec(msg.batch_ids));
+        match msg.wait {
+            Some(wait_time) => {
+                batch_status_request.set_wait(true);
+                batch_status_request.set_timeout(wait_time);
+            }
+            None => {
+                batch_status_request.set_wait(false);
+            }
+        }
+
+        let response_status: ClientBatchStatusResponse = try_fut!(query_validator(
+            &self.sender,
+            Message_MessageType::CLIENT_BATCH_STATUS_REQUEST,
+            &batch_status_request,
+        ));
+
+        future::ready(process_batch_status_response(response_status)).boxed()
+    }
+
+    fn clone_box(&self) -> Box<dyn BatchSubmitter> {
+        unimplemented!()
+    }
+}
+
+impl MessageSender for MockMessageSender {
+    fn send(
+        &self,
+        destination: Message_MessageType,
+        correlation_id: &str,
+        contents: &[u8],
+    ) -> Result<MessageFuture, SendError> {
+        let mut mock_validator_response = Message::new();
+        mock_validator_response.set_message_type(destination);
+        mock_validator_response.set_correlation_id(correlation_id.to_string());
+        match &self.response_type {
+            ResponseType::ClientBatchStatusResponseOK => {
+                let request: ClientBatchStatusRequest =
+                    protobuf::parse_from_bytes(contents).unwrap();
+                if request.get_batch_ids().len() <= 1 {
+                    mock_validator_response.set_content(get_batch_statuses_response_one_id())
+                } else {
+                    mock_validator_response
+                        .set_content(get_batch_statuses_response_multiple_ids())
+                }
+            }
+            ResponseType::ClientBatchStatusResponseInvalidId => {
+                mock_validator_response.set_content(get_batch_statuses_response_invalid_id())
+            }
+            ResponseType::ClientBatchStatusResponseInternalError => mock_validator_response
+                .set_content(get_batch_statuses_response_validator_internal_error()),
+            ResponseType::ClientBatchSubmitResponseOK => mock_validator_response.set_content(
+                get_submit_batches_response(ClientBatchSubmitResponse_Status::OK),
+            ),
+            ResponseType::ClientBatchSubmitResponseInvalidBatch => mock_validator_response
+                .set_content(get_submit_batches_response(
+                    ClientBatchSubmitResponse_Status::INVALID_BATCH,
+                )),
+            ResponseType::ClientBatchSubmitResponseInternalError => mock_validator_response
+                .set_content(get_submit_batches_response(
+                    ClientBatchSubmitResponse_Status::INTERNAL_ERROR,
+                )),
+        }
+
+        let mock_resut = Ok(mock_validator_response);
+        let (send, recv) = channel();
+        send.send(mock_resut).unwrap();
+        Ok(MessageFuture::new(recv))
+    }
+
+    fn reply(
+        &self,
+        _destination: Message_MessageType,
+        _correlation_id: &str,
+        _contents: &[u8],
+    ) -> Result<(), SendError> {
+        unimplemented!()
+    }
+
+    fn close(&mut self) {
+        unimplemented!()
     }
 }
 

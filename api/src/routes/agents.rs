@@ -10,7 +10,8 @@ use sawtooth_sdk::signing::create_context;
 use crate::transaction::BatchBuilder;
 use crate::connection::SawtoothConnection;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
-use crate::submitter::{BatchSubmitter, SawtoothBatchSubmitter};
+//use crate::submitter::{BatchSubmitter, SawtoothBatchSubmitter};
+use crate::submitter::{BatchSubmitter, MockBatchSubmitter, ResponseType};
 use crate::error::RestApiResponseError;
 
 use grid_sdk::protocol::pike::{
@@ -164,17 +165,20 @@ pub async fn create_agent(
         .create_batch_list();
 
     let response_url = req.url_for_static("agent")?;
-    
+/*    
     let sawtooth_connection = SawtoothConnection::new(&response_url.to_string());
 
     let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
         sawtooth_connection.get_sender(),
     ));
+*/
+    let mock_sender = MockMessageSender::new(ResponseType::ClientBatchStatusResponseOK);
+    let mock_batch_submitter = Box::new(MockBatchSubmitter {
+        sender: mock_sender,
+    });
 
-    //Ok(HttpResponse::Ok().body("Hello world! I am here to create_agent"))
-
-
-    batch_submitter
+    //batch_submitter
+    mock_batch_submitter
         .submit_batches(SubmitBatches {
             batch_list,
             response_url,

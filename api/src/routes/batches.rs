@@ -13,7 +13,8 @@ use crate::AppState;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 //use crate::submitter::BatchSubmitter;
 use crate::connection::SawtoothConnection;
-use crate::submitter::{BatchSubmitter, SawtoothBatchSubmitter};
+//use crate::submitter::{BatchSubmitter, SawtoothBatchSubmitter};
+use crate::submitter::{BatchSubmitter, MockBatchSubmitter};
 
 pub async fn submit_batches(
     req: HttpRequest,
@@ -102,6 +103,9 @@ pub async fn get_batch_statuses(
             return Err(err.into());
         }
     };
+
+    println!("I am here! response_url : {:?}", response_url);
+    
 /*
     state
         .batch_submitter
@@ -118,15 +122,12 @@ pub async fn get_batch_statuses(
             })
         })
 */
-    let sawtooth_connection = SawtoothConnection::new(&response_url);
+    let mock_sender = MockMessageSender::new(ResponseType::ClientBatchSubmitResponseOK);
+    let mock_batch_submitter = Box::new(MockBatchSubmitter {
+        sender: mock_sender,
+    });
 
-    let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
-        sawtooth_connection.get_sender(),
-    ));
-
-    //println!("I am here! {:?}", response_url);
-    
-    batch_submitter
+    mock_batch_submitter
     .batch_status(BatchStatuses {
         batch_ids,
         wait,
