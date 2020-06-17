@@ -172,7 +172,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
             }
         }
 
-        println!("I am here! msg.wait= {:?}", msg.wait);
+        println!("I am here! msg.wait = {:?}", msg.wait);
 
         let response_status: ClientBatchStatusResponse = try_fut!(query_validator(
             &self.sender,
@@ -180,7 +180,7 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
             &batch_status_request,
         ));
 
-        println!("I am here! response_status= {:?}", response_status);
+        println!("I am here! response_status = {:?}", response_status);
 
         future::ready(process_batch_status_response(response_status)).boxed()
     }
@@ -196,7 +196,7 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
     message: &C,
 ) -> Result<T, RestApiResponseError> {
 
-    println!("I am here! message={:?}", message);
+    println!("I am here! message = {:?}", message);
 
     let content = protobuf::Message::write_to_bytes(message).map_err(|err| {
         RestApiResponseError::RequestHandlerError(format!(
@@ -205,11 +205,11 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
         ))
     })?;
 
-    println!("I am here! content= {:?}", content);
+    println!("I am here! content = {:?}", content);
 
     let correlation_id = Uuid::new_v4().to_string();
 
-    println!("I am here! correlation_id= {:?}", correlation_id);
+    println!("I am here! correlation_id = {:?}", correlation_id);
 
     let mut response_future = sender
         .send(message_type, &correlation_id, &content)
@@ -219,6 +219,8 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
                 err.to_string()
             ))
         })?;
+
+    println!("I am here! response_future = {:?}", response_future);
 
     protobuf::parse_from_bytes(
         response_future
