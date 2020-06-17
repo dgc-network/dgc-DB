@@ -86,10 +86,10 @@ pub async fn fetch_agent(
     //let agent = result.unwrap();
     //let org_id = agent.org_id();
     println!("this ");
-    println!(result);
-    Ok(HttpResponse::Ok().body(result))
+    println!("I am here! {}", result);
+    //Ok(HttpResponse::Ok().body(result))
 
-    //Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
+    Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 
 }
 
