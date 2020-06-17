@@ -208,7 +208,7 @@ pub enum ResponseType {
 }
 
 impl MockMessageSender {
-    fn new(response_type: ResponseType) -> Self {
+    pub fn new(response_type: ResponseType) -> Self {
         MockMessageSender { response_type }
     }
 }
@@ -299,6 +299,7 @@ impl BatchSubmitter for MockBatchSubmitter {
 }
 
 impl MessageSender for MockMessageSender {
+/*    
     fn send(
         &self,
         destination: Message_MessageType,
@@ -342,7 +343,7 @@ impl MessageSender for MockMessageSender {
         send.send(mock_resut).unwrap();
         Ok(MessageFuture::new(recv))
     }
-
+*/
     fn reply(
         &self,
         _destination: Message_MessageType,

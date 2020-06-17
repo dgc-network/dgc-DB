@@ -10,8 +10,6 @@ use actix_web::{
 use futures::future::{Future, TryFutureExt};
 use std::{error::Error, fmt, io};
 use sawtooth_sdk::signing;
-//use sawtooth_sdk::processor::handler::ApplyError;
-//use sawtooth_sdk::processor::handler::ContextError;
 use sawtooth_sdk::processor::handler;
 use grid_sdk::protos;
 
@@ -58,7 +56,6 @@ pub enum RestApiResponseError {
     ProtobufError(protobuf::ProtobufError),
     SigningError(signing::Error),
     ApplyError(handler::ApplyError),
-    //InvalidTransaction(handler::ApplyError::InvalidTransaction),
     ContextError(handler::ContextError),
     ReqwestError(reqwest::Error),
     GridProtoError(protos::ProtoConversionError),
@@ -81,7 +78,6 @@ impl Error for RestApiResponseError {
             RestApiResponseError::ProtobufError(_) => None,
             RestApiResponseError::SigningError(_) => None,
             RestApiResponseError::ApplyError(_) => None,
-            //RestApiResponseError::InvalidTransaction(_) => None,
             RestApiResponseError::ContextError(_) => None,
             RestApiResponseError::ReqwestError(_) => None,
             RestApiResponseError::GridProtoError(_) => None,
@@ -110,7 +106,6 @@ impl fmt::Display for RestApiResponseError {
             RestApiResponseError::ProtobufError(ref err) => write!(f, "ProtobufError: {}", err),
             RestApiResponseError::SigningError(ref err) => write!(f, "SigningError: {}", err),
             RestApiResponseError::ApplyError(ref err) => write!(f, "ApplyError: {}", err),
-            //RestApiResponseError::InvalidTransaction(ref err) => write!(f, "InvalidTransaction: {}", err),
             RestApiResponseError::ContextError(ref err) => write!(f, "ContextError: {}", err),
             RestApiResponseError::ReqwestError(ref err) => write!(f, "Reqwest Error: {}", err),
             RestApiResponseError::GridProtoError(ref err) => write!(f, "Grid Proto Error: {}", err),
@@ -194,13 +189,7 @@ impl From<UrlGenerationError> for RestApiResponseError {
         ))
     }
 }
-/*
-impl From<DatabaseError> for RestApiResponseError {
-    fn from(err: DatabaseError) -> RestApiResponseError {
-        RestApiResponseError::DatabaseError(format!("Database Error occured: {}", err.to_string()))
-    }
-}
-*/
+
 impl From<diesel::result::Error> for RestApiResponseError {
     fn from(err: diesel::result::Error) -> Self {
         RestApiResponseError::DatabaseError(format!(
@@ -233,13 +222,7 @@ impl From<handler::ApplyError> for RestApiResponseError {
         RestApiResponseError::ApplyError(err)
     }
 }
-/*
-impl From<handler::ApplyError::InvalidTransaction> for RestApiResponseError {
-    fn from(err: handler::ApplyError::InvalidTransaction) -> Self {
-        RestApiResponseError::InvalidTransaction(err)
-    }
-}
-*/
+
 impl From<handler::ContextError> for RestApiResponseError {
     fn from(err: handler::ContextError) -> Self {
         RestApiResponseError::ContextError(err)
