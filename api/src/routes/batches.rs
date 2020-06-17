@@ -50,7 +50,7 @@ struct Params {
 
 pub async fn get_batch_statuses(
     req: HttpRequest,
-    state: web::Data<AppState>,
+    //state: web::Data<AppState>,
     query: web::Query<HashMap<String, String>>,
     //query_service_id: web::Query<QueryServiceId>,
     //_: AcceptServiceIdParam,
@@ -100,7 +100,7 @@ pub async fn get_batch_statuses(
             return Err(err.into());
         }
     };
-
+/*
     state
         .batch_submitter
         .batch_status(BatchStatuses {
@@ -115,4 +115,25 @@ pub async fn get_batch_statuses(
                 link: response_url,
             })
         })
+*/
+    let sawtooth_connection = SawtoothConnection::new(&response_url);
+
+    let batch_submitter = Box::new(SawtoothBatchSubmitter::new(
+        sawtooth_connection.get_sender(),
+    ));
+    
+    batch_submitter
+    .batch_status(BatchStatuses {
+        batch_ids,
+        wait,
+        //service_id: query_service_id.into_inner().service_id,
+    })
+    .await
+    .map(|batch_statuses| {
+        HttpResponse::Ok().json(BatchStatusResponse {
+            data: batch_statuses,
+            link: response_url,
+        })
+    })
+
 }
