@@ -71,7 +71,7 @@ pub async fn fetch_agent(
     let state = State::new(&mut transaction_context);
     //let result = state.get_agent(&public_key).unwrap();
     let result = match state.get_agent(&public_key){
-        Ok(x)  => x,
+        Ok(x)  => x.unwrap(),
         Err(e) => return Err(e),
     };
     Ok(HttpResponse::Ok().body(result))
