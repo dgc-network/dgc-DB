@@ -76,7 +76,8 @@ pub async fn fetch_agent(
                 x.unwrap();
             } else {
                 return Err(RestApiResponseError::BadRequest(format!(
-                    "It should set to false or a time in seconds to wait for the commit"
+                    "Not found the Agent data for public_key: {:?}",
+                    public_key
                 )));
             }
         }
