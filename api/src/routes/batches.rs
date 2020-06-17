@@ -124,6 +124,8 @@ pub async fn get_batch_statuses(
         sawtooth_connection.get_sender(),
     ));
     
+    println!("I am here! {:?}", response_url);
+    
     batch_submitter
     .batch_status(BatchStatuses {
         batch_ids,
