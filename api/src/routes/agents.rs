@@ -73,7 +73,7 @@ pub async fn fetch_agent(
     let result = match state.get_agent(&public_key){
         Ok(x)  => {
             if x != None {
-                x.unwrap();
+                x;
             } else {
                 return Err(RestApiResponseError::BadRequest(format!(
                     "It should set to false or a time in seconds to wait for the commit"
