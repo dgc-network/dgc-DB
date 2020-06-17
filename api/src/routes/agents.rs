@@ -71,15 +71,23 @@ pub async fn fetch_agent(
     let state = State::new(&mut transaction_context);
     //let result = state.get_agent(&public_key).unwrap();
     let result = match state.get_agent(&public_key){
-        Ok(x)  => x.unwrap(),
+        Ok(x)  => {
+            if x != None {
+                x.unwrap(),
+            } else {
+                return Err(RestApiResponseError::BadRequest(format!(
+                    "It should set to false or a time in seconds to wait for the commit"
+                )));
+            }
+        }
         Err(e) => return Err(e),
     };
     let org_id = result.org_id();
-    //Ok(HttpResponse::Ok().body(result.org_id()))
+    Ok(HttpResponse::Ok().body(org_id))
     //let agent = result.unwrap();
     //let org_id = agent.org_id();
 
-    Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
+    //Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 
 }
 

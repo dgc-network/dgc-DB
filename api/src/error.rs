@@ -17,7 +17,7 @@ use grid_sdk::protos;
 
 #[derive(Debug)]
 pub enum RestApiServerError {
-    StartUpError(String),
+    //StartUpError(String),
     StdError(std::io::Error),
 }
 

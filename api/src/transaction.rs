@@ -302,6 +302,7 @@ fn compute_namespace_registry_address(namespace: &str) -> Result<String, CliErro
 ///
 /// If a HOME or USER environment variable is required but cannot be
 /// retrieved from the environment, a CliError::VarError is returned.
+/*
 pub fn load_signing_key(name: Option<String>) -> Result<Secp256k1PrivateKey, CliError> {
     let username: String = name
         .ok_or_else(|| env::var("USER"))
@@ -353,3 +354,4 @@ pub fn load_signing_key(name: Option<String>) -> Result<Secp256k1PrivateKey, Cli
 
     Ok(Secp256k1PrivateKey::from_hex(&key_str)?)
 }
+*/
