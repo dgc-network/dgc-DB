@@ -193,12 +193,12 @@ impl BatchSubmitter for SawtoothBatchSubmitter {
     }
 }
 */
-struct MockMessageSender {
+pub struct MockMessageSender {
     response_type: ResponseType,
 }
 
 #[derive(Clone, Copy, Debug)]
-enum ResponseType {
+pub enum ResponseType {
     ClientBatchStatusResponseOK,
     ClientBatchStatusResponseInvalidId,
     ClientBatchStatusResponseInternalError,
@@ -222,7 +222,7 @@ macro_rules! try_fut {
     };
 }
 
-struct MockBatchSubmitter {
+pub struct MockBatchSubmitter {
     sender: MockMessageSender,
 }
 
