@@ -300,7 +300,7 @@ impl BatchSubmitter for MockBatchSubmitter {
 
 impl MessageSender for MockMessageSender {
 
-    fn send(
+    pub fn send(
         &self,
         destination: Message_MessageType,
         correlation_id: &str,
