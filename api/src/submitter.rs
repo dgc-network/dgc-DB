@@ -299,7 +299,7 @@ impl BatchSubmitter for MockBatchSubmitter {
 }
 
 impl MessageSender for MockMessageSender {
-/*    
+
     fn send(
         &self,
         destination: Message_MessageType,
@@ -309,6 +309,7 @@ impl MessageSender for MockMessageSender {
         let mut mock_validator_response = Message::new();
         mock_validator_response.set_message_type(destination);
         mock_validator_response.set_correlation_id(correlation_id.to_string());
+/*        
         match &self.response_type {
             ResponseType::ClientBatchStatusResponseOK => {
                 let request: ClientBatchStatusRequest =
@@ -337,13 +338,13 @@ impl MessageSender for MockMessageSender {
                     ClientBatchSubmitResponse_Status::INTERNAL_ERROR,
                 )),
         }
-
+*/
         let mock_resut = Ok(mock_validator_response);
         let (send, recv) = channel();
         send.send(mock_resut).unwrap();
         Ok(MessageFuture::new(recv))
     }
-*/
+
     fn reply(
         &self,
         _destination: Message_MessageType,
@@ -388,7 +389,7 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
             ))
         })?;
 
-    println!("I am here! response_future = {:?}", response_future);
+    //println!("I am here! response_future = {:?}", response_future);
 
     protobuf::parse_from_bytes(
         response_future
