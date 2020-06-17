@@ -82,10 +82,10 @@ pub async fn fetch_agent(
         }
         Err(e) => return Err(e),
     };
-    let org_id = result.org_id();
+    //let org_id = result.org_id();
+    let agent = result.unwrap();
+    let org_id = agent.org_id();
     Ok(HttpResponse::Ok().body(org_id))
-    //let agent = result.unwrap();
-    //let org_id = agent.org_id();
 
     //Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 
