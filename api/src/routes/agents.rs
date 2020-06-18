@@ -187,7 +187,8 @@ pub async fn update_agent(
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_hex)?;
     //let public_key_hex = context.get_public_key(&private_key)?.as_hex();
     let public_key = Box::into_raw(context.get_public_key(private_key)?).as_ref().unwrap();
-
+    println!("I am here! private_key = {:?}", private_key.as_hex());
+    println!("I am here! public_key = {:?}", public_key.as_hex());
 
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
