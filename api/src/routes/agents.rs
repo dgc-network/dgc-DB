@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::{web, HttpRequest, HttpResponse};
-use sawtooth_sdk::signing::CryptoFactory;
+//use sawtooth_sdk::signing::CryptoFactory;
 use sawtooth_sdk::signing::create_context;
+use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 
 use crate::transaction::BatchBuilder;
-use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
-use crate::submitter::{BatchSubmitter, MockBatchSubmitter, MockMessageSender, ResponseType};
+//use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
+use crate::submitter::{BatchSubmitter, SubmitBatches};
+use crate::submitter::{MockBatchSubmitter, MockMessageSender, ResponseType};
 use crate::error::RestApiResponseError;
 use super::state::{MockTransactionContext, State};
 
@@ -15,7 +17,7 @@ use super::state::{MockTransactionContext, State};
 use grid_sdk::protocol::pike::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
     state::{
-        KeyValueEntry, KeyValueEntryBuilder, Agent,
+        KeyValueEntry, KeyValueEntryBuilder,
     },
     payload::{
         Action, PikePayloadBuilder, 
