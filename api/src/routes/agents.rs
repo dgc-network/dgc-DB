@@ -5,7 +5,7 @@ use actix_web::{web, HttpRequest, HttpResponse};
 //use sawtooth_sdk::signing::CryptoFactory;
 use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::signing::Context;
-use sawtooth_sdk::signing::secp256k1::Secp256k1Context;
+//use sawtooth_sdk::signing::secp256k1::Secp256k1Context;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use serde::Deserialize;
 
@@ -79,8 +79,8 @@ pub async fn fetch_agent(
 
 }
 
-use std::alloc::{dealloc, Layout};
-use std::ptr;
+//use std::alloc::{dealloc, Layout};
+//use std::ptr;
 
 pub async fn create_agent(
     req: HttpRequest,
@@ -90,7 +90,7 @@ pub async fn create_agent(
     let context = create_context("secp256k1")?;
     //let context = Secp256k1Context::new();
     let private_key = Box::into_raw(context.new_random_private_key()?).as_ref().unwrap();
-    let public_key_hex = Box::into_raw(context.get_public_key(private_key)?).as_ref().unwrap();
+    let public_key = Box::into_raw(context.get_public_key(private_key)?).as_ref().unwrap();
 
     //let private_key = &agent_input.private_key;
     let org_id = &agent_input.org_id;
@@ -130,7 +130,7 @@ pub async fn create_agent(
 
     let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
-        .with_public_key(public_key_hex.to_string())
+        .with_public_key(public_key.as_hex())
         .with_active(true)
         .with_roles(roles)
         .with_metadata(metadata)
