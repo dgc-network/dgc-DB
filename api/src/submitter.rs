@@ -16,9 +16,7 @@ use sawtooth_sdk::messages::client_batch_submit::{
     ClientBatchStatusRequest, ClientBatchStatusResponse, ClientBatchStatusResponse_Status,
     ClientBatchSubmitRequest, ClientBatchSubmitResponse, ClientBatchSubmitResponse_Status,
 };
-//use sawtooth_sdk::messages::validator::Message_MessageType;
 use sawtooth_sdk::messages::validator::{Message, Message_MessageType};
-//use sawtooth_sdk::messaging::stream::MessageSender;
 use sawtooth_sdk::messaging::stream::{MessageFuture, MessageSender, SendError};
 use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
 use std::sync::mpsc::channel;
@@ -101,98 +99,7 @@ impl Clone for Box<dyn BatchSubmitter> {
         self.clone_box()
     }
 }
-/*
-#[derive(Clone)]
-pub struct SawtoothBatchSubmitter {
-    sender: ZmqMessageSender,
-}
 
-impl SawtoothBatchSubmitter {
-    pub fn new(sender: ZmqMessageSender) -> Self {
-        Self { sender }
-    }
-}
-
-macro_rules! try_fut {
-    ($try_expr:expr) => {
-        match $try_expr {
-            Ok(res) => res,
-            Err(err) => return futures::future::err(err).boxed(),
-        }
-    };
-}
-
-impl BatchSubmitter for SawtoothBatchSubmitter {
-    fn submit_batches(
-        &self,
-        msg: SubmitBatches,
-    ) -> Pin<Box<dyn Future<Output = Result<BatchStatusLink, RestApiResponseError>> + Send>> {
-        
-        let mut client_submit_request = ClientBatchSubmitRequest::new();
-        client_submit_request.set_batches(protobuf::RepeatedField::from_vec(
-            msg.batch_list.get_batches().to_vec(),
-        ));
-
-        let response_status: ClientBatchSubmitResponse = try_fut!(query_validator(
-            &self.sender,
-            Message_MessageType::CLIENT_BATCH_SUBMIT_REQUEST,
-            &client_submit_request,
-        ));
-
-        future::ready(
-            process_validator_response(response_status.get_status()).map(|_| {
-                let batch_query = msg
-                    .batch_list
-                    .get_batches()
-                    .iter()
-                    .map(Batch::get_header_signature)
-                    .collect::<Vec<_>>()
-                    .join(",");
-
-                let mut response_url = msg.response_url;
-                response_url.set_query(Some(&format!("id={}", batch_query)));
-
-                BatchStatusLink {
-                    link: response_url.to_string(),
-                }
-            }),
-        ).boxed()
-    }
-
-    fn batch_status(
-        &self,
-        msg: BatchStatuses,
-    ) -> Pin<Box<dyn Future<Output = Result<Vec<BatchStatus>, RestApiResponseError>> + Send>> {
-        let mut batch_status_request = ClientBatchStatusRequest::new();
-        batch_status_request.set_batch_ids(protobuf::RepeatedField::from_vec(msg.batch_ids));
-        match msg.wait {
-            Some(wait_time) => {
-                batch_status_request.set_wait(true);
-                batch_status_request.set_timeout(wait_time);
-            }
-            None => {
-                batch_status_request.set_wait(false);
-            }
-        }
-
-        println!("I am here! msg.wait = {:?}", msg.wait);
-
-        let response_status: ClientBatchStatusResponse = try_fut!(query_validator(
-            &self.sender,
-            Message_MessageType::CLIENT_BATCH_STATUS_REQUEST,
-            &batch_status_request,
-        ));
-
-        println!("I am here! response_status = {:?}", response_status);
-
-        future::ready(process_batch_status_response(response_status)).boxed()
-    }
-
-    fn clone_box(&self) -> Box<dyn BatchSubmitter> {
-        Box::new(self.clone())
-    }
-}
-*/
 pub struct MockMessageSender {
     response_type: ResponseType,
 }
@@ -299,7 +206,6 @@ impl BatchSubmitter for MockBatchSubmitter {
 }
 
 impl MessageSender for MockMessageSender {
-
     fn send(
         &self,
         destination: Message_MessageType,
@@ -309,7 +215,7 @@ impl MessageSender for MockMessageSender {
         let mut mock_validator_response = Message::new();
         mock_validator_response.set_message_type(destination);
         mock_validator_response.set_correlation_id(correlation_id.to_string());
-/*        
+
         match &self.response_type {
             ResponseType::ClientBatchStatusResponseOK => {
                 let request: ClientBatchStatusRequest =
@@ -338,7 +244,7 @@ impl MessageSender for MockMessageSender {
                     ClientBatchSubmitResponse_Status::INTERNAL_ERROR,
                 )),
         }
-*/
+
         let mock_resut = Ok(mock_validator_response);
         let (send, recv) = channel();
         send.send(mock_resut).unwrap();
@@ -409,9 +315,6 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
 pub fn process_validator_response(
     status: ClientBatchSubmitResponse_Status,
 ) -> Result<(), RestApiResponseError> {
-
-    Ok(())
-/*
     match status {
         ClientBatchSubmitResponse_Status::OK => Ok(()),
         ClientBatchSubmitResponse_Status::INVALID_BATCH => Err(RestApiResponseError::BadRequest(
@@ -423,7 +326,6 @@ pub fn process_validator_response(
             format!("Validator responded with error {:?}", status),
         )),
     }
-*/
 }
 
 pub fn process_batch_status_response(
@@ -446,3 +348,58 @@ pub fn process_batch_status_response(
         )),
     }
 }
+
+fn get_batch_statuses_response_one_id() -> Vec<u8> {
+    let mut batch_status_response = ClientBatchStatusResponse::new();
+    batch_status_response.set_status(ClientBatchStatusResponse_Status::OK);
+    let mut batch_status = ClientBatchStatus::new();
+    batch_status.set_batch_id(BATCH_ID_1.to_string());
+    batch_status.set_status(ClientBatchStatus_Status::COMMITTED);
+    batch_status_response
+        .set_batch_statuses(protobuf::RepeatedField::from_vec(vec![batch_status]));
+    protobuf::Message::write_to_bytes(&batch_status_response)
+        .expect("Failed to write batch statuses to bytes")
+}
+
+fn get_batch_statuses_response_multiple_ids() -> Vec<u8> {
+    let mut batch_status_response = ClientBatchStatusResponse::new();
+    batch_status_response.set_status(ClientBatchStatusResponse_Status::OK);
+    let mut batch_status_1 = ClientBatchStatus::new();
+    batch_status_1.set_batch_id(BATCH_ID_1.to_string());
+    batch_status_1.set_status(ClientBatchStatus_Status::COMMITTED);
+    let mut batch_status_2 = ClientBatchStatus::new();
+    batch_status_2.set_batch_id(BATCH_ID_2.to_string());
+    batch_status_2.set_status(ClientBatchStatus_Status::COMMITTED);
+    let mut batch_status_3 = ClientBatchStatus::new();
+    batch_status_3.set_batch_id(BATCH_ID_3.to_string());
+    batch_status_3.set_status(ClientBatchStatus_Status::COMMITTED);
+    batch_status_response.set_batch_statuses(protobuf::RepeatedField::from_vec(vec![
+        batch_status_1,
+        batch_status_2,
+        batch_status_3,
+    ]));
+    protobuf::Message::write_to_bytes(&batch_status_response)
+        .expect("Failed to write batch statuses to bytes")
+}
+
+fn get_batch_statuses_response_invalid_id() -> Vec<u8> {
+    let mut batch_status_response = ClientBatchStatusResponse::new();
+    batch_status_response.set_status(ClientBatchStatusResponse_Status::INVALID_ID);
+    protobuf::Message::write_to_bytes(&batch_status_response)
+        .expect("Failed to write batch statuses to bytes")
+}
+
+fn get_batch_statuses_response_validator_internal_error() -> Vec<u8> {
+    let mut batch_status_response = ClientBatchStatusResponse::new();
+    batch_status_response.set_status(ClientBatchStatusResponse_Status::INTERNAL_ERROR);
+    protobuf::Message::write_to_bytes(&batch_status_response)
+        .expect("Failed to write batch statuses to bytes")
+}
+
+fn get_submit_batches_response(status: ClientBatchSubmitResponse_Status) -> Vec<u8> {
+    let mut batch_status_response = ClientBatchSubmitResponse::new();
+    batch_status_response.set_status(status);
+    protobuf::Message::write_to_bytes(&batch_status_response)
+        .expect("Failed to write batch statuses to bytes")
+}
+
