@@ -90,16 +90,20 @@ pub async fn create_agent(
 
     //let context = create_context("secp256k1")?;
     let context = Secp256k1Context::new();
-    let private_key = Box::into_raw(context.new_random_private_key()?).as_ref().unwrap();
+    let private_key_box = Box::into_raw(context.new_random_private_key()?);
     unsafe {
-        ptr::drop_in_place(private_key);
-        dealloc(private_key as &dyn sawtooth_sdk::signing::PrivateKey, Layout::new::<String>());
+        ptr::drop_in_place(private_key_box);
+        dealloc(private_key_box as *mut u8, Layout::new::<String>());
     }
-    let public_key = Box::into_raw(context.get_public_key(private_key)?).as_ref().unwrap();
+    let private_key = private_key_box.as_ref().unwrap();
+
+    let public_key_box = Box::into_raw(context.get_public_key(private_key)?);
     unsafe {
-        ptr::drop_in_place(public_key);
-        dealloc(public_key as &dyn sawtooth_sdk::signing::PublicKey, Layout::new::<String>());
+        ptr::drop_in_place(public_key_box);
+        dealloc(public_key_box as *mut u8, Layout::new::<String>());
     }
+    let public_key = public_key_box.as_ref().unwrap();
+    
     //let private_key = context.new_random_private_key()?.as_ref().unwrap();
     //let public_key = context.get_public_key(private_key)?.as_ref().unwrap();
     //let private_key = context.new_random_private_key()?.unwrap();
