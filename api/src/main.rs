@@ -6,7 +6,7 @@
 
 mod routes;
 mod error;
-mod connection;
+//mod connection;
 mod submitter;
 mod transaction;
 

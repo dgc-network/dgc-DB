@@ -9,17 +9,17 @@ use serde::Deserialize;
 
 use crate::error::RestApiResponseError;
 //use crate::{AcceptServiceIdParam, AppState, QueryServiceId};
-use crate::AppState;
+//use crate::AppState;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 //use crate::submitter::BatchSubmitter;
-use crate::connection::SawtoothConnection;
+//use crate::connection::SawtoothConnection;
 //use crate::submitter::{BatchSubmitter, SawtoothBatchSubmitter};
 use crate::submitter::{BatchSubmitter, MockBatchSubmitter, MockMessageSender, ResponseType};
 
 pub async fn submit_batches(
     req: HttpRequest,
     body: web::Bytes,
-    state: web::Data<AppState>,
+    //state: web::Data<AppState>,
     //query_service_id: web::Query<QueryServiceId>,
     //_: AcceptServiceIdParam,
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -34,7 +34,7 @@ pub async fn submit_batches(
     };
 
     let response_url = req.url_for_static("batch_statuses")?;
-
+/*
     state
         .batch_submitter
         .submit_batches(SubmitBatches {
@@ -44,6 +44,21 @@ pub async fn submit_batches(
         })
         .await
         .map(|link| HttpResponse::Ok().json(link))
+*/
+    let mock_sender = MockMessageSender::new(ResponseType::ClientBatchSubmitResponseOK);
+    let mock_batch_submitter = Box::new(MockBatchSubmitter {
+        sender: mock_sender,
+    });
+
+    mock_batch_submitter
+    .submit_batches(SubmitBatches {
+        batch_list,
+        response_url,
+        //service_id: query_service_id.into_inner().service_id,
+    })
+    .await
+    .map(|link| HttpResponse::Ok().json(link))
+
 }
 
 #[derive(Deserialize, Debug)]
@@ -122,7 +137,7 @@ pub async fn get_batch_statuses(
             })
         })
 */
-    let mock_sender = MockMessageSender::new(ResponseType::ClientBatchSubmitResponseOK);
+    let mock_sender = MockMessageSender::new(ResponseType::ClientBatchStatusResponseOK);
     let mock_batch_submitter = Box::new(MockBatchSubmitter {
         sender: mock_sender,
     });
