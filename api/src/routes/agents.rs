@@ -3,9 +3,9 @@
 
 use actix_web::{web, HttpRequest, HttpResponse};
 //use sawtooth_sdk::signing::CryptoFactory;
-use sawtooth_sdk::signing::create_context;
-//use sawtooth_sdk::signing::Context;
-//use sawtooth_sdk::signing::secp256k1::Secp256k1Context;
+//use sawtooth_sdk::signing::create_context;
+use sawtooth_sdk::signing::Context;
+use sawtooth_sdk::signing::secp256k1::Secp256k1Context;
 use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use serde::Deserialize;
@@ -88,10 +88,12 @@ pub async fn create_agent(
     agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let context = create_context("secp256k1")?;
-    //let context = Secp256k1Context::new();
-    let private_key = Box::into_raw(context.new_random_private_key()?).as_ref().unwrap();
-    let public_key = Box::into_raw(context.get_public_key(private_key)?).as_ref().unwrap();
+    //let context = create_context("secp256k1")?;
+    let context = Secp256k1Context::new();
+    //let private_key = Box::into_raw(context.new_random_private_key()?).as_ref().unwrap();
+    //let public_key = Box::into_raw(context.get_public_key(private_key)?).as_ref().unwrap();
+    let private_key = context.new_random_private_key()?.as_ref().unwrap();
+    let public_key = context.get_public_key(private_key)?.as_ref().unwrap();
     println!("I am here! private_key = {:?}", private_key.as_hex());
     println!("I am here! public_key = {:?}", public_key.as_hex());
 
@@ -184,10 +186,11 @@ pub async fn update_agent(
     let roles_as_string = &agent_input.roles;
     let metadata_as_string = &agent_input.metadata;
 
-    let context = create_context("secp256k1")?;
+    //let context = create_context("secp256k1")?;
+    let context = Secp256k1Context::new();
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_hex)?;
-    //let public_key_hex = context.get_public_key(&private_key)?.as_hex();
-    let public_key = Box::into_raw(context.get_public_key(&private_key)?).as_ref().unwrap();
+    let public_key = context.get_public_key(&private_key)?;
+    //let public_key = Box::into_raw(context.get_public_key(&private_key)?).as_ref().unwrap();
     println!("I am here! private_key = {:?}", private_key.as_hex());
     println!("I am here! public_key = {:?}", public_key.as_hex());
 
