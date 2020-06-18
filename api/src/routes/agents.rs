@@ -6,7 +6,6 @@ use sawtooth_sdk::signing::CryptoFactory;
 use sawtooth_sdk::signing::create_context;
 
 use crate::transaction::BatchBuilder;
-//use crate::connection::SawtoothConnection;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 use crate::submitter::{BatchSubmitter, MockBatchSubmitter, MockMessageSender, ResponseType};
 use crate::error::RestApiResponseError;
@@ -94,7 +93,8 @@ pub async fn create_agent(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     let context = create_context("secp256k1")?;
-    let private_key = context.new_random_private_key()?.as_hex();
+    let private_key = context.new_random_private_key()?;
+    let public_key_hex = context.get_public_key(&private_key)?.as_hex();
 
     //let private_key = &agent_input.private_key;
     let org_id = &agent_input.org_id;
@@ -134,7 +134,7 @@ pub async fn create_agent(
 
     let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
-        .with_public_key("public_key".to_string())
+        .with_public_key(public_key_hex.to_string())
         .with_active(true)
         .with_roles(roles)
         .with_metadata(metadata)
@@ -147,7 +147,7 @@ pub async fn create_agent(
         .build()
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
 
-    let batch_list = BatchBuilder::new(PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, &private_key)
+    let batch_list = BatchBuilder::new(PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, &private_key.as_hex())
         .add_transaction(
             &payload.into_proto()?,
             &[PIKE_NAMESPACE.to_string()],
@@ -157,7 +157,7 @@ pub async fn create_agent(
 
     let response_url = req.url_for_static("agent")?;
 
-    let mock_sender = MockMessageSender::new(ResponseType::ClientBatchStatusResponseOK);
+    let mock_sender = MockMessageSender::new(ResponseType::ClientBatchSubmitResponseOK);
     let mock_batch_submitter = Box::new(MockBatchSubmitter {
         sender: mock_sender,
     });
@@ -180,13 +180,14 @@ pub async fn update_agent(
     agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    //let context = create_context("secp256k1")?;
-    //let private_key = context.new_random_private_key()?.as_hex();
-
-    let private_key = &agent_input.private_key;
+    let private_key_hex = &agent_input.private_key;
     let org_id = &agent_input.org_id;
     let roles_as_string = &agent_input.roles;
     let metadata_as_string = &agent_input.metadata;
+
+    let context = create_context("secp256k1")?;
+    let private_key = Secp256k1PrivateKey::from_hex(&private_key_hex)?;
+    let public_key_hex = context.get_public_key(&private_key)?.as_hex();
 
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
@@ -221,7 +222,7 @@ pub async fn update_agent(
 
     let action = UpdateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
-        .with_public_key("public_key".to_string())
+        .with_public_key(public_key_hex.to_string())
         .with_active(true)
         .with_roles(roles)
         .with_metadata(metadata)
@@ -234,7 +235,7 @@ pub async fn update_agent(
         .build()
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
 
-    let batch_list = BatchBuilder::new(PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, &private_key)
+    let batch_list = BatchBuilder::new(PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, &private_key_hex)
         .add_transaction(
             &payload.into_proto()?,
             &[PIKE_NAMESPACE.to_string()],
@@ -244,7 +245,7 @@ pub async fn update_agent(
 
     let response_url = req.url_for_static("agent")?;
 
-    let mock_sender = MockMessageSender::new(ResponseType::ClientBatchStatusResponseOK);
+    let mock_sender = MockMessageSender::new(ResponseType::ClientBatchSubmitResponseOK);
     let mock_batch_submitter = Box::new(MockBatchSubmitter {
         sender: mock_sender,
     });
