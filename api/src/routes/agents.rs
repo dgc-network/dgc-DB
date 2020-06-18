@@ -93,12 +93,12 @@ pub async fn create_agent(
     let private_key = Box::into_raw(context.new_random_private_key()?).as_ref().unwrap();
     unsafe {
         ptr::drop_in_place(private_key);
-        dealloc(private_key as *mut u8, Layout::new::<String>());
+        dealloc(private_key as &dyn sawtooth_sdk::signing::PrivateKey, Layout::new::<String>());
     }
     let public_key = Box::into_raw(context.get_public_key(private_key)?).as_ref().unwrap();
     unsafe {
         ptr::drop_in_place(public_key);
-        dealloc(public_key as *mut u8, Layout::new::<String>());
+        dealloc(public_key as &dyn sawtooth_sdk::signing::PublicKey, Layout::new::<String>());
     }
     //let private_key = context.new_random_private_key()?.as_ref().unwrap();
     //let public_key = context.get_public_key(private_key)?.as_ref().unwrap();
