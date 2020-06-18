@@ -84,9 +84,9 @@ pub async fn create_agent(
     agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    //let context = create_context("secp256k1")?;
-    let context = Secp256k1Context::new();
-    let private_key = context.new_random_private_key()?;
+    let context = create_context("secp256k1")?;
+    //let context = Secp256k1Context::new();
+    let private_key = context.new_random_private_key()?.unwrap();
     let public_key_hex = context.get_public_key(&private_key)?.as_hex();
 
     //let private_key = &agent_input.private_key;
