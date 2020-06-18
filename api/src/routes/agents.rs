@@ -6,7 +6,7 @@ use sawtooth_sdk::signing::CryptoFactory;
 use sawtooth_sdk::signing::create_context;
 
 use crate::transaction::BatchBuilder;
-use crate::connection::SawtoothConnection;
+//use crate::connection::SawtoothConnection;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 use crate::submitter::{BatchSubmitter, MockBatchSubmitter, MockMessageSender, ResponseType};
 use crate::error::RestApiResponseError;
@@ -19,8 +19,9 @@ use grid_sdk::protocol::pike::{
         KeyValueEntry, KeyValueEntryBuilder, Agent,
     },
     payload::{
-        Action, PikePayloadBuilder, CreateAgentActionBuilder, 
-        //CreateAgentAction, UpdateAgentAction, UpdateAgentActionBuilder, 
+        Action, PikePayloadBuilder, 
+        CreateAgentActionBuilder, UpdateAgentActionBuilder, 
+        //CreateAgentAction, UpdateAgentAction,
     },
 };
 use grid_sdk::protos::IntoProto;

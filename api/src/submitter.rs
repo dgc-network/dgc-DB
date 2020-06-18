@@ -11,17 +11,26 @@ use url::Url;
 use uuid::Uuid;
 
 use sawtooth_sdk::messages::batch::{Batch, BatchList};
+//use sawtooth_sdk::messages::client_batch_submit::{
+//    ClientBatchStatus,
+//    ClientBatchStatusRequest, ClientBatchStatusResponse, ClientBatchStatusResponse_Status,
+//    ClientBatchSubmitRequest, ClientBatchSubmitResponse, ClientBatchSubmitResponse_Status,
+//};
 use sawtooth_sdk::messages::client_batch_submit::{
-    ClientBatchStatus,
-    ClientBatchStatusRequest, ClientBatchStatusResponse, ClientBatchStatusResponse_Status,
-    ClientBatchSubmitRequest, ClientBatchSubmitResponse, ClientBatchSubmitResponse_Status,
+    ClientBatchStatus, ClientBatchStatusRequest, ClientBatchStatusResponse,
+    ClientBatchStatusResponse_Status, ClientBatchStatus_Status, ClientBatchSubmitRequest,
+    ClientBatchSubmitResponse, ClientBatchSubmitResponse_Status,
 };
 use sawtooth_sdk::messages::validator::{Message, Message_MessageType};
 use sawtooth_sdk::messaging::stream::{MessageFuture, MessageSender, SendError};
-use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
+//use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
 use std::sync::mpsc::channel;
 
 use crate::error::RestApiResponseError;
+
+static BATCH_ID_1: &str = "batch_1";
+static BATCH_ID_2: &str = "batch_2";
+static BATCH_ID_3: &str = "batch_3";
 
 pub const DEFAULT_TIME_OUT: u32 = 300; // Max timeout 300 seconds == 5 minutes
 
