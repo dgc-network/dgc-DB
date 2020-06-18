@@ -4,6 +4,7 @@
 use std::collections::HashMap;
 use std::pin::Pin;
 use std::time::Duration;
+use std::sync::mpsc::channel;
 
 use futures::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -11,11 +12,6 @@ use url::Url;
 use uuid::Uuid;
 
 use sawtooth_sdk::messages::batch::{Batch, BatchList};
-//use sawtooth_sdk::messages::client_batch_submit::{
-//    ClientBatchStatus,
-//    ClientBatchStatusRequest, ClientBatchStatusResponse, ClientBatchStatusResponse_Status,
-//    ClientBatchSubmitRequest, ClientBatchSubmitResponse, ClientBatchSubmitResponse_Status,
-//};
 use sawtooth_sdk::messages::client_batch_submit::{
     ClientBatchStatus, ClientBatchStatusRequest, ClientBatchStatusResponse,
     ClientBatchStatusResponse_Status, ClientBatchStatus_Status, ClientBatchSubmitRequest,
@@ -23,8 +19,6 @@ use sawtooth_sdk::messages::client_batch_submit::{
 };
 use sawtooth_sdk::messages::validator::{Message, Message_MessageType};
 use sawtooth_sdk::messaging::stream::{MessageFuture, MessageSender, SendError};
-//use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
-use std::sync::mpsc::channel;
 
 use crate::error::RestApiResponseError;
 

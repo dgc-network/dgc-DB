@@ -41,17 +41,17 @@ pub fn compute_schema_address(name: &str) -> String {
 }
 
 /// GridSchemaState is in charge of handling getting and setting state.
-pub struct State<'a> {
+pub struct MockState<'a> {
     context: &'a dyn TransactionContext,
 }
 
-impl<'a> State<'a> {
-    pub fn new(context: &'a dyn TransactionContext) -> State {
-        State { context }
+impl<'a> MockState<'a> {
+    pub fn new(context: &'a dyn TransactionContext) -> MockState {
+        MockState { context }
     }
-/*
+
     /// Gets a Pike Agent. Handles retrieving the correct agent from an AgentList.
-    pub fn get_agents(&self, public_key: &str) -> Result<Option<Agent>, ApplyError> {
+    pub fn get_agents(&self, public_key: &str) -> Result<Option<Vec<Agent>>, RestApiResponseError> {
         let address = compute_agent_address(public_key);
         let d = self.context.get_state_entry(&address)?;
         match d {
@@ -59,7 +59,7 @@ impl<'a> State<'a> {
                 let agents = match AgentList::from_bytes(packed.as_slice()) {
                     Ok(agents) => agents,
                     Err(err) => {
-                        return Err(ApplyError::InvalidTransaction(format!(
+                        return Err(RestApiResponseError::NotFoundError(format!(
                             "Cannot deserialize agent list: {:?}",
                             err,
                         )));
@@ -69,7 +69,7 @@ impl<'a> State<'a> {
             None => Ok(None),
         }
     }
-*/
+
     /// Gets a Pike Agent. Handles retrieving the correct agent from an AgentList.
     //pub fn get_agent(&self, public_key: &str) -> Result<Option<Agent>, ApplyError> {
     pub fn get_agent(&self, public_key: &str) -> Result<Option<Agent>, RestApiResponseError> {

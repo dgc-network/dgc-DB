@@ -4,15 +4,15 @@
 use actix_web::{web, HttpRequest, HttpResponse};
 //use sawtooth_sdk::signing::CryptoFactory;
 use sawtooth_sdk::signing::create_context;
+use sawtooth_sdk::signing::secp256k1::Secp256k1Context;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use serde::Deserialize;
 
 use crate::transaction::BatchBuilder;
 use crate::submitter::{BatchSubmitter, SubmitBatches};
 use crate::submitter::{MockBatchSubmitter, MockMessageSender, ResponseType};
+use super::state::{MockTransactionContext, MockState};
 use crate::error::RestApiResponseError;
-use super::state::{MockTransactionContext, State};
-
 
 use grid_sdk::protocol::pike::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
@@ -54,7 +54,7 @@ pub async fn fetch_agent(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     let mut transaction_context = MockTransactionContext::default();
-    let state = State::new(&mut transaction_context);
+    let state = MockState::new(&mut transaction_context);
     //let result = state.get_agent(&public_key).unwrap();
     let result = match state.get_agent(&public_key){
         Ok(x)  => {
@@ -83,9 +83,10 @@ pub async fn create_agent(
     agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let context = create_context("secp256k1")?;
+    //let context = create_context("secp256k1")?;
+    let context = Secp256k1Context.new()?;
     let private_key = context.new_random_private_key()?;
-    //let public_key_hex = context.get_public_key(&private_key)?.as_hex();
+    let public_key_hex = context.get_public_key(&private_key)?.as_hex();
 
     //let private_key = &agent_input.private_key;
     let org_id = &agent_input.org_id;
@@ -179,6 +180,7 @@ pub async fn update_agent(
     let context = create_context("secp256k1")?;
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_hex)?;
     let public_key_hex = context.get_public_key(&private_key)?.as_hex();
+
 
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
