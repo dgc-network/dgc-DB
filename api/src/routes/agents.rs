@@ -90,12 +90,12 @@ pub async fn create_agent(
 
     //let context = create_context("secp256k1")?;
     let context = Secp256k1Context::new();
-    //let private_key = Box::into_raw(context.new_random_private_key()?).as_ref().unwrap();
-    //let public_key = Box::into_raw(context.get_public_key(private_key)?).as_ref().unwrap();
+    let private_key = Box::into_raw(context.new_random_private_key()?).as_ref().unwrap();
+    let public_key = Box::into_raw(context.get_public_key(private_key)?).as_ref().unwrap();
     //let private_key = context.new_random_private_key()?.as_ref().unwrap();
     //let public_key = context.get_public_key(private_key)?.as_ref().unwrap();
-    let private_key = context.new_random_private_key()?.unwrap();
-    let public_key = context.get_public_key(private_key)?.unwrap();
+    //let private_key = context.new_random_private_key()?.unwrap();
+    //let public_key = context.get_public_key(private_key)?.unwrap();
     println!("I am here! private_key = {:?}", private_key.as_hex());
     println!("I am here! public_key = {:?}", public_key.as_hex());
 
