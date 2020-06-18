@@ -57,7 +57,7 @@ impl<'a> MockState<'a> {
         match d {
             Some(packed) => {
                 let agents = match AgentList::from_bytes(packed.as_slice()) {
-                    Ok(agents) => agents,
+                    Ok(agents) => Ok(agents),
                     Err(err) => {
                         return Err(RestApiResponseError::NotFoundError(format!(
                             "Cannot deserialize agent list: {:?}",
