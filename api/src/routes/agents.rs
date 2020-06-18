@@ -92,12 +92,12 @@ pub async fn create_agent(
     let context = Secp256k1Context::new();
     let private_key = Box::into_raw(context.new_random_private_key()?).as_ref().unwrap();
     unsafe {
-        ptr::drop_in_place(p);
+        ptr::drop_in_place(private_key);
         dealloc(private_key as *mut u8, Layout::new::<String>());
     }
     let public_key = Box::into_raw(context.get_public_key(private_key)?).as_ref().unwrap();
     unsafe {
-        ptr::drop_in_place(p);
+        ptr::drop_in_place(public_key);
         dealloc(public_key as *mut u8, Layout::new::<String>());
     }
     //let private_key = context.new_random_private_key()?.as_ref().unwrap();
