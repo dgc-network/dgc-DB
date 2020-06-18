@@ -96,7 +96,8 @@ pub async fn create_agent(
 
     let context = create_context("secp256k1")?;
     let private_key = context.new_random_private_key()?;
-    let public_key_hex = context.get_public_key(&private_key)?.as_hex();
+    let public_key_hex = context.get_public_key(private_key)?.as_hex();
+    //let public_key_hex = context.get_public_key(&private_key)?.as_hex();
 
     //let private_key = &agent_input.private_key;
     let org_id = &agent_input.org_id;
