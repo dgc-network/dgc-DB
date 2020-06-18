@@ -79,6 +79,9 @@ pub async fn fetch_agent(
 
 }
 
+use std::alloc::{dealloc, Layout};
+use std::ptr;
+
 pub async fn create_agent(
     req: HttpRequest,
     agent_input: web::Json<AgentInput>,
@@ -87,6 +90,10 @@ pub async fn create_agent(
     let context = create_context("secp256k1")?;
     //let context = Secp256k1Context::new();
     let private_key = Box::into_raw(context.new_random_private_key()?);
+    unsafe {
+        ptr::drop_in_place(private_key);
+        dealloc(private_key as *mut u8, Layout::new::<String>());
+    }
     let public_key_hex = context.get_public_key(&private_key)?.as_hex();
 
     //let private_key = &agent_input.private_key;
