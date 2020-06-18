@@ -5,9 +5,9 @@ use actix_web::{web, HttpRequest, HttpResponse};
 //use sawtooth_sdk::signing::CryptoFactory;
 use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
+use serde::Deserialize;
 
 use crate::transaction::BatchBuilder;
-//use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 use crate::submitter::{BatchSubmitter, SubmitBatches};
 use crate::submitter::{MockBatchSubmitter, MockMessageSender, ResponseType};
 use crate::error::RestApiResponseError;
@@ -22,11 +22,9 @@ use grid_sdk::protocol::pike::{
     payload::{
         Action, PikePayloadBuilder, 
         CreateAgentActionBuilder, UpdateAgentActionBuilder, 
-        //CreateAgentAction, UpdateAgentAction,
     },
 };
 use grid_sdk::protos::IntoProto;
-use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct AgentInput {
@@ -38,14 +36,7 @@ pub struct AgentInput {
 
 pub async fn list_agents(
     req: HttpRequest,
-    //agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
-
-    //let private_key = &agent_input.private_key;
-    //let org_id = &agent_input.org_id;
-    //let roles_as_string = &agent_input.roles;
-    //let metadata_as_string = &agent_input.metadata;
-
     // Get the URL
     let response_url = match req.url_for_static("agent") {
         Ok(url) => format!("{}?{}", url, req.query_string()),
@@ -71,8 +62,8 @@ pub async fn fetch_agent(
                 x.unwrap();
             } else {
                 return Err(RestApiResponseError::BadRequest(format!(
-                    "Cannot found the data for public_key : {:?}",
-                    public_key
+                    "Cannot find the data for public_key : {:?}",
+                    public_key.to_string()
                 )));
             }
         }
@@ -81,9 +72,7 @@ pub async fn fetch_agent(
     //let org_id = result.org_id();
     //let agent = result.unwrap();
     //let org_id = agent.org_id();
-    println!("this ");
-    println!("I am here! {:?}", result);
-    //Ok(HttpResponse::Ok().body(result))
+    println!("I am here! result : {:?}", result);
 
     Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 
@@ -96,7 +85,6 @@ pub async fn create_agent(
 
     let context = create_context("secp256k1")?;
     let private_key = context.new_random_private_key()?;
-    let public_key_hex = context.get_public_key(&private_key.into())?.as_hex();
     //let public_key_hex = context.get_public_key(&private_key)?.as_hex();
 
     //let private_key = &agent_input.private_key;
@@ -137,7 +125,7 @@ pub async fn create_agent(
 
     let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
-        .with_public_key(public_key_hex.to_string())
+        .with_public_key("public_key_hex".to_string())
         .with_active(true)
         .with_roles(roles)
         .with_metadata(metadata)
