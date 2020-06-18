@@ -126,7 +126,7 @@ pub async fn create_agent(
 
     let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
-        .with_public_key("public_key_hex".to_string())
+        .with_public_key(public_key_hex.to_string())
         .with_active(true)
         .with_roles(roles)
         .with_metadata(metadata)
