@@ -10,6 +10,7 @@ use futures::prelude::*;
 use serde::{Deserialize, Serialize};
 use url::Url;
 use uuid::Uuid;
+use protobuf::core::Message;
 
 use sawtooth_sdk::messages::batch::{Batch, BatchList};
 use sawtooth_sdk::messages::client_batch_submit::{
