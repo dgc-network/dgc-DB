@@ -528,7 +528,10 @@ mod test {
     ///
     #[actix_rt::test]
     async fn test_post_batches_ok() {
-        let srv = create_test_server(Backend::Sawtooth, ResponseType::ClientBatchSubmitResponseOK);
+        let srv = create_test_server(
+            Backend::Sawtooth, 
+            ResponseType::ClientBatchSubmitResponseOK
+        );
 
         let mut response = srv
             .request(http::Method::POST, srv.url("/submit_batches"))

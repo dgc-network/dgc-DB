@@ -11,7 +11,7 @@ use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use serde::Deserialize;
 
 use crate::transaction::BatchBuilder;
-use crate::submitter::{BatchSubmitter, SubmitBatches};
+use crate::submitter::{BatchSubmitter, SubmitBatches, SplinterBatchSubmitter};
 use crate::submitter::{MockBatchSubmitter, MockMessageSender, ResponseType};
 use super::state::{MockTransactionContext, MockState};
 use crate::error::RestApiResponseError;
@@ -162,7 +162,11 @@ pub async fn create_agent(
         sender: mock_sender,
     });
 
-    mock_batch_submitter
+    //let batch_submitter = Box::new(SplinterBatchSubmitter::new(config.endpoint().url()));
+    let batch_submitter = Box::new(SplinterBatchSubmitter::new(response_url));
+
+    //mock_batch_submitter
+    batch_submitter
         .submit_batches(SubmitBatches {
             batch_list,
             response_url,
@@ -254,7 +258,11 @@ pub async fn update_agent(
         sender: mock_sender,
     });
 
-    mock_batch_submitter
+    //let batch_submitter = Box::new(SplinterBatchSubmitter::new(config.endpoint().url()));
+    let batch_submitter = Box::new(SplinterBatchSubmitter::new(response_url));
+
+    //mock_batch_submitter
+    batch_submitter
         .submit_batches(SubmitBatches {
             batch_list,
             response_url,
