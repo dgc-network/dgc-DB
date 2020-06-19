@@ -88,34 +88,11 @@ pub async fn create_agent(
     agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    //let context = create_context("secp256k1")?;
     let context = Secp256k1Context::new();
-    //let private_key = Box::into_raw(context.new_random_private_key()?).as_ref();
     let private_key = context.new_random_private_key()
         .expect("Error generating a new Private Key");
-    let private_key_as_ref = private_key.as_ref();
-/*    
-    unsafe {
-        ptr::drop_in_place(private_key_box);
-        dealloc(private_key_box as *mut u8, Layout::new::<String>());
-    }
-    let private_key = private_key_box.as_ref().unwrap();
-*/
-    //let public_key = Box::into_raw(context.get_public_key(&private_key)?).as_ref();
-    let public_key = context.get_public_key(private_key_as_ref)
+    let public_key = context.get_public_key(private_key.as_ref())
         .expect("Error generating a new Public Key");
-    let public_key_as_ref = public_key.as_ref();
-/*    
-    unsafe {
-        ptr::drop_in_place(public_key_box);
-        dealloc(public_key_box as *mut u8, Layout::new::<String>());
-    }
-    let public_key = public_key_box.as_ref().unwrap();
-*/    
-    //let private_key = context.new_random_private_key()?.as_ref().unwrap();
-    //let public_key = context.get_public_key(private_key)?.as_ref().unwrap();
-    //let private_key = context.new_random_private_key()?.unwrap();
-    //let public_key = context.get_public_key(private_key)?.unwrap();
     println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     println!("!dgc-network! public_key = {:?}", public_key.as_hex());
 
@@ -210,9 +187,14 @@ pub async fn update_agent(
 
     //let context = create_context("secp256k1")?;
     let context = Secp256k1Context::new();
-    let private_key = Secp256k1PrivateKey::from_hex(&private_key_hex)?;
-    let public_key = context.get_public_key(&private_key)?;
+    //let private_key = Secp256k1PrivateKey::from_hex(&private_key_hex)?;
+    //let public_key = context.get_public_key(&private_key)?;
     //let public_key = Box::into_raw(context.get_public_key(&private_key)?).as_ref().unwrap();
+    //let private_key = context.new_random_private_key()
+    let private_key = Secp256k1PrivateKey::from_hex(&private_key_hex)
+        .expect("Error generating a new Private Key");
+    let public_key = context.get_public_key(private_key.as_ref())
+        .expect("Error generating a new Public Key");
     println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     println!("!dgc-network! public_key = {:?}", public_key.as_hex());
 
