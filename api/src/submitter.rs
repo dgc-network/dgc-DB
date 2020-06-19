@@ -274,7 +274,7 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
     message: &C,
 ) -> Result<T, RestApiResponseError> {
 
-    println!("I am here! message = {:?}", message);
+    println!("!dgc.network! message = {:?}", message);
 
     let content = protobuf::Message::write_to_bytes(message).map_err(|err| {
         RestApiResponseError::RequestHandlerError(format!(
@@ -283,11 +283,11 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
         ))
     })?;
 
-    println!("I am here! content = {:?}", content);
+    //println!("!dgc.network! content = {:?}", content);
 
     let correlation_id = Uuid::new_v4().to_string();
 
-    println!("I am here! correlation_id = {:?}", correlation_id);
+    //println!("!dgc.network! correlation_id = {:?}", correlation_id);
 
     let mut response_future = sender
         .send(message_type, &correlation_id, &content)
@@ -298,7 +298,7 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
             ))
         })?;
 
-    //println!("I am here! response_future = {:?}", response_future);
+    //println!("!dgc.network! response_future = {:?}", response_future);
 
     protobuf::parse_from_bytes(
         response_future
@@ -318,6 +318,9 @@ pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSe
 pub fn process_validator_response(
     status: ClientBatchSubmitResponse_Status,
 ) -> Result<(), RestApiResponseError> {
+
+    println!("!dgc.network! process_validator_response! status = {:?}", status);
+
     match status {
         ClientBatchSubmitResponse_Status::OK => Ok(()),
         ClientBatchSubmitResponse_Status::INVALID_BATCH => Err(RestApiResponseError::BadRequest(
@@ -335,6 +338,7 @@ pub fn process_batch_status_response(
     response: ClientBatchStatusResponse,
 ) -> Result<Vec<BatchStatus>, RestApiResponseError> {
     let status = response.get_status();
+    println!("!dgc.network! process_batch_status_response! status = {:?}", status);
     match status {
         ClientBatchStatusResponse_Status::OK => Ok(response
             .get_batch_statuses()

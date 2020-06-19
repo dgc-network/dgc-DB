@@ -180,18 +180,13 @@ pub async fn update_agent(
     agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let private_key_hex = &agent_input.private_key;
+    let private_key_as_hex = &agent_input.private_key;
     let org_id = &agent_input.org_id;
     let roles_as_string = &agent_input.roles;
     let metadata_as_string = &agent_input.metadata;
 
-    //let context = create_context("secp256k1")?;
     let context = Secp256k1Context::new();
-    //let private_key = Secp256k1PrivateKey::from_hex(&private_key_hex)?;
-    //let public_key = context.get_public_key(&private_key)?;
-    //let public_key = Box::into_raw(context.get_public_key(&private_key)?).as_ref().unwrap();
-    //let private_key = context.new_random_private_key()
-    let private_key = Secp256k1PrivateKey::from_hex(&private_key_hex)
+    let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
         .expect("Error generating a new Private Key");
     let public_key = context.get_public_key(&private_key)
         .expect("Error generating a new Public Key");
@@ -271,32 +266,3 @@ pub async fn update_agent(
 
     //Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
-/*
-pub async fn update_agent(
-    //url: &str,
-    //key: Option<String>,
-    //wait: u64,
-    //update_agent: web::Json<UpdateAgentAction>,
-    //service_id: Option<String>,
-//) -> Result<(), CliError> {
-) -> Result<HttpResponse, RestApiResponseError> {
-    Ok(HttpResponse::Ok().body("Hello world! update_agent"))
-
-    let payload = PikePayloadBuilder::new()
-        .with_action(Action::UpdateAgent)
-        .with_update_agent(update_agent)
-        .build()
-        .map_err(|err| CliError::UserError(format!("{}", err)))?;
-
-    let batch_list = pike_batch_builder(key)
-        .add_transaction(
-            &payload.into_proto()?,
-            &[PIKE_NAMESPACE.to_string()],
-            &[PIKE_NAMESPACE.to_string()],
-        )?
-        .create_batch_list();
-
-    submit_batches(url, wait, &batch_list, service_id.as_deref())
-    
-}
-*/
