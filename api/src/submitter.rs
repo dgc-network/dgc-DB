@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use url::Url;
 use uuid::Uuid;
 
-use protobuf::Message;
+//use protobuf::Message::write_to_bytes;
 
 use sawtooth_sdk::messages::batch::{Batch, BatchList};
 use sawtooth_sdk::messages::client_batch_submit::{
@@ -300,7 +300,8 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             "{}/submit_batches", self.node_url
         );
 
-        let batch_list_bytes = try_fut!(msg.batch_list.write_to_bytes().map_err(|err| {
+        //let batch_list_bytes = try_fut!(msg.batch_list.write_to_bytes().map_err(|err| {
+        let batch_list_bytes = try_fut!(protobuf::Message::write_to_bytes(msg.batch_list).map_err(|err| {
             RestApiResponseError::BadRequest(format!("Malformed batch list: {}", err))
         }));
 
