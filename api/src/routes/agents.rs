@@ -93,7 +93,7 @@ pub async fn create_agent(
     //let private_key = Box::into_raw(context.new_random_private_key()?).as_ref();
     let private_key = context.new_random_private_key()
     .expect("Error generating a new Private Key");
-    let private_key_as_ref = private_key.as_ref()
+    let private_key_as_ref = private_key.as_ref();
 /*    
     unsafe {
         ptr::drop_in_place(private_key_box);
