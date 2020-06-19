@@ -80,8 +80,8 @@ pub async fn fetch_agent(
 
 }
 
-use std::alloc::{dealloc, Layout};
-use std::ptr;
+//use std::alloc::{dealloc, Layout};
+//use std::ptr;
 
 pub async fn create_agent(
     req: HttpRequest,
@@ -91,7 +91,8 @@ pub async fn create_agent(
     //let context = create_context("secp256k1")?;
     let context = Secp256k1Context::new();
     //let private_key = Box::into_raw(context.new_random_private_key()?).as_ref();
-    let private_key = context.new_random_private_key()?.as_ref();
+    let private_key = context.new_random_private_key()
+    .expect("Error generating a new Private Key").as_ref();
 /*    
     unsafe {
         ptr::drop_in_place(private_key_box);
@@ -100,7 +101,8 @@ pub async fn create_agent(
     let private_key = private_key_box.as_ref().unwrap();
 */
     //let public_key = Box::into_raw(context.get_public_key(&private_key)?).as_ref();
-    let public_key = context.get_public_key(private_key)?.as_ref();
+    let public_key = context.get_public_key(private_key)
+    .expect("Error generating a new Public Key").as_ref();
 /*    
     unsafe {
         ptr::drop_in_place(public_key_box);
@@ -112,8 +114,8 @@ pub async fn create_agent(
     //let public_key = context.get_public_key(private_key)?.as_ref().unwrap();
     //let private_key = context.new_random_private_key()?.unwrap();
     //let public_key = context.get_public_key(private_key)?.unwrap();
-    println!("I am here! private_key = {:?}", private_key.as_hex());
-    println!("I am here! public_key = {:?}", public_key.as_hex());
+    println!("!dgc-network! private_key = {:?}", private_key.as_hex());
+    println!("!dgc-network! public_key = {:?}", public_key.as_hex());
 
     //let private_key = &agent_input.private_key;
     let org_id = &agent_input.org_id;
@@ -209,8 +211,8 @@ pub async fn update_agent(
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_hex)?;
     let public_key = context.get_public_key(&private_key)?;
     //let public_key = Box::into_raw(context.get_public_key(&private_key)?).as_ref().unwrap();
-    println!("I am here! private_key = {:?}", private_key.as_hex());
-    println!("I am here! public_key = {:?}", public_key.as_hex());
+    println!("!dgc-network! private_key = {:?}", private_key.as_hex());
+    println!("!dgc-network! public_key = {:?}", public_key.as_hex());
 
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
