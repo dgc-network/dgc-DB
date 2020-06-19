@@ -163,7 +163,7 @@ pub async fn create_agent(
     });
 
     //let batch_submitter = Box::new(SplinterBatchSubmitter::new(config.endpoint().url()));
-    let batch_submitter = Box::new(SplinterBatchSubmitter::new(response_url));
+    let batch_submitter = Box::new(SplinterBatchSubmitter::new(response_url.to_string()));
 
     //mock_batch_submitter
     batch_submitter
@@ -259,7 +259,7 @@ pub async fn update_agent(
     });
 
     //let batch_submitter = Box::new(SplinterBatchSubmitter::new(config.endpoint().url()));
-    let batch_submitter = Box::new(SplinterBatchSubmitter::new(response_url));
+    let batch_submitter = Box::new(SplinterBatchSubmitter::new(response_url.to_string()));
 
     //mock_batch_submitter
     batch_submitter

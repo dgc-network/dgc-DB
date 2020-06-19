@@ -286,11 +286,11 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         &self,
         msg: SubmitBatches,
     ) -> Pin<Box<dyn Future<Output = Result<BatchStatusLink, RestApiResponseError>> + Send>> {
-        let service_arg = try_fut!(msg.service_id.ok_or_else(|| {
-            RestApiResponseError::BadRequest("A service id must be provided".into())
-        }));
+        //let service_arg = try_fut!(msg.service_id.ok_or_else(|| {
+        //    RestApiResponseError::BadRequest("A service id must be provided".into())
+        //}));
 
-        let service_info = try_fut!(SplinterService::from_str(&service_arg));
+        //let service_info = try_fut!(SplinterService::from_str(&service_arg));
 
         let url = format!(
             //"{}/scabbard/{}/{}/submit_batches",
@@ -335,11 +335,11 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         &self,
         msg: BatchStatuses,
     ) -> Pin<Box<dyn Future<Output = Result<Vec<BatchStatus>, RestApiResponseError>> + Send>> {
-        let service_arg = try_fut!(msg.service_id.ok_or_else(|| {
-            RestApiResponseError::BadRequest("A service id must be provided".into())
-        }));
+        //let service_arg = try_fut!(msg.service_id.ok_or_else(|| {
+        //    RestApiResponseError::BadRequest("A service id must be provided".into())
+        //}));
 
-        let service_info = try_fut!(SplinterService::from_str(&service_arg));
+        //let service_info = try_fut!(SplinterService::from_str(&service_arg));
 
         // {base_url}/scabbard/{circuit_id}/{service_id}/batch_statuses?[wait={time}&]ids={batch_ids}
         let mut url = self.node_url.clone();
@@ -381,7 +381,7 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         Box::new(self.clone())
     }
 }
-
+/*
 struct SplinterService {
     circuit_id: String,
     service_id: String,
@@ -413,7 +413,7 @@ impl FromStr for SplinterService {
         })
     }
 }
-
+*/
 pub fn query_validator<T: protobuf::Message, C: protobuf::Message, MS: MessageSender>(
     sender: &MS,
     message_type: Message_MessageType,
