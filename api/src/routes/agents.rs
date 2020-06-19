@@ -193,7 +193,7 @@ pub async fn update_agent(
     //let private_key = context.new_random_private_key()
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_hex)
         .expect("Error generating a new Private Key");
-    let public_key = context.get_public_key(private_key.as_ref())
+    let public_key = context.get_public_key(&private_key)
         .expect("Error generating a new Public Key");
     println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     println!("!dgc-network! public_key = {:?}", public_key.as_hex());
