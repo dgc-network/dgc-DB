@@ -92,7 +92,7 @@ pub async fn create_agent(
     let context = Secp256k1Context::new();
     //let private_key = Box::into_raw(context.new_random_private_key()?).as_ref();
     let private_key = context.new_random_private_key()
-    .expect("Error generating a new Private Key");
+        .expect("Error generating a new Private Key");
     let private_key_as_ref = private_key.as_ref();
 /*    
     unsafe {
@@ -103,7 +103,8 @@ pub async fn create_agent(
 */
     //let public_key = Box::into_raw(context.get_public_key(&private_key)?).as_ref();
     let public_key = context.get_public_key(private_key_as_ref)
-    .expect("Error generating a new Public Key").as_ref();
+        .expect("Error generating a new Public Key");
+    let public_key_as_ref = public_key.as_ref();
 /*    
     unsafe {
         ptr::drop_in_place(public_key_box);
