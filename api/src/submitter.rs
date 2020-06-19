@@ -301,7 +301,7 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         );
 
         //let batch_list_bytes = try_fut!(msg.batch_list.write_to_bytes().map_err(|err| {
-        let batch_list_bytes = try_fut!(protobuf::Message::write_to_bytes(msg.batch_list).map_err(|err| {
+        let batch_list_bytes = try_fut!(protobuf::Message::write_to_bytes(&msg.batch_list).map_err(|err| {
             RestApiResponseError::BadRequest(format!("Malformed batch list: {}", err))
         }));
 
@@ -322,7 +322,8 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             .header("Content-Type", "octet-stream")
             .body(batch_list_bytes)
             .send()
-            .then(|res| {
+            //.then(|res| {
+            .and_then(|res| {
                 future::ready(match res {
                     Ok(_) => Ok(BatchStatusLink { link }),
                     Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
@@ -365,7 +366,8 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         client
             .get(&url)
             .send()
-            .then(|res| match res {
+            //.then(|res| match res {
+            .and_then(|res| match res {
                 Ok(res) => res.json().boxed(),
                 Err(err) => future::err(err).boxed(),
             })
