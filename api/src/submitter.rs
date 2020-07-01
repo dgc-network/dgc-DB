@@ -388,24 +388,16 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         url.push_str(&msg.batch_ids.join(","));
 
         let client = reqwest::Client::new();
-/*
-        let res = client
-            .post("http://localhost:8008/batches")
-            .header("Content-Type", "application/octet-stream")
-            .body(
-                batch_list_bytes,
-            )
-            .send()
-*/
         let res = client
             .get(&url)
             .send();
 
         future::ready(match res {
-            Ok(res) => res.json(),
-            Err(err) => future::err(err),
+            Ok(res) => res,
+            Err(err) => err,
         }).boxed()
-/*        
+
+/*
         .map(|result| {
             result.map_err(|err| {
                 RestApiResponseError::RequestHandlerError(format!(
