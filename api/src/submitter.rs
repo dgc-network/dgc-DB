@@ -333,16 +333,14 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             .body(batch_list_bytes)
             .send();
 
-//.then(|res| {
-    future::ready(match res {
-        Ok(_) => Ok(BatchStatusLink { link }),
-        Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
-            "Unable to submit batch: {}",
-            err
-        ))),
-    })
-//})
-.boxed()
+        future::ready(match res {
+            Ok(_) => Ok(BatchStatusLink { link }),
+            Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
+                "Unable to submit batch: {}",
+                err
+            ))),
+        })
+        .boxed()
 /*
         client
             .post(&url)
@@ -399,12 +397,30 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             )
             .send()
 */
+        let res = client
+            .get(&url)
+            .send();
+
+        match res {
+            Ok(res) => res.json().boxed(),
+            Err(err) => future::err(err).boxed(),
+        }
+/*
+.map(|result| {
+    result.map_err(|err| {
+        RestApiResponseError::RequestHandlerError(format!(
+            "Unable to retrieve batch statuses: {}",
+            err
+        ))
+    })
+})
+.boxed()
+*/
+/*
         client
             .get(&url)
             .send()
-/*            
             .then(|res| match res {
-            //.and_then(|res| match res {
                 Ok(res) => res.json().boxed(),
                 Err(err) => future::err(err).boxed(),
             })
@@ -416,9 +432,8 @@ impl BatchSubmitter for SplinterBatchSubmitter {
                     ))
                 })
             })
-*/            
             .boxed()
-            
+*/            
     }
 
     fn clone_box(&self) -> Box<dyn BatchSubmitter> {
