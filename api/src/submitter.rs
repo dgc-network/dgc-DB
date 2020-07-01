@@ -392,10 +392,10 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             .get(&url)
             .send();
 
-        future::ready(match res {
-            Ok(res) => res.json().boxed(),
-            Err(err) => future::err(err).boxed(),
-        })
+        Box::pin(future::ready(match res {
+            Ok(res) => res.json(),
+            Err(err) => future::err(err),
+        }))
 
 /*
         .map(|result| {
