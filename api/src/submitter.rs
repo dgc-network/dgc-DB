@@ -401,21 +401,20 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             .get(&url)
             .send();
 
-        match res {
-            Ok(res) => res.json().boxed(),
-            Err(err) => future::err(err).boxed(),
-        }
-/*
-.map(|result| {
-    result.map_err(|err| {
-        RestApiResponseError::RequestHandlerError(format!(
-            "Unable to retrieve batch statuses: {}",
-            err
-        ))
-    })
-})
-.boxed()
-*/
+        future::ready(match res {
+            Ok(res) => res.json(),
+            Err(err) => future::err(err),
+        })
+        .map(|result| {
+            result.map_err(|err| {
+                RestApiResponseError::RequestHandlerError(format!(
+                    "Unable to retrieve batch statuses: {}",
+                    err
+                ))
+            })
+        })
+        .boxed()
+
 /*
         client
             .get(&url)
