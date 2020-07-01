@@ -394,7 +394,7 @@ impl BatchSubmitter for SplinterBatchSubmitter {
 
         Box::pin(future::ready(match res {
             Ok(res) => res.json(),
-            Err(err) => future::err(err),
+            Err(err) => err,
         }))
 
 /*
