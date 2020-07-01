@@ -390,8 +390,7 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         let client = reqwest::Client::new();
         let res = client
             .get(&url)
-            .send()
-            .json();
+            .send();
 /*
         Box::pin(future::ready(match res {
             Ok(res) => res.json(),
@@ -399,7 +398,7 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         }))
 */
         future::ready(match res {
-            Ok(res) => res,
+            Ok(res) => res.json(),
             Err(err) => Err(err),
         })
         .map(|result| {
