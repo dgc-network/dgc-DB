@@ -327,14 +327,29 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             .send()
 */
 
+        let res = client
+            .post(&url)
+            .header("Content-Type", "octet-stream")
+            .body(batch_list_bytes)
+            .send();
+
+//.then(|res| {
+    future::ready(match res {
+        Ok(_) => Ok(BatchStatusLink { link }),
+        Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
+            "Unable to submit batch: {}",
+            err
+        ))),
+    })
+//})
+.boxed()
+/*
         client
             .post(&url)
             .header("Content-Type", "octet-stream")
             .body(batch_list_bytes)
             .send()
-/*            
             .then(|res| {
-            //.and_then(|res| {
                 future::ready(match res {
                     Ok(_) => Ok(BatchStatusLink { link }),
                     Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
@@ -343,9 +358,8 @@ impl BatchSubmitter for SplinterBatchSubmitter {
                     ))),
                 })
             })
-*/            
             .boxed()
-            
+*/            
     }
 
     fn batch_status(
