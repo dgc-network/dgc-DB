@@ -398,7 +398,7 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         }))
 */
         future::ready(match res {
-            Ok(res) => res.json(),
+            Ok(res) => res,
             Err(err) => Err(err),
         })
         .map(|result| {
