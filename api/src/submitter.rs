@@ -317,11 +317,22 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         let link = response_url.to_string();
 
         let client = reqwest::Client::new();
+/*
+        let res = client
+            .post("http://localhost:8008/batches")
+            .header("Content-Type", "application/octet-stream")
+            .body(
+                batch_list_bytes,
+            )
+            .send()
+*/
+
         client
             .post(&url)
             .header("Content-Type", "octet-stream")
             .body(batch_list_bytes)
             .send()
+/*            
             .then(|res| {
             //.and_then(|res| {
                 future::ready(match res {
@@ -333,6 +344,7 @@ impl BatchSubmitter for SplinterBatchSubmitter {
                 })
             })
             .boxed()
+*/            
     }
 
     fn batch_status(
@@ -363,9 +375,19 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         url.push_str(&msg.batch_ids.join(","));
 
         let client = reqwest::Client::new();
+/*
+        let res = client
+            .post("http://localhost:8008/batches")
+            .header("Content-Type", "application/octet-stream")
+            .body(
+                batch_list_bytes,
+            )
+            .send()
+*/
         client
             .get(&url)
             .send()
+/*            
             .then(|res| match res {
             //.and_then(|res| match res {
                 Ok(res) => res.json().boxed(),
@@ -380,6 +402,7 @@ impl BatchSubmitter for SplinterBatchSubmitter {
                 })
             })
             .boxed()
+*/            
     }
 
     fn clone_box(&self) -> Box<dyn BatchSubmitter> {
