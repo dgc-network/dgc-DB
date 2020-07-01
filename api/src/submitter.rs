@@ -390,7 +390,8 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         let client = reqwest::Client::new();
         let res = client
             .get(&url)
-            .send();
+            .send()
+            .json();
 /*
         Box::pin(future::ready(match res {
             Ok(res) => res.json(),
