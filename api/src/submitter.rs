@@ -343,8 +343,9 @@ impl BatchSubmitter for SplinterBatchSubmitter {
                     ))),
                 })
             })
-            .boxed()
 */            
+            .boxed()
+            
     }
 
     fn batch_status(
@@ -401,8 +402,9 @@ impl BatchSubmitter for SplinterBatchSubmitter {
                     ))
                 })
             })
-            .boxed()
 */            
+            .boxed()
+            
     }
 
     fn clone_box(&self) -> Box<dyn BatchSubmitter> {
