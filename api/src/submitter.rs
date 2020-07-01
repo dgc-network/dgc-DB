@@ -391,13 +391,16 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         let res = client
             .get(&url)
             .send();
-
+/*
         Box::pin(future::ready(match res {
             Ok(res) => res.json(),
             Err(err) => Err(err),
         }))
-
-/*
+*/
+        future::ready(match res {
+            Ok(res) => res.json(),
+            Err(err) => Err(err),
+        })
         .map(|result| {
             result.map_err(|err| {
                 RestApiResponseError::RequestHandlerError(format!(
@@ -407,7 +410,7 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             })
         })
         .boxed()
-*/
+
 /*
         client
             .get(&url)
