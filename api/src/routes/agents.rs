@@ -55,6 +55,7 @@ pub async fn fetch_agent(
     public_key: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
+    println!("!dgc-network! public_key = {:?}", public_key);
     let mut transaction_context = MockTransactionContext::default();
     let state = MockState::new(&mut transaction_context);
     //let result = state.get_agent(&public_key).unwrap();
@@ -74,7 +75,7 @@ pub async fn fetch_agent(
     //let org_id = result.org_id();
     //let agent = result.unwrap();
     //let org_id = agent.org_id();
-    println!("I am here! result : {:?}", result);
+    println!("!dgc-network! result = {:?}", result);
 
     Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 
@@ -88,18 +89,23 @@ pub async fn create_agent(
     agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
+    let response_url = req.url_for_static("agent")?;
+
+    let org_id = &agent_input.org_id;
+    let roles_as_string = &agent_input.roles;
+    let metadata_as_string = &agent_input.metadata;
+
     let context = Secp256k1Context::new();
     let private_key = context.new_random_private_key()
         .expect("Error generating a new Private Key");
     let public_key = context.get_public_key(private_key.as_ref())
         .expect("Error generating a new Public Key");
+
     println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     println!("!dgc-network! public_key = {:?}", public_key.as_hex());
-
-    //let private_key = &agent_input.private_key;
-    let org_id = &agent_input.org_id;
-    let roles_as_string = &agent_input.roles;
-    let metadata_as_string = &agent_input.metadata;
+    println!("!dgc-network! org_id = {:?}", org_id);
+    println!("!dgc-network! roles = {:?}", roles_as_string);
+    println!("!dgc-network! metadata = {:?}", metadata_as_string);
 
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
@@ -155,12 +161,13 @@ pub async fn create_agent(
         )?
         .create_batch_list();
 
-    let response_url = req.url_for_static("agent")?;
+    println!("!dgc-network! batch_list = {:?}", batch_list);
+    println!("!dgc-network! response_url = {:?}", response_url);
 
-    let mock_sender = MockMessageSender::new(ResponseType::ClientBatchSubmitResponseOK);
-    let mock_batch_submitter = Box::new(MockBatchSubmitter {
-        sender: mock_sender,
-    });
+    //let mock_sender = MockMessageSender::new(ResponseType::ClientBatchSubmitResponseOK);
+    //let mock_batch_submitter = Box::new(MockBatchSubmitter {
+    //    sender: mock_sender,
+    //});
 
     //let batch_submitter = Box::new(SplinterBatchSubmitter::new(config.endpoint().url()));
     let batch_submitter = Box::new(SplinterBatchSubmitter::new(response_url.to_string()));
@@ -184,6 +191,8 @@ pub async fn update_agent(
     agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
+    let response_url = req.url_for_static("agent")?;
+
     let private_key_as_hex = &agent_input.private_key;
     let org_id = &agent_input.org_id;
     let roles_as_string = &agent_input.roles;
@@ -194,8 +203,12 @@ pub async fn update_agent(
         .expect("Error generating a new Private Key");
     let public_key = context.get_public_key(&private_key)
         .expect("Error generating a new Public Key");
+
     println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     println!("!dgc-network! public_key = {:?}", public_key.as_hex());
+    println!("!dgc-network! org_id = {:?}", org_id);
+    println!("!dgc-network! roles = {:?}", roles_as_string);
+    println!("!dgc-network! metadata = {:?}", metadata_as_string);
 
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
@@ -251,12 +264,13 @@ pub async fn update_agent(
         )?
         .create_batch_list();
 
-    let response_url = req.url_for_static("agent")?;
+    println!("!dgc-network! batch_list = {:?}", batch_list);
+    println!("!dgc-network! response_url = {:?}", response_url);
 
-    let mock_sender = MockMessageSender::new(ResponseType::ClientBatchSubmitResponseOK);
-    let mock_batch_submitter = Box::new(MockBatchSubmitter {
-        sender: mock_sender,
-    });
+    //let mock_sender = MockMessageSender::new(ResponseType::ClientBatchSubmitResponseOK);
+    //let mock_batch_submitter = Box::new(MockBatchSubmitter {
+    //    sender: mock_sender,
+    //});
 
     //let batch_submitter = Box::new(SplinterBatchSubmitter::new(config.endpoint().url()));
     let batch_submitter = Box::new(SplinterBatchSubmitter::new(response_url.to_string()));

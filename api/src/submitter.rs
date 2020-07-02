@@ -276,8 +276,8 @@ pub struct SplinterBatchSubmitter {
 }
 
 impl SplinterBatchSubmitter {
-    /// Constructs a new splinter BatchSubmitter instance, using the given url for the node's REST
-    /// API.
+    /// Constructs a new splinter BatchSubmitter instance, 
+    /// using the given url for the node's REST API.
     pub fn new(node_url: String) -> Self {
         Self { node_url }
     }
