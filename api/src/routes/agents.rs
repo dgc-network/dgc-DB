@@ -101,6 +101,7 @@ pub async fn create_agent(
     let public_key = context.get_public_key(private_key.as_ref())
         .expect("Error generating a new Public Key");
 
+    println!("============ create_agent ============");
     println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     println!("!dgc-network! public_key = {:?}", public_key.as_hex());
     println!("!dgc-network! org_id = {:?}", org_id);
@@ -204,6 +205,7 @@ pub async fn update_agent(
     let public_key = context.get_public_key(&private_key)
         .expect("Error generating a new Public Key");
 
+    println!("============ update_agent ============");
     println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     println!("!dgc-network! public_key = {:?}", public_key.as_hex());
     println!("!dgc-network! org_id = {:?}", org_id);
