@@ -93,8 +93,8 @@ pub async fn create_agent(
     /// Client: Building and Submitting Transactions
 
     /// Creating a Private Key and Signer
-    use sawtooth_sdk::signing::CryptoFactory;
-    use sawtooth_sdk::signing::create_context;
+    //use sawtooth_sdk::signing::CryptoFactory;
+    //use sawtooth_sdk::signing::create_context;
     
     let context = create_context("secp256k1")
         .expect("Error creating the right context");
@@ -105,7 +105,7 @@ pub async fn create_agent(
     let signer = crypto_factory.new_signer(private_key.as_ref());
 
     /// Encoding Your Payload
-    extern crate serde;
+    //extern crate serde;
     extern crate serde_cbor;
 
     use serde::{Serialize, Deserialize};
@@ -271,7 +271,7 @@ pub async fn create_agent(
             batch_list_bytes,
         )
         .send()
-        
+
     /// 
 
     let response_url = req.url_for_static("agent")?;
