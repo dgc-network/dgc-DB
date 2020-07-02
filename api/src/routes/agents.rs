@@ -107,6 +107,7 @@ pub async fn create_agent(
     println!("!dgc-network! org_id = {:?}", org_id);
     println!("!dgc-network! roles = {:?}", roles_as_string);
     println!("!dgc-network! metadata = {:?}", metadata_as_string);
+    println!("============ create_agent ============");
 
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
