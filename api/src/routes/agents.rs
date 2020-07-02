@@ -13,7 +13,8 @@ use serde::Deserialize;
 use crate::transaction::BatchBuilder;
 use crate::submitter::{BatchSubmitter, SubmitBatches, SplinterBatchSubmitter};
 use crate::submitter::{MockBatchSubmitter, MockMessageSender, ResponseType};
-use super::state::{MockTransactionContext, MockState};
+use crate::routes::batches::{submit_batches, get_batch_statuses};
+use crate::state::{MockTransactionContext, MockState};
 use crate::error::RestApiResponseError;
 
 use grid_sdk::protocol::pike::{

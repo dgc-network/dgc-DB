@@ -12,6 +12,7 @@ use crate::error::RestApiResponseError;
 //use crate::AppState;
 use crate::submitter::{BatchStatusResponse, BatchStatuses, SubmitBatches, DEFAULT_TIME_OUT};
 use crate::submitter::{BatchSubmitter, MockBatchSubmitter, MockMessageSender, ResponseType};
+use crate::submitter::SplinterBatchSubmitter;
 
 pub async fn submit_batches(
     req: HttpRequest,
@@ -34,13 +35,17 @@ pub async fn submit_batches(
     let response_url = req.url_for_static("submit_batches")?;
 
     println!("!dgc.network! response_url : {:?}", response_url);
-    
+/*    
     let mock_sender = MockMessageSender::new(ResponseType::ClientBatchSubmitResponseOK);
     let mock_batch_submitter = Box::new(MockBatchSubmitter {
         sender: mock_sender,
     });
 
     mock_batch_submitter
+*/
+    let batch_submitter = Box::new(SplinterBatchSubmitter::new(response_url.to_string()));
+
+    batch_submitter
     .submit_batches(SubmitBatches {
         batch_list,
         response_url,
@@ -110,13 +115,17 @@ pub async fn get_batch_statuses(
     };
 
     println!("!dgc.network! response_url : {:?}", response_url);
-    
+/*    
     let mock_sender = MockMessageSender::new(ResponseType::ClientBatchStatusResponseOK);
     let mock_batch_submitter = Box::new(MockBatchSubmitter {
         sender: mock_sender,
     });
 
     mock_batch_submitter
+*/
+    let batch_submitter = Box::new(SplinterBatchSubmitter::new(response_url.to_string()));
+
+    batch_submitter
     .batch_status(BatchStatuses {
         batch_ids,
         wait,
