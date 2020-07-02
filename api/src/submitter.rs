@@ -312,13 +312,13 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             .map(Batch::get_header_signature)
             .collect::<Vec<_>>()
             .join(",");
+            
         let mut response_url = msg.response_url;
         response_url.set_query(Some(&format!("id={}", batch_query)));
         let link = response_url.to_string();
 
-        //let client = reqwest::Client::new();
+        println!("!dgc-network! node_url = {:?}", url);
 
-        //let res = client
         let res = reqwest::Client::new()
             .post(&url)
             .header("Content-Type", "octet-stream")

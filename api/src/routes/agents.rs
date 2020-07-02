@@ -162,8 +162,8 @@ pub async fn create_agent(
         )?
         .create_batch_list();
 
-    println!("!dgc-network! batch_list = {:?}", batch_list);
-    println!("!dgc-network! response_url = {:?}", response_url);
+    //println!("!dgc-network! batch_list = {:?}", batch_list);
+    //println!("!dgc-network! response_url = {:?}", response_url);
 
     //let mock_sender = MockMessageSender::new(ResponseType::ClientBatchSubmitResponseOK);
     //let mock_batch_submitter = Box::new(MockBatchSubmitter {
