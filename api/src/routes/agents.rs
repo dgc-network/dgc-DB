@@ -58,11 +58,12 @@ pub async fn list_agents(
         .await?;
 
     println!("============ list_agent ============");
-    println!("!dgc-network! res = {:?}", res);
+    //println!("!dgc-network! res = {:?}", res);
 
     match res {
         //Ok(_) => Ok(BatchStatusLink { link }),
-        Ok(_) => Ok(HttpResponse::Ok().body("Hello world! list_agent")),
+        //Ok(_) => Ok(HttpResponse::Ok().body("Hello world! list_agent")),
+        Ok(_) => Ok(HttpResponse::Ok().body(res)),
         Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
             "Unable to submit batch: {}",
             err
