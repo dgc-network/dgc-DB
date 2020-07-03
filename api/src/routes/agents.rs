@@ -56,7 +56,7 @@ pub async fn list_agents(
 
     //let client = reqwest::Client::new();
     let res = reqwest::get("http://rest-api:8008/state")
-        //.await?
+        .await?
         .text()
         .await?;
     //let res = reqwest::Client::new()
