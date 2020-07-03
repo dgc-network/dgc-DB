@@ -188,15 +188,9 @@ pub async fn create_agent(
         .expect("Error converting batch list to bytes");
 
     // Submitting Batches to the Validator //
-    //extern crate reqwest;
-
-    //let client = reqwest::Client::new();
     let res = reqwest::Client::new()
         .post("http://rest-api:8008/batches")
         .header("Content-Type", "application/octet-stream")
-        //.body(
-        //    batch_list_bytes,
-        //)
         .body(batch_list_bytes)
         .send()
         .await?;
