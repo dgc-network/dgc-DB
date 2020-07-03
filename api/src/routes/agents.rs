@@ -60,7 +60,7 @@ pub async fn list_agents(
     println!("============ list_agent ============");
     println!("!dgc-network! res = {:?}", res);
 
-    match res {
+    future::ready(match res {
         //Ok(_) => Ok(BatchStatusLink { link }),
         //Ok(_) => Ok(HttpResponse::Ok().body("Hello world! list_agent")),
         Ok(_) => Ok(HttpResponse::Ok().body(res)),
@@ -68,7 +68,7 @@ pub async fn list_agents(
             "Unable to submit batch: {}",
             err
         ))),
-    }
+    })
 
 }
 
