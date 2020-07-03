@@ -279,7 +279,7 @@ fn compute_namespace_registry_address(namespace: &str) -> Result<String, CliErro
 
     Ok(String::from(SABRE_NAMESPACE_REGISTRY_PREFIX) + &bytes_to_hex_str(hash)[..64])
 }
-
+/*
 /// Return a signing key loaded from the user's environment
 ///
 /// This method attempts to load the user's key from a file.  The filename
@@ -354,3 +354,4 @@ pub fn load_signing_key(name: Option<String>) -> Result<Secp256k1PrivateKey, Cli
 
     Ok(Secp256k1PrivateKey::from_hex(&key_str)?)
 }
+*/
