@@ -9,7 +9,7 @@ use sawtooth_sdk::signing::secp256k1::Secp256k1Context;
 use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use serde::Deserialize;
-use protobuf::core::Message;
+use protobuf::Message;
 
 use crate::transaction::BatchBuilder;
 use crate::submitter::{BatchSubmitter, SubmitBatches, SplinterBatchSubmitter};
