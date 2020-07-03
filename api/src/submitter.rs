@@ -323,9 +323,10 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             .post(&url)
             .header("Content-Type", "octet-stream")
             .body(batch_list_bytes)
-            .send();
+            .send()
+            .error_for_status_ref();
 
-        future::ready(match res.error_for_status_ref() {
+        future::ready(match res {
             Ok(_) => Ok(BatchStatusLink { link }),
             Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
                 "Unable to submit batch: {}",
@@ -383,9 +384,10 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         //let res = client
         let res = reqwest::Client::new()
             .get(&url)
-            .send();
+            .send()
+            .error_for_status_ref();
 
-        future::ready(match res.error_for_status_ref() {
+        future::ready(match res {
             Ok(mut res) => res.json(),
             Err(err) => Err(err),
         })
