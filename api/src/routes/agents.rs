@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::{web, HttpRequest, HttpResponse};
-//use sawtooth_sdk::signing::CryptoFactory;
 use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::signing::Context;
 use sawtooth_sdk::signing::secp256k1::Secp256k1Context;
@@ -10,7 +9,7 @@ use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use serde::Deserialize;
 use protobuf::Message;
-//use reqwest;
+use reqwest;
 
 use crate::transaction::BatchBuilder;
 use crate::submitter::{BatchSubmitter, SubmitBatches, SplinterBatchSubmitter};
@@ -48,18 +47,18 @@ pub async fn list_agents(
             return Err(err.into());
         }
     };
-*/
+
     Ok(HttpResponse::Ok().body("Hello world! list_agents"))
-/*
+*/
     // Submitting Batches to the Validator //
-    extern crate reqwest;
+    //extern crate reqwest;
     let res = reqwest::get("http://rest-api:8008/state")
         .await?
         .text()
         .await?;
 
     println!("============ list_agent ============");
-    //println!("!dgc-network! res = {:?}", res);
+    println!("!dgc-network! res = {:?}", res);
 
     match res {
         //Ok(_) => Ok(BatchStatusLink { link }),
@@ -70,7 +69,7 @@ pub async fn list_agents(
             err
         ))),
     }
-*/
+
 }
 
 pub async fn fetch_agent(
@@ -186,15 +185,16 @@ pub async fn create_agent(
         .expect("Error converting batch list to bytes");
 
     // Submitting Batches to the Validator //
-    extern crate reqwest;
+    //extern crate reqwest;
 
-    let client = reqwest::Client::new();
-    let res = client
+    //let client = reqwest::Client::new();
+    let res = reqwest::Client::new()
         .post("http://rest-api:8008/batches")
         .header("Content-Type", "application/octet-stream")
-        .body(
-            batch_list_bytes,
-        )
+        //.body(
+        //    batch_list_bytes,
+        //)
+        .body(batch_list_bytes)
         .send();
 
     println!("============ create_agent ============");
