@@ -55,14 +55,18 @@ pub async fn list_agents(
     //extern crate reqwest;
 
     //let client = reqwest::Client::new();
-    let res = reqwest::Client::new()
-        .get("http://rest-api:8008/state")
-        .text();
+    let body = reqwest::get("http://rest-api:8008/state")
+        .await?
+        .text()
+        .await?;
+    //let res = reqwest::Client::new()
+    //    .get("http://rest-api:8008/state")
+    //    .text();
         //.header("Content-Type", "application/octet-stream")
         //.send();
 
     println!("============ list_agent ============");
-    println!("!dgc-network! res = {:?}", res);
+    println!("!dgc-network! res = {:?}", body);
 
     match res {
         //Ok(_) => Ok(BatchStatusLink { link }),
