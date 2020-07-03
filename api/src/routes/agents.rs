@@ -344,6 +344,7 @@ pub async fn create_agent(
         .send();
 
     println!("============ create_agent ============");
+    println!("!dgc-network! res = {:?}", res);
 
     match res {
         //Ok(_) => Ok(BatchStatusLink { link }),
