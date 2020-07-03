@@ -345,15 +345,14 @@ pub async fn create_agent(
 
     println!("============ create_agent ============");
 
-    future::ready(match res {
+    match res {
         //Ok(_) => Ok(BatchStatusLink { link }),
         Ok(_) => Ok(HttpResponse::Ok().body("Hello world! create_agent")),
         Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
             "Unable to submit batch: {}",
             err
         ))),
-    })
-    .boxed()
+    }
 
 
     // ***** //
