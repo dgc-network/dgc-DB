@@ -11,13 +11,13 @@ use sawtooth_sdk::signing::secp256k1::Secp256k1Context;
 use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use serde::Deserialize;
-
-extern crate serde_cbor;
+use serde_cbor;
+//extern crate serde_cbor;
 
 use crate::transaction::BatchBuilder;
 use crate::submitter::{BatchSubmitter, SubmitBatches, SplinterBatchSubmitter};
-use crate::submitter::{MockBatchSubmitter, MockMessageSender, ResponseType};
-use crate::routes::batches::{submit_batches, get_batch_statuses};
+//use crate::submitter::{MockBatchSubmitter, MockMessageSender, ResponseType};
+//use crate::routes::batches::{submit_batches, get_batch_statuses};
 use crate::routes::state::{MockTransactionContext, MockState};
 use crate::error::RestApiResponseError;
 
@@ -184,7 +184,7 @@ pub async fn create_agent(
         .build()
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
 
-    let payload_bytes = serde_cbor::to_vec(&payload).expect("upsi");
+    //let payload_bytes = serde_cbor::to_vec(&payload).expect("upsi");
 
     // Building the Transaction //
 /*    
@@ -381,7 +381,7 @@ pub async fn create_agent(
         .map(|link| HttpResponse::Ok().json(link))
 */
 
-    //Ok(HttpResponse::Ok().body("Hello world! create_agent"))
+    Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
 
 pub async fn update_agent(
