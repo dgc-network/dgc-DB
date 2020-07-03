@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::{web, HttpRequest, HttpResponse};
-use sawtooth_sdk::signing::CryptoFactory;
+//use sawtooth_sdk::signing::CryptoFactory;
 use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::signing::Context;
 use sawtooth_sdk::signing::secp256k1::Secp256k1Context;
@@ -39,6 +39,7 @@ pub struct AgentInput {
 pub async fn list_agents(
     req: HttpRequest,
 ) -> Result<HttpResponse, RestApiResponseError> {
+/*    
     // Get the URL
     let response_url = match req.url_for_static("agent") {
         Ok(url) => format!("{}?{}", url, req.query_string()),
@@ -48,6 +49,27 @@ pub async fn list_agents(
     };
 
     Ok(HttpResponse::Ok().body("Hello world! list_agents"))
+*/
+    // Submitting Batches to the Validator //
+    extern crate reqwest;
+
+    //let client = reqwest::Client::new();
+    let res = reqwest::Client::new()
+        .get("http://rest-api:8008/state")
+        .header("Content-Type", "application/octet-stream")
+        .send();
+
+    println!("============ list_agent ============");
+    println!("!dgc-network! res = {:?}", res);
+
+    match res {
+        //Ok(_) => Ok(BatchStatusLink { link }),
+        Ok(_) => Ok(HttpResponse::Ok().body("Hello world! list_agent")),
+        Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
+            "Unable to submit batch: {}",
+            err
+        ))),
+    }
 
 }
 
@@ -82,7 +104,7 @@ pub async fn fetch_agent(
 }
 
 pub async fn create_agent(
-    req: HttpRequest,
+    //req: HttpRequest,
     agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
@@ -91,12 +113,6 @@ pub async fn create_agent(
         .expect("Error creating the right context");
     let private_key = context.new_random_private_key()
         .expect("Error generating a new Private Key");
-    //let crypto_factory = CryptoFactory::new(context.as_ref());
-    //let signer = crypto_factory.new_signer(private_key.as_ref());
-
-    //let context = Secp256k1Context::new();
-    //let private_key = context.new_random_private_key()
-    //    .expect("Error generating a new Private Key");
     let public_key = context.get_public_key(private_key.as_ref())
         .expect("Error generating a new Public Key");
 

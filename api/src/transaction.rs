@@ -5,9 +5,9 @@
 //! Contains functions which assist with signing key management
 
 use std::time::Instant;
-use std::env;
-use std::fs::File;
-use std::io::prelude::*;
+//use std::env;
+//use std::fs::File;
+//use std::io::prelude::*;
 
 use crypto::digest::Digest;
 use crypto::sha2::Sha512;
@@ -25,7 +25,7 @@ use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 
 use protobuf::Message;
 
-use users::get_current_username;
+//use users::get_current_username;
 
 use crate::error::RestApiResponseError as CliError;
 /*
