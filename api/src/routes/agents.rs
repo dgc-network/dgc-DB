@@ -198,7 +198,8 @@ pub async fn create_agent(
         //    batch_list_bytes,
         //)
         .body(batch_list_bytes)
-        .send();
+        .send()
+        .await?;
 
     println!("============ create_agent ============");
     println!("!dgc-network! private_key = {:?}", private_key.as_hex());
