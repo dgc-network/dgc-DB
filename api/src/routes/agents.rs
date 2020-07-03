@@ -10,7 +10,7 @@ use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use serde::Deserialize;
 use protobuf::Message;
-use reqwest;
+//use reqwest;
 
 use crate::transaction::BatchBuilder;
 use crate::submitter::{BatchSubmitter, SubmitBatches, SplinterBatchSubmitter};
@@ -48,10 +48,11 @@ pub async fn list_agents(
             return Err(err.into());
         }
     };
-*/
+
     Ok(HttpResponse::Ok().body("Hello world! list_agents"))
-/*
+*/
     // Submitting Batches to the Validator //
+    extern crate reqwest;
     let res = reqwest::get("http://rest-api:8008/state")
         .await?
         .text()
@@ -69,7 +70,7 @@ pub async fn list_agents(
             err
         ))),
     }
-*/
+
 }
 
 pub async fn fetch_agent(
@@ -185,7 +186,7 @@ pub async fn create_agent(
         .expect("Error converting batch list to bytes");
 
     // Submitting Batches to the Validator //
-    //extern crate reqwest;
+    extern crate reqwest;
 
     let client = reqwest::Client::new();
     let res = client
