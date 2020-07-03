@@ -336,7 +336,7 @@ pub async fn create_agent(
 
     let client = reqwest::Client::new();
     let res = client
-        .post("http://localhost:8008/batches")
+        .post("http://rest-api:8008/batches")
         .header("Content-Type", "application/octet-stream")
         .body(
             batch_list_bytes,
