@@ -52,14 +52,14 @@ pub async fn list_agents(
     Ok(HttpResponse::Ok().body("Hello world! list_agents"))
 */
     // Submitting Batches to the Validator //
-    extern crate reqwest;
+    //extern crate reqwest;
 
     //let client = reqwest::Client::new();
     let res = reqwest::Client::new()
         .get("http://rest-api:8008/state")
+        .text();
         //.header("Content-Type", "application/octet-stream")
         //.send();
-        .await?;
 
     println!("============ list_agent ============");
     println!("!dgc-network! res = {:?}", res);
@@ -188,7 +188,7 @@ pub async fn create_agent(
         .expect("Error converting batch list to bytes");
 
     // Submitting Batches to the Validator //
-    extern crate reqwest;
+    //extern crate reqwest;
 
     let client = reqwest::Client::new();
     let res = client
