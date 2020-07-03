@@ -52,18 +52,10 @@ pub async fn list_agents(
     Ok(HttpResponse::Ok().body("Hello world! list_agents"))
 */
     // Submitting Batches to the Validator //
-    //extern crate reqwest;
-
-    //let client = reqwest::Client::new();
     let res = reqwest::get("http://rest-api:8008/state")
-        //.await?
-        //.text()
-        //.await?;
-    //let res = reqwest::Client::new()
-    //    .get("http://rest-api:8008/state")
-    //    .text();
-        //.header("Content-Type", "application/octet-stream")
-        //.send();
+        .await?
+        .text()
+        .await?;
 
     println!("============ list_agent ============");
     println!("!dgc-network! res = {:?}", res);
