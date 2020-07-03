@@ -59,8 +59,8 @@ pub async fn list_agents(
 
     println!("============ list_agent ============");
     println!("!dgc-network! res = {:?}", res);
-
-    future::ready(match res {
+/*
+    match res {
         //Ok(_) => Ok(BatchStatusLink { link }),
         //Ok(_) => Ok(HttpResponse::Ok().body("Hello world! list_agent")),
         Ok(_) => Ok(HttpResponse::Ok().body(res)),
@@ -68,7 +68,9 @@ pub async fn list_agents(
             "Unable to submit batch: {}",
             err
         ))),
-    })
+    }
+*/
+    Ok(_) => Ok(HttpResponse::Ok().body(res))
 
 }
 
@@ -200,16 +202,16 @@ pub async fn create_agent(
     println!("============ create_agent ============");
     println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     println!("!dgc-network! public_key = {:?}", public_key.as_hex());
-    println!("!dgc-network! res = {:?}", res);
+    //println!("!dgc-network! res = {:?}", res);
 
-    match res {
+    future::ready(match res {
         //Ok(_) => Ok(BatchStatusLink { link }),
         Ok(_) => Ok(HttpResponse::Ok().body("Hello world! create_agent")),
         Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
             "Unable to submit batch: {}",
             err
         ))),
-    }
+    })
 }
 
 pub async fn update_agent(
