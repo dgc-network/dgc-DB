@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::{web, HttpRequest, HttpResponse};
-//use sawtooth_sdk::signing::CryptoFactory;
-//use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::signing::CryptoFactory;
 use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::signing::Context;
@@ -11,13 +9,10 @@ use sawtooth_sdk::signing::secp256k1::Secp256k1Context;
 use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use serde::Deserialize;
-use serde_cbor;
-//extern crate serde_cbor;
+use protobuf::core::Message;
 
 use crate::transaction::BatchBuilder;
 use crate::submitter::{BatchSubmitter, SubmitBatches, SplinterBatchSubmitter};
-//use crate::submitter::{MockBatchSubmitter, MockMessageSender, ResponseType};
-//use crate::routes::batches::{submit_batches, get_batch_statuses};
 use crate::routes::state::{MockTransactionContext, MockState};
 use crate::error::RestApiResponseError;
 
@@ -86,9 +81,6 @@ pub async fn fetch_agent(
 
 }
 
-//use std::alloc::{dealloc, Layout};
-//use std::ptr;
-
 pub async fn create_agent(
     req: HttpRequest,
     agent_input: web::Json<AgentInput>,
@@ -102,8 +94,7 @@ pub async fn create_agent(
     
     let context = create_context("secp256k1")
         .expect("Error creating the right context");
-    let private_key = context
-        .new_random_private_key()
+    let private_key = context.new_random_private_key()
         .expect("Error generating a new Private Key");
     let crypto_factory = CryptoFactory::new(context.as_ref());
     let signer = crypto_factory.new_signer(private_key.as_ref());
