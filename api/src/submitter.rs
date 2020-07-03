@@ -324,7 +324,9 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             .header("Content-Type", "octet-stream")
             .body(batch_list_bytes)
             .send()
-            .error_for_status_ref();
+            .await?
+            .text()
+            .await?;
 
         future::ready(match res {
             Ok(_) => Ok(BatchStatusLink { link }),
@@ -385,7 +387,9 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         let res = reqwest::Client::new()
             .get(&url)
             .send()
-            .error_for_status_ref();
+            .await?
+            .text()
+            .await?;
 
         future::ready(match res {
             Ok(mut res) => res.json(),
