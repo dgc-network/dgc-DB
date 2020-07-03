@@ -48,9 +48,9 @@ pub async fn list_agents(
             return Err(err.into());
         }
     };
-
-    Ok(HttpResponse::Ok().body("Hello world! list_agents"))
 */
+    Ok(HttpResponse::Ok().body("Hello world! list_agents"))
+/*
     // Submitting Batches to the Validator //
     let res = reqwest::get("http://rest-api:8008/state")
         .await?
@@ -69,7 +69,7 @@ pub async fn list_agents(
             err
         ))),
     }
-
+*/
 }
 
 pub async fn fetch_agent(
