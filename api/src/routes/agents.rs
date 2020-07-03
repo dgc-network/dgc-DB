@@ -344,6 +344,18 @@ pub async fn create_agent(
         .send();
 
     println!("============ create_agent ============");
+
+    future::ready(match res {
+        //Ok(_) => Ok(BatchStatusLink { link }),
+        Ok(_) => Ok(HttpResponse::Ok().body("Hello world! create_agent")),
+        Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
+            "Unable to submit batch: {}",
+            err
+        ))),
+    })
+    .boxed()
+
+
     // ***** //
 /*
     let response_url = req.url_for_static("agent")?;
@@ -372,7 +384,7 @@ pub async fn create_agent(
         .map(|link| HttpResponse::Ok().json(link))
 */
 
-    Ok(HttpResponse::Ok().body("Hello world! create_agent"))
+    //Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
 
 pub async fn update_agent(
