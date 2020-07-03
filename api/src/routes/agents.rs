@@ -10,6 +10,7 @@ use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
+use futures::prelude::*;
 
 use crate::transaction::BatchBuilder;
 use crate::submitter::{BatchSubmitter, SubmitBatches, SplinterBatchSubmitter};
@@ -70,7 +71,7 @@ pub async fn list_agents(
         ))),
     }
 */
-    Ok(_) => Ok(HttpResponse::Ok().body(res))
+    Ok(HttpResponse::Ok().body(res))
 
 }
 
