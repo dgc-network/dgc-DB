@@ -10,6 +10,7 @@ use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use serde::Deserialize;
 use protobuf::Message;
+use reqwest;
 
 use crate::transaction::BatchBuilder;
 use crate::submitter::{BatchSubmitter, SubmitBatches, SplinterBatchSubmitter};
@@ -37,7 +38,7 @@ pub struct AgentInput {
 }
 
 pub async fn list_agents(
-    req: HttpRequest,
+    //req: HttpRequest,
 ) -> Result<HttpResponse, RestApiResponseError> {
 /*    
     // Get the URL
@@ -56,8 +57,9 @@ pub async fn list_agents(
     //let client = reqwest::Client::new();
     let res = reqwest::Client::new()
         .get("http://rest-api:8008/state")
-        .header("Content-Type", "application/octet-stream")
-        .send();
+        //.header("Content-Type", "application/octet-stream")
+        //.send();
+        .await?;
 
     println!("============ list_agent ============");
     println!("!dgc-network! res = {:?}", res);
