@@ -325,7 +325,7 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             .body(batch_list_bytes)
             .send();
 
-        future::ready(match res {
+        future::ready(match res.error_for_status_ref() {
             Ok(_) => Ok(BatchStatusLink { link }),
             Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
                 "Unable to submit batch: {}",
@@ -385,7 +385,7 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             .get(&url)
             .send();
 
-        future::ready(match res {
+        future::ready(match res.error_for_status_ref() {
             Ok(mut res) => res.json(),
             Err(err) => Err(err),
         })
