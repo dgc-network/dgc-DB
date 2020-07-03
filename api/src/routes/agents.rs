@@ -4,17 +4,21 @@
 use actix_web::{web, HttpRequest, HttpResponse};
 //use sawtooth_sdk::signing::CryptoFactory;
 //use sawtooth_sdk::signing::create_context;
+use sawtooth_sdk::signing::CryptoFactory;
+use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::signing::Context;
 use sawtooth_sdk::signing::secp256k1::Secp256k1Context;
 use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use serde::Deserialize;
 
+extern crate serde_cbor;
+
 use crate::transaction::BatchBuilder;
 use crate::submitter::{BatchSubmitter, SubmitBatches, SplinterBatchSubmitter};
 use crate::submitter::{MockBatchSubmitter, MockMessageSender, ResponseType};
 use crate::routes::batches::{submit_batches, get_batch_statuses};
-use crate::state::{MockTransactionContext, MockState};
+use crate::routes::state::{MockTransactionContext, MockState};
 use crate::error::RestApiResponseError;
 
 use grid_sdk::protocol::pike::{
@@ -346,8 +350,9 @@ pub async fn create_agent(
         .body(
             batch_list_bytes,
         )
-        .send()
+        .send();
 
+    println!("============ create_agent ============");
     // ***** //
 /*
     let response_url = req.url_for_static("agent")?;
