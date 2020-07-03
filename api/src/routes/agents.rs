@@ -193,21 +193,25 @@ pub async fn create_agent(
         .header("Content-Type", "application/octet-stream")
         .body(batch_list_bytes)
         .send()
+        .await?
+        .text()
         .await?;
 
     println!("============ create_agent ============");
     println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     println!("!dgc-network! public_key = {:?}", public_key.as_hex());
-    //println!("!dgc-network! res = {:?}", res);
-
-    future::ready(match res {
+    println!("!dgc-network! res = {:?}", res);
+/*
+    match res {
         //Ok(_) => Ok(BatchStatusLink { link }),
         Ok(_) => Ok(HttpResponse::Ok().body("Hello world! create_agent")),
         Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
             "Unable to submit batch: {}",
             err
         ))),
-    })
+    }
+*/
+    Ok(HttpResponse::Ok().body(res))
 }
 
 pub async fn update_agent(
