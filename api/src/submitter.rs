@@ -323,11 +323,8 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             .post(&url)
             .header("Content-Type", "octet-stream")
             .body(batch_list_bytes)
-            .send()
-            .await?
-            .text()
-            .await?;
-
+            .send();
+/*
         future::ready(match res {
             Ok(_) => Ok(BatchStatusLink { link }),
             Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
@@ -336,6 +333,8 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             ))),
         })
         .boxed()
+*/
+        future::ready(Ok(BatchStatusLink { link })).boxed()
 /*
         client
             .post(&url)
@@ -386,11 +385,8 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         //let res = client
         let res = reqwest::Client::new()
             .get(&url)
-            .send()
-            .await?
-            .text()
-            .await?;
-
+            .send();
+/*
         future::ready(match res {
             Ok(mut res) => res.json(),
             Err(err) => Err(err),
@@ -404,7 +400,8 @@ impl BatchSubmitter for SplinterBatchSubmitter {
             })
         })
         .boxed()
-
+*/
+        future::ready(Ok()).boxed()
 /*
         client
             .get(&url)
