@@ -13,7 +13,7 @@ use reqwest;
 //use futures::prelude::*;
 
 use crate::transaction::BatchBuilder;
-use crate::submitter::{BatchSubmitter, SubmitBatches, SplinterBatchSubmitter};
+//use crate::submitter::{BatchSubmitter, SubmitBatches, SplinterBatchSubmitter};
 use crate::routes::state::{MockTransactionContext, MockState};
 use crate::error::RestApiResponseError;
 
@@ -78,7 +78,7 @@ pub async fn list_agents(
 pub async fn fetch_agent(
     public_key: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
-
+/*
     println!("!dgc-network! public_key = {:?}", public_key);
     let mut transaction_context = MockTransactionContext::default();
     let state = MockState::new(&mut transaction_context);
@@ -100,7 +100,7 @@ pub async fn fetch_agent(
     //let agent = result.unwrap();
     //let org_id = agent.org_id();
     println!("!dgc-network! result = {:?}", result);
-
+*/
     Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 
 }
@@ -218,7 +218,7 @@ pub async fn update_agent(
     req: HttpRequest,
     agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
-
+/*
     let response_url = req.url_for_static("agent")?;
 
     let private_key_as_hex = &agent_input.private_key;
@@ -313,7 +313,7 @@ pub async fn update_agent(
         })
         .await
         .map(|link| HttpResponse::Ok().json(link))
+*/
 
-
-    //Ok(HttpResponse::Ok().body("Hello world! create_agent"))
+    Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }

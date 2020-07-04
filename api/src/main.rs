@@ -3,12 +3,12 @@
 
 mod routes;
 mod error;
-mod submitter;
+//mod submitter;
 mod transaction;
 
 use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
 
-use crate::routes::batches::{submit_batches, get_batch_statuses};
+//use crate::routes::batches::{submit_batches, get_batch_statuses};
 use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};
 /*
 #[derive(Clone)]
@@ -45,14 +45,14 @@ async fn main() -> std::io::Result<()> {
         App::new()
             //.data(state.clone())
             .route("/", web::get().to(index))
-
+/*
             .service(web::resource("/submit_batches")
                 .route(web::post().to(submit_batches)))
 
             .service(web::resource("/batch_statuses")
                 .name("batch_statuses")
                 .route(web::get().to(get_batch_statuses)))            
-            
+*/            
             .service(web::resource("/agent")
                 .name("agent")
                 .route(web::post().to(create_agent))
