@@ -3,19 +3,12 @@
 
 use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::create_context;
-//use sawtooth_sdk::signing::Context;
-//use sawtooth_sdk::signing::secp256k1::Secp256k1Context;
-//use sawtooth_sdk::signing::PrivateKey;
-//use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
-//use futures::prelude::*;
-
 
 use crate::transaction::BatchBuilder;
-//use crate::submitter::{BatchSubmitter, SubmitBatches, SplinterBatchSubmitter};
-//use crate::routes::state::{MockTransactionContext, MockState};
+use crate::routes::state::{MockTransactionContext, MockState};
 use crate::error::RestApiResponseError;
 
 use grid_sdk::protocol::pike::{
@@ -79,7 +72,7 @@ pub async fn list_agents(
 pub async fn fetch_agent(
     public_key: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
-/*
+
     println!("!dgc-network! public_key = {:?}", public_key);
     let mut transaction_context = MockTransactionContext::default();
     let state = MockState::new(&mut transaction_context);
@@ -101,7 +94,7 @@ pub async fn fetch_agent(
     //let agent = result.unwrap();
     //let org_id = agent.org_id();
     println!("!dgc-network! result = {:?}", result);
-*/
+
     Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 
 }
