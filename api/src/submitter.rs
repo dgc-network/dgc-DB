@@ -401,7 +401,7 @@ impl BatchSubmitter for SplinterBatchSubmitter {
         })
         .boxed()
 */
-        future::ready(Ok(res)).boxed()
+        Box::pin(future::ready(Ok(res)))
 /*
         client
             .get(&url)
