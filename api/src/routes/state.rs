@@ -49,7 +49,7 @@ impl<'a> MockState<'a> {
     pub fn new(context: &'a dyn TransactionContext) -> MockState {
         MockState { context }
     }
-/*
+
     /// Gets a Pike Agent. Handles retrieving the correct agent from an AgentList.
     pub fn get_agents(&self, public_key: &str) -> Result<Option<Vec<Agent>>, RestApiResponseError> {
         let address = compute_agent_address(public_key);
@@ -57,7 +57,7 @@ impl<'a> MockState<'a> {
         match d {
             Some(packed) => {
                 let agents = match AgentList::from_bytes(packed.as_slice()) {
-                    Ok(agents) => agents,
+                    Ok(agents) => return agents,
                     Err(err) => {
                         return Err(RestApiResponseError::NotFoundError(format!(
                             "Cannot deserialize agent list: {:?}",
@@ -69,7 +69,7 @@ impl<'a> MockState<'a> {
             None => Ok(None),
         }
     }
-*/
+
     /// Gets a Pike Agent. Handles retrieving the correct agent from an AgentList.
     //pub fn get_agent(&self, public_key: &str) -> Result<Option<Agent>, ApplyError> {
     pub fn get_agent(&self, public_key: &str) -> Result<Option<Agent>, RestApiResponseError> {
