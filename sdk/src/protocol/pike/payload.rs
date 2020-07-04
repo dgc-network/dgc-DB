@@ -1,5 +1,16 @@
-// Copyright (c) The dgc.network
-// SPDX-License-Identifier: Apache-2.0
+// Copyright 2019 Cargill Incorporated
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 use protobuf::Message;
 use protobuf::RepeatedField;
@@ -118,7 +129,7 @@ impl FromNative<CreateAgentAction> for protos::pike_payload::CreateAgentAction {
 
         proto_create_agent.set_org_id(create_agent.org_id().to_string());
         proto_create_agent.set_public_key(create_agent.public_key().to_string());
-        proto_create_agent.set_active(create_agent.active().clone());
+        proto_create_agent.set_active(*create_agent.active());
         proto_create_agent.set_org_id(create_agent.org_id().to_string());
         proto_create_agent.set_roles(RepeatedField::from_vec(create_agent.roles().to_vec()));
         proto_create_agent.set_metadata(RepeatedField::from_vec(
@@ -309,7 +320,7 @@ impl FromNative<UpdateAgentAction> for protos::pike_payload::UpdateAgentAction {
 
         proto_update_agent.set_org_id(update_agent.org_id().to_string());
         proto_update_agent.set_public_key(update_agent.public_key().to_string());
-        proto_update_agent.set_active(update_agent.active().clone());
+        proto_update_agent.set_active(*update_agent.active());
         proto_update_agent.set_org_id(update_agent.org_id().to_string());
         proto_update_agent.set_roles(RepeatedField::from_vec(update_agent.roles().to_vec()));
         proto_update_agent.set_metadata(RepeatedField::from_vec(

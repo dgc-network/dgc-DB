@@ -33,7 +33,7 @@ pub fn submit_batches(
 
     let client = Client::new();
 
-    let mut final_url = format!("{}/submit_batches", url);
+    let mut final_url = format!("{}/batches", url);
     if let Some(service_id) = service_id {
         final_url = format!("{}?service_id={}", final_url, service_id);
     }

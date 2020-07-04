@@ -138,7 +138,7 @@ export async function editProduct(data, keys, callbackFn) {
   const batch = new BatchBuilder().withTransactions([txn]).build(signer);
 
   data.services.forEach(async service => {
-    await submitBatchList(`${gridURL}/submit_batches?service_id=${service}`, batch);
+    await submitBatchList(`${gridURL}/batches?service_id=${service}`, batch);
   });
   callbackFn();
 }
@@ -196,7 +196,7 @@ export async function addProduct(data, keys, callbackFn) {
   const batch = new BatchBuilder().withTransactions([txn]).build(signer);
 
   data.services.forEach(async service => {
-    await submitBatchList(`${gridURL}/submit_batches?service_id=${service}`, batch);
+    await submitBatchList(`${gridURL}/batches?service_id=${service}`, batch);
   });
   callbackFn();
 }
