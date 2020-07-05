@@ -277,7 +277,7 @@ fn create_agent(
     }
 
     // verify the signer of the transaction is authorized to create agent
-    is_admin(signer, payload.get_org_id(), state)?;
+    //is_admin(signer, payload.get_org_id(), state)?;
 
     // Check if agent already exists
     match state.get_agent(payload.get_public_key()) {
