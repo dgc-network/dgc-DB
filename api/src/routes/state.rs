@@ -65,7 +65,7 @@ impl<'a> MockState<'a> {
                         )));
                     }
                 };
-                return Ok(Some(agents.agents()));
+                return Ok(Some(agents.agents().to_vec()));
             }
             None => Ok(None),
         }
