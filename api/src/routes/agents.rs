@@ -78,7 +78,9 @@ pub async fn fetch_agent(
     let mut transaction_context = MockTransactionContext::default();
     let state = MockState::new(&mut transaction_context);
     //let result = state.get_agent(&public_key).unwrap();
-    let result = match state.get_agents(&public_key){
+    let result = state.get_agents(&public_key){
+/*        
+    let result = match state.get_agent(&public_key){
         Ok(x)  => {
             if x != None {
                 x.unwrap();
@@ -91,6 +93,7 @@ pub async fn fetch_agent(
         }
         Err(e) => return Err(e),
     };
+*/    
     //let org_id = result.org_id();
     //let agent = result.unwrap();
     //let org_id = agent.org_id();
