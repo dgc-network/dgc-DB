@@ -77,12 +77,13 @@ pub async fn list_orgs(
 pub async fn fetch_org(
     org_id: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
-
+/*
     println!("!dgc-network! org_id = {:?}", org_id);
     let mut transaction_context = MockTransactionContext::default();
     let state = MockState::new(&mut transaction_context);
     //let result = state.get_agent(&public_key).unwrap();
     let result = state.get_orgs(&org_id);
+*/    
 /*        
     let result = match state.get_agent(&public_key){
         Ok(x)  => {
@@ -101,7 +102,7 @@ pub async fn fetch_org(
     //let org_id = result.org_id();
     //let agent = result.unwrap();
     //let org_id = agent.org_id();
-    println!("!dgc-network! result = {:?}", result);
+    //println!("!dgc-network! result = {:?}", result);
 
     Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
@@ -109,10 +110,11 @@ pub async fn fetch_org(
 
 pub async fn create_org(
     //req: HttpRequest,
-    agent_input: web::Json<AgentInput>,
+    org_input: web::Json<OrgInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Creating a Private Key and Signer //
+    let private_key_as_hex = &org_input.private_key;
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
         .expect("Error generating a new Private Key");
 /*        
@@ -213,9 +215,9 @@ pub async fn create_org(
     Ok(HttpResponse::Ok().body(res))
 }
 
-pub async fn update_agent(
+pub async fn update_org(
     req: HttpRequest,
-    agent_input: web::Json<AgentInput>,
+    org_input: web::Json<OrgInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 /*
     let response_url = req.url_for_static("agent")?;
