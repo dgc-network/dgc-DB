@@ -3,7 +3,7 @@
 
 use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::create_context;
-use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey
+use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
