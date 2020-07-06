@@ -3,26 +3,51 @@
 
 use crypto::digest::Digest;
 use crypto::sha2::Sha512;
+use sawtooth_sdk::processor::handler::ApplyError;
+use sawtooth_sdk::processor::handler::TransactionContext;
+
 use grid_sdk::protocol::pike::state::{Agent, AgentList};
+use grid_sdk::protocol::pike::state::{Organization, OrganizationList};
+use grid_sdk::protocol::product::state::{Product, ProductList, ProductListBuilder};
 use grid_sdk::protocol::schema::state::{Schema, SchemaList, SchemaListBuilder};
 use grid_sdk::protos::{FromBytes, IntoBytes};
 
-//cfg_if! {
-//    if #[cfg(target_arch = "wasm32")] {
-//        use sabre_sdk::ApplyError;
-//        use sabre_sdk::TransactionContext;
-//    } else {
-        use sawtooth_sdk::processor::handler::ApplyError;
-        use sawtooth_sdk::processor::handler::TransactionContext;
-//    }
-//}
 use crate::error::RestApiResponseError;
 
+const GRID_ADDRESS_LEN: usize = 70;
+const GS1_NAMESPACE: &str = "01"; // Indicates GS1 standard
+const PRODUCT_NAMESPACE: &str = "02"; // Indicates product under GS1 standard
+//const GRID_NAMESPACE: &str = "621dee"; // Grid prefix
 pub const GRID_NAMESPACE: &str = "621dee";
 pub const GRID_SCHEMA_NAMESPACE: &str = "01";
 
-pub const PIKE_NAMESPACE: &str = "cad11d";
+//pub const PIKE_NAMESPACE: &str = "cad11d";
 pub const PIKE_AGENT_NAMESPACE: &str = "00";
+pub const PIKE_ORG_NAMESPACE: &str = "01";
+
+pub const PIKE_NAMESPACE: &str = "cad11d";
+pub const PIKE_FAMILY_NAME: &str = "pike";
+pub const PIKE_FAMILY_VERSION: &str = "0.1";
+
+pub fn get_product_prefix() -> String {
+    GRID_NAMESPACE.to_string()
+}
+
+pub fn hash(to_hash: &str, num: usize) -> String {
+    let mut sha = Sha512::new();
+    sha.input_str(to_hash);
+    let temp = sha.result_str();
+    let hash = temp.get(..num).expect("PANIC! Hashing Out of Bounds Error");
+    hash.to_string()
+}
+
+pub fn make_product_address(product_id: &str) -> String {
+    let grid_product_gs1_prefix = get_product_prefix() + PRODUCT_NAMESPACE + GS1_NAMESPACE;
+    let grid_product_gs1_prefix_len = grid_product_gs1_prefix.chars().count();
+    let hash_len = GRID_ADDRESS_LEN - grid_product_gs1_prefix_len;
+
+    grid_product_gs1_prefix + &hash(product_id, hash_len)
+}
 
 /// Computes the address a Pike Agent is stored at based on its public_key
 pub fn compute_agent_address(public_key: &str) -> String {
@@ -30,6 +55,14 @@ pub fn compute_agent_address(public_key: &str) -> String {
     sha.input(public_key.as_bytes());
 
     String::from(PIKE_NAMESPACE) + PIKE_AGENT_NAMESPACE + &sha.result_str()[..62].to_string()
+}
+
+/// Computes the address a Pike Organization is stored at based on its identifier
+pub fn compute_org_address(identifier: &str) -> String {
+    let mut sha = Sha512::new();
+    sha.input(identifier.as_bytes());
+
+    String::from(PIKE_NAMESPACE) + PIKE_ORG_NAMESPACE + &sha.result_str()[..62]
 }
 
 /// Computes the address a Grid Schema is stored at based on its name
@@ -41,13 +74,64 @@ pub fn compute_schema_address(name: &str) -> String {
 }
 
 /// GridSchemaState is in charge of handling getting and setting state.
-pub struct MockState<'a> {
+pub struct ApiState<'a> {
     context: &'a dyn TransactionContext,
 }
 
-impl<'a> MockState<'a> {
-    pub fn new(context: &'a dyn TransactionContext) -> MockState {
-        MockState { context }
+impl<'a> ApiState<'a> {
+    pub fn new(context: &'a dyn TransactionContext) -> ApiState {
+        ApiState { context }
+    }
+
+    pub fn get_organization(&self, id: &str) -> Result<Option<Organization>, ApplyError> {
+        let address = compute_org_address(id);
+        let d = self.context.get_state_entry(&address)?;
+        match d {
+            Some(packed) => {
+                let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
+                    Ok(orgs) => orgs,
+                    Err(err) => {
+                        return Err(ApplyError::InternalError(format!(
+                            "Cannot deserialize organization list: {:?}",
+                            err,
+                        )))
+                    }
+                };
+
+                for org in orgs.organizations() {
+                    if org.org_id() == id {
+                        return Ok(Some(org.clone()));
+                    }
+                }
+                Ok(None)
+            }
+            None => Ok(None),
+        }
+    }
+
+    pub fn get_product(&self, product_id: &str) -> Result<Option<Product>, ApplyError> {
+        let address = make_product_address(product_id); //product id = gtin
+        let d = self.context.get_state_entry(&address)?;
+        match d {
+            Some(packed) => {
+                let products = match ProductList::from_bytes(packed.as_slice()) {
+                    Ok(products) => products,
+                    Err(_) => {
+                        return Err(ApplyError::InternalError(String::from(
+                            "Cannot deserialize product list",
+                        )));
+                    }
+                };
+
+                // find the product with the correct id
+                Ok(products
+                    .products()
+                    .iter()
+                    .find(|p| p.product_id() == product_id)
+                    .cloned())
+            }
+            None => Ok(None),
+        }
     }
 
     /// Gets a Pike Agent. Handles retrieving the correct agent from an AgentList.
@@ -201,12 +285,12 @@ impl<'a> MockState<'a> {
     use sawtooth_sdk::processor::handler::ContextError;
 
     #[derive(Default)]
-    /// A MockTransactionContext that can be used to test GridSchemaState
-    pub struct MockTransactionContext {
+    /// A ApiTransactionContext that can be used to test GridSchemaState
+    pub struct ApiTransactionContext {
         state: RefCell<HashMap<String, Vec<u8>>>,
     }
 
-    impl TransactionContext for MockTransactionContext {
+    impl TransactionContext for ApiTransactionContext {
         fn get_state_entries(
             &self,
             addresses: &[String],
@@ -253,7 +337,7 @@ impl<'a> MockState<'a> {
     #[test]
     // Test that if an agent does not exist in state, None is returned
     fn test_get_agent_none() {
-        let transaction_context = MockTransactionContext::default();
+        let transaction_context = ApiTransactionContext::default();
         let state = GridSchemaState::new(&transaction_context);
 
         let result = state.get_agent("agent_public_key").unwrap();
@@ -263,7 +347,7 @@ impl<'a> MockState<'a> {
     #[test]
     // Test that if an agent does exists in state, Some(Agent) is returned;
     fn test_get_agent_some() {
-        let transaction_context = MockTransactionContext::default();
+        let transaction_context = ApiTransactionContext::default();
 
         let builder = AgentBuilder::new();
         let agent = builder
@@ -297,7 +381,7 @@ impl<'a> MockState<'a> {
     // 3. Test that if a schema is in state it will be returned as Some(Schema).
     // 4. Test that a schema can be replaced
     fn test_grid_schema_state() {
-        let transaction_context = MockTransactionContext::default();
+        let transaction_context = ApiTransactionContext::default();
         let state = GridSchemaState::new(&transaction_context);
 
         let result = state.get_schema("TestSchema").unwrap();

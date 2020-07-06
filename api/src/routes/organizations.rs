@@ -10,11 +10,13 @@ use protobuf::Message;
 use reqwest;
 
 use crate::transaction::BatchBuilder;
-use crate::routes::state::{MockTransactionContext, MockState};
+use crate::routes::state::{
+    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
+    ApiTransactionContext, ApiState
+};
 use crate::error::RestApiResponseError;
 
 use grid_sdk::protocol::pike::{
-    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
     state::{
         KeyValueEntry, KeyValueEntryBuilder,
     },
@@ -77,22 +79,22 @@ pub async fn list_orgs(
 pub async fn fetch_org(
     org_id: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
-/*
+
     println!("!dgc-network! org_id = {:?}", org_id);
-    let mut transaction_context = MockTransactionContext::default();
-    let state = MockState::new(&mut transaction_context);
+    let mut transaction_context = ApiTransactionContext::default();
+    let state = ApiState::new(&mut transaction_context);
     //let result = state.get_agent(&public_key).unwrap();
-    let result = state.get_orgs(&org_id);
-*/    
-/*        
-    let result = match state.get_agent(&public_key){
+    //let result = state.get_orgs(&org_id);
+   
+
+    let result = match state.get_organization(&org_id){
         Ok(x)  => {
             if x != None {
                 x.unwrap();
             } else {
                 return Err(RestApiResponseError::BadRequest(format!(
-                    "Cannot find the data for public_key : {:?}",
-                    public_key.to_string()
+                    "Cannot find the data for org_id : {:?}",
+                    org_id.to_string()
                 )));
             }
         }
@@ -102,7 +104,7 @@ pub async fn fetch_org(
     //let org_id = result.org_id();
     //let agent = result.unwrap();
     //let org_id = agent.org_id();
-    //println!("!dgc-network! result = {:?}", result);
+    println!("!dgc-network! result = {:?}", result);
 
     Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 

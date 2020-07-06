@@ -8,11 +8,13 @@ use protobuf::Message;
 use reqwest;
 
 use crate::transaction::BatchBuilder;
-use crate::routes::state::{MockTransactionContext, MockState};
+use crate::routes::state::{
+    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
+    ApiTransactionContext, ApiState
+};
 use crate::error::RestApiResponseError;
 
 use grid_sdk::protocol::pike::{
-    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
     state::{
         KeyValueEntry, KeyValueEntryBuilder,
     },
@@ -75,8 +77,8 @@ pub async fn fetch_agent(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     println!("!dgc-network! public_key = {:?}", public_key);
-    let mut transaction_context = MockTransactionContext::default();
-    let state = MockState::new(&mut transaction_context);
+    let mut transaction_context = ApiTransactionContext::default();
+    let state = ApiState::new(&mut transaction_context);
     //let result = state.get_agent(&public_key).unwrap();
     let result = state.get_agents(&public_key);
 /*        
