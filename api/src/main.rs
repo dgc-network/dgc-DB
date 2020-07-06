@@ -10,6 +10,7 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
 
 //use crate::routes::batches::{submit_batches, get_batch_statuses};
 use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};
+use crate::routes::organizations::{create_org, update_org, list_orgs, fetch_org};
 /*
 #[derive(Clone)]
 pub struct AppState {
@@ -61,6 +62,15 @@ async fn main() -> std::io::Result<()> {
 
             .service(web::resource("/agent/{public_key}")
                 .route(web::get().to(fetch_agent)))
+        
+            .service(web::resource("/organization")
+                .name("organization")
+                .route(web::post().to(create_org))
+                .route(web::put().to(update_org))
+                .route(web::get().to(list_orgs)))
+
+            .service(web::resource("/organization/{org_id}")
+                .route(web::get().to(fetch_org)))
         
 /*
             .service(
