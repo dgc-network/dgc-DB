@@ -97,7 +97,7 @@ impl<'a> ApiState<'a> {
                         )))
                     }
                 };
-                return Ok(orgs.organizations().to_vec());
+                return Ok(Some(orgs.organizations().to_vec()));
             }
             None => Ok(None),
         }
