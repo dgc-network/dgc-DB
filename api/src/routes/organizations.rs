@@ -98,7 +98,13 @@ pub async fn fetch_org(
                 )));
             }
         }
-        //Err(e) => return Err(e),
+        Err(e) => {
+            //return Err(e),
+            return Err(RestApiResponseError::BadRequest(format!(
+                "Cannot find the data for org_id : {:?}",
+                org_id.to_string()
+            )));
+        }
     };
 
     //let org_id = result.org_id();
