@@ -100,7 +100,7 @@ pub async fn fetch_org(
         }
         Err(e) => return Err(e),
     };
-*/    
+
     //let org_id = result.org_id();
     //let agent = result.unwrap();
     //let org_id = agent.org_id();
