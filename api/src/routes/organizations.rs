@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::{web, HttpRequest, HttpResponse};
-use sawtooth_sdk::signing::create_context;
+//use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
 use serde::Deserialize;
@@ -45,7 +45,7 @@ pub async fn list_orgs(
     let result = state.get_organizations("organization_org_id").unwrap();
     assert!(result.is_some());
     let orgs = result.unwrap();
-    assert_eq!(agent.public_key(), "organization_org_id");
+    assert_eq!(organization.org_id(), "organization_org_id");
     println!("!dgc-network! orgs = {:?}", orgs);
 
     Ok(HttpResponse::Ok().body("Hello world! list_org"))
@@ -59,10 +59,10 @@ pub async fn fetch_org(
     println!("!dgc-network! org_id = {:?}", org_id);
     let transaction_context = ApiTransactionContext::default();
     let state = ApiState::new(&transaction_context);
-    let result = state.get_organization(org_id).unwrap();
+    let result = state.get_organization(&org_id).unwrap();
     assert!(result.is_some());
     let org = result.unwrap();
-    assert_eq!(agent.public_key(), org_id);
+    assert_eq!(organization.org_id(), org_id);
     println!("!dgc-network! org = {:?}", org);
 /*
     println!("!dgc-network! org_id = {:?}", org_id);
