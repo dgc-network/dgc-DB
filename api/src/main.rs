@@ -4,6 +4,7 @@
 mod routes;
 mod error;
 //mod submitter;
+mod state;
 mod transaction;
 
 use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
