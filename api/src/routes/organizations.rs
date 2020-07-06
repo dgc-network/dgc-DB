@@ -87,7 +87,7 @@ pub async fn fetch_org(
     //let result = state.get_orgs(&org_id);
    
 
-    let result = match state.get_organization(&org_id){
+    let result = match state.get_organizations(&org_id){
         Ok(x)  => {
             if x != None {
                 x.unwrap();
@@ -101,8 +101,7 @@ pub async fn fetch_org(
         Err(e) => {
             //return Err(e),
             return Err(RestApiResponseError::BadRequest(format!(
-                "Cannot find the data for org_id : {:?}",
-                org_id.to_string()
+                "Cannot find the data for org_id"
             )));
         }
     };
