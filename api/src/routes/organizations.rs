@@ -38,40 +38,16 @@ pub struct OrgInput {
 }
 
 pub async fn list_orgs(
-    //req: HttpRequest,
 ) -> Result<HttpResponse, RestApiResponseError> {
-/*    
-    // Get the URL
-    let response_url = match req.url_for_static("agent") {
-        Ok(url) => format!("{}?{}", url, req.query_string()),
-        Err(err) => {
-            return Err(err.into());
-        }
-    };
 
-    Ok(HttpResponse::Ok().body("Hello world! list_agents"))
-*/
-    // Submitting Batches to the Validator //
-    //extern crate reqwest;
-    let res = reqwest::get("http://rest-api:8008/state")
-        .await?
-        .text()
-        .await?;
+    let transaction_context = ApiTransactionContext::default();
+    let state = ApiState::new(&transaction_context);
+    let result = state.get_organizations("organization_org_id").unwrap();
+    assert!(result.is_some());
+    let orgs = result.unwrap();
+    assert_eq!(agent.public_key(), "organization_org_id");
+    println!("!dgc-network! orgs = {:?}", orgs);
 
-    println!("============ list_agent ============");
-    println!("!dgc-network! res = {:?}", res);
-/*
-    match res {
-        //Ok(_) => Ok(BatchStatusLink { link }),
-        //Ok(_) => Ok(HttpResponse::Ok().body("Hello world! list_agent")),
-        Ok(_) => Ok(HttpResponse::Ok().body(res)),
-        Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
-            "Unable to submit batch: {}",
-            err
-        ))),
-    }
-*/
-    //Ok(HttpResponse::Ok().body(res))
     Ok(HttpResponse::Ok().body("Hello world! list_org"))
 
 }
@@ -81,36 +57,23 @@ pub async fn fetch_org(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     println!("!dgc-network! org_id = {:?}", org_id);
-    let mut transaction_context = ApiTransactionContext::default();
-    let state = ApiState::new(&mut transaction_context);
-    //let result = state.get_agent(&public_key).unwrap();
-    //let result = state.get_orgs(&org_id);
-   
-
-    let result = match state.get_organizations(&org_id){
-        Ok(x)  => {
-            if x != None {
-                x.unwrap();
-            } else {
-                return Err(RestApiResponseError::BadRequest(format!(
-                    "Cannot find the data for org_id : {:?}",
-                    org_id.to_string()
-                )));
-            }
-        }
-        Err(e) => {
-            //return Err(e),
-            return Err(RestApiResponseError::BadRequest(format!(
-                "Cannot find the data for org_id"
-            )));
-        }
-    };
-
-    //let org_id = result.org_id();
-    //let agent = result.unwrap();
-    //let org_id = agent.org_id();
-    println!("!dgc-network! result = {:?}", result);
-
+    let transaction_context = ApiTransactionContext::default();
+    let state = ApiState::new(&transaction_context);
+    let result = state.get_organization(org_id).unwrap();
+    assert!(result.is_some());
+    let org = result.unwrap();
+    assert_eq!(agent.public_key(), org_id);
+    println!("!dgc-network! org = {:?}", org);
+/*
+    println!("!dgc-network! org_id = {:?}", org_id);
+    let transaction_context = ApiTransactionContext::default();
+    let state = ApiState::new(&transaction_context);
+    let result = state.get_agent(public_key).unwrap();
+    assert!(result.is_some());
+    let agent = result.unwrap();
+    assert_eq!(agent.public_key(), public_key);
+    println!("!dgc-network! org = {:?}", org);
+*/
     Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
 }
