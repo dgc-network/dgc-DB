@@ -83,6 +83,26 @@ impl<'a> ApiState<'a> {
         ApiState { context }
     }
 
+    pub fn get_organizations(&self, id: &str) -> Result<Option<Vec<Organization>>, ApplyError> {
+        let address = compute_org_address(id);
+        let d = self.context.get_state_entry(&address)?;
+        match d {
+            Some(packed) => {
+                let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
+                    Ok(orgs) => orgs,
+                    Err(err) => {
+                        return Err(ApplyError::InternalError(format!(
+                            "Cannot deserialize organization list: {:?}",
+                            err,
+                        )))
+                    }
+                };
+                return Ok(orgs.organizations().to_vec());
+            }
+            None => Ok(None),
+        }
+    }
+
     pub fn get_organization(&self, id: &str) -> Result<Option<Organization>, ApplyError> {
         let address = compute_org_address(id);
         let d = self.context.get_state_entry(&address)?;

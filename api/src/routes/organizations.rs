@@ -10,7 +10,7 @@ use protobuf::Message;
 use reqwest;
 
 use crate::transaction::BatchBuilder;
-use crate::routes::state::{
+use crate::state::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
     ApiTransactionContext, ApiState
 };
@@ -98,7 +98,7 @@ pub async fn fetch_org(
                 )));
             }
         }
-        Err(e) => return Err(e),
+        //Err(e) => return Err(e),
     };
 
     //let org_id = result.org_id();

@@ -8,7 +8,7 @@ use protobuf::Message;
 use reqwest;
 
 use crate::transaction::BatchBuilder;
-use crate::routes::state::{
+use crate::state::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
     ApiTransactionContext, ApiState
 };
