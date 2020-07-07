@@ -43,7 +43,7 @@ pub async fn list_orgs(
     let transaction_context = ApiTransactionContext::default();
     let state = ApiState::new(&transaction_context);
     let result = state.get_organizations("organization_org_id").unwrap();
-    assert!(result.is_some());
+    //assert!(result.is_some());
     let orgs = result.unwrap();
     //assert_eq!(Organization.org_id(), "organization_org_id");
     println!("!dgc-network! orgs = {:?}", orgs);
@@ -60,7 +60,7 @@ pub async fn fetch_org(
     let transaction_context = ApiTransactionContext::default();
     let state = ApiState::new(&transaction_context);
     let result = state.get_organization(&org_id).unwrap();
-    assert!(result.is_some());
+    //assert!(result.is_some());
     let org = result.unwrap();
     //assert_eq!(Organization.org_id(), org_id);
     println!("!dgc-network! org = {:?}", org);
