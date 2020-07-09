@@ -186,44 +186,44 @@ services:
         --connect tcp://validator:4004
         --bind rest-api:8008
 
-  gridd:
-    image: gridd:${ISOLATION_ID}
-    container_name: gridd
-    build:
-      context: .
-      dockerfile: daemon/Dockerfile
-      args:
-        - CARGO_ARGS=${CARGO_ARGS}
-        - REPO_VERSION=${REPO_VERSION}
-    expose:
-      - 8080
-    ports:
-      - '8080:8080'
-    entrypoint: |
-        bash -c "
+#  gridd:
+#    image: gridd:${ISOLATION_ID}
+#    container_name: gridd
+#    build:
+#      context: .
+#      dockerfile: daemon/Dockerfile
+#      args:
+#        - CARGO_ARGS=${CARGO_ARGS}
+#        - REPO_VERSION=${REPO_VERSION}
+#    expose:
+#      - 8080
+#    ports:
+#      - '8080:8080'
+#    entrypoint: |
+#        bash -c "
           # we need to wait for the db to have started.
-          until PGPASSWORD=grid_example psql -h db -U grid -c '\q'; do
-              >&2 echo \"Database is unavailable - sleeping\"
-              sleep 1
-          done
+#          until PGPASSWORD=grid_example psql -h db -U grid -c '\q'; do
+#              >&2 echo \"Database is unavailable - sleeping\"
+#              sleep 1
+#          done
 
-          grid -vv database migrate \
-              --database-url postgres://grid:grid_example@db/grid &&
-          gridd -vv -b gridd:8080 -C tcp://validator:4004 \
-              --database-url postgres://grid:grid_example@db/grid
-        "
+#          grid -vv database migrate \
+#              --database-url postgres://grid:grid_example@db/grid &&
+#          gridd -vv -b gridd:8080 -C tcp://validator:4004 \
+#              --database-url postgres://grid:grid_example@db/grid
+#        "
 
-  grid-cli:
-    image: grid-cli:${ISOLATION_ID}
-    container_name: grid-cli
-    build:
-      context: .
-      dockerfile: cli/Dockerfile
-      args:
-        - CARGO_ARGS=${CARGO_ARGS}
-        - REPO_VERSION=${REPO_VERSION}
-    entrypoint: |
-        tail -f /dev/null
+#  grid-cli:
+#    image: grid-cli:${ISOLATION_ID}
+#    container_name: grid-cli
+#    build:
+#      context: .
+#      dockerfile: cli/Dockerfile
+#      args:
+#        - CARGO_ARGS=${CARGO_ARGS}
+#        - REPO_VERSION=${REPO_VERSION}
+#    entrypoint: |
+#        tail -f /dev/null
 
   sabre-tp:
     image: hyperledger/sawtooth-sabre-tp:latest

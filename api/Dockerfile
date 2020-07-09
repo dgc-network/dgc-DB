@@ -6,8 +6,8 @@ FROM hyperledger/grid-dev:v2 as gridd-builder
 # Copy over Cargo.toml files
 COPY Cargo.toml /build/Cargo.toml
 COPY api/Cargo.toml /build/api/Cargo.toml
-COPY cli/Cargo.toml /build/cli/Cargo.toml
-COPY daemon/Cargo.toml /build/daemon/Cargo.toml
+#COPY cli/Cargo.toml /build/cli/Cargo.toml
+#COPY daemon/Cargo.toml /build/daemon/Cargo.toml
 COPY sdk/Cargo.toml /build/sdk/Cargo.toml
 
 COPY contracts/pike/Cargo.toml /build/contracts/pike/Cargo.toml
@@ -17,8 +17,8 @@ COPY contracts/track_and_trace/Cargo.toml /build/contracts/track_and_trace/Cargo
 
 # Copy over build files
 COPY api /build/api
-COPY cli /build/cli
-COPY daemon /build/daemon
+#COPY cli /build/cli
+#COPY daemon /build/daemon
 COPY sdk /build/sdk
 
 # Build the dgc-api package
@@ -42,7 +42,7 @@ RUN cargo deb --deb-version $REPO_VERSION $CARGO_ARGS
 #RUN sed -i -e "0,/version.*$/ s/version.*$/version\ =\ \"${REPO_VERSION}\"/" Cargo.toml
 #RUN cargo deb --deb-version $REPO_VERSION $CARGO_ARGS
 
-# -------------=== gridd docker build ===-------------
+# -------------=== dgc-api docker build ===-------------
 FROM ubuntu:bionic
 
 ARG CARGO_ARGS

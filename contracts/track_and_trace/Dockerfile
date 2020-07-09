@@ -6,8 +6,8 @@ FROM hyperledger/grid-dev:v2 as grid-track_and_trace-builder
 # Copy over Cargo.toml files
 COPY Cargo.toml /build/Cargo.toml
 COPY api/Cargo.toml /build/api/Cargo.toml
-COPY cli/Cargo.toml /build/cli/Cargo.toml
-COPY daemon/Cargo.toml /build/daemon/Cargo.toml
+#COPY cli/Cargo.toml /build/cli/Cargo.toml
+#COPY daemon/Cargo.toml /build/daemon/Cargo.toml
 COPY sdk/Cargo.toml /build/sdk/Cargo.toml
 
 COPY contracts/pike/Cargo.toml /build/contracts/pike/Cargo.toml

@@ -2,11 +2,11 @@
 
 members = [
     "api",
-    "cli",
+    #"cli",
     "contracts/pike",
     "contracts/product",
     "contracts/schema",
     "contracts/track_and_trace",
-    "daemon",
+    #"daemon",
     "sdk"
 ]
