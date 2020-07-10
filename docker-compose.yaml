@@ -125,7 +125,8 @@ services:
 
   validator:
     image: hyperledger/sawtooth-validator:1.1
-    container_name: grid-sawtooth-validator
+    #container_name: grid-sawtooth-validator
+    container_name: sawtooth-validator
     expose:
       - 4004
     ports:
@@ -167,14 +168,16 @@ services:
 
   settings-tp:
     image: hyperledger/sawtooth-settings-tp:1.1
-    container_name: grid-sawtooth-settings-tp
+    #container_name: grid-sawtooth-settings-tp
+    container_name: sawtooth-settings-tp
     depends_on:
       - validator
     entrypoint: settings-tp -vv -C tcp://validator:4004
 
   rest-api:
     image: hyperledger/sawtooth-rest-api:1.1
-    container_name: grid-sawtooth-rest-api
+    #container_name: grid-sawtooth-rest-api
+    container_name: sawtooth-rest-api
     expose:
       - 8008
     ports:
@@ -234,20 +237,21 @@ services:
 
   sawtooth-shell:
     image: hyperledger/sawtooth-shell:1.1
-    container_name: grid-sawtooth-shell
+    #container_name: grid-sawtooth-shell
+    container_name: sawtooth-shell
     command: |
         bash -c "
           sawtooth keygen &&
           tail -f /dev/null
         "
-  db:
-    image: postgres
-    restart: always
-    expose:
-      - 5432
-    ports:
-        - "5432:5432"
-    environment:
-      POSTGRES_USER: grid
-      POSTGRES_PASSWORD: grid_example
-      POSTGRES_DB: grid
+  #db:
+  #  image: postgres
+  #  restart: always
+  #  expose:
+  #    - 5432
+  #  ports:
+  #      - "5432:5432"
+  #  environment:
+  #    POSTGRES_USER: grid
+  #    POSTGRES_PASSWORD: grid_example
+  #    POSTGRES_DB: grid
