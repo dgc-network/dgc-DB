@@ -420,10 +420,9 @@ fn create_org(
 
     // Check if the agent already exists
     // make sure agent already exists
-    let mut agent = match state.get_agent(signer) {
-        Ok(None) => {
-            agent = Agent::new();
-        }
+    let mut agent = Agent::new();
+    agent = match state.get_agent(signer) {
+        Ok(None) => (),
         Ok(Some(agent)) => agent,
         Err(err) => {
             return Err(ApplyError::InvalidTransaction(format!(
