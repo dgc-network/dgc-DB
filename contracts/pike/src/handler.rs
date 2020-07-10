@@ -419,6 +419,21 @@ fn create_org(
     })?;
 
     // Check if the agent already exists
+    // make sure agent already exists
+    let mut agent = match state.get_agent(signer) {
+        Ok(None) => {
+            agent = Agent::new();
+        }
+        Ok(Some(agent)) => agent,
+        Err(err) => {
+            return Err(ApplyError::InvalidTransaction(format!(
+                "Failed to retrieve state: {}",
+                err,
+            )))
+        }
+    };
+/*
+    // Check if the agent already exists
     match state.get_agent(signer) {
         Ok(None) => (),
         Ok(Some(_)) => {
@@ -435,6 +450,7 @@ fn create_org(
         }
     };
     let mut agent = Agent::new();
+*/    
     agent.set_public_key(signer.to_string());
     agent.set_org_id(payload.get_id().to_string());
     agent.set_active(true);
