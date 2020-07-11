@@ -54,10 +54,20 @@ pub async fn fetch_org(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     println!("!dgc-network! org_id = {:?}", org_id);
+/*
     let transaction_context = ApiTransactionContext::default();
     let state = ApiState::new(&transaction_context);
     let org = state.get_organization(&org_id).unwrap();
     println!("!dgc-network! org = {:?}", org);
+*/
+
+    let res = reqwest::get(format!("http://rest-api:8008/state/{}", oeg_id))
+        .await?
+        .text()
+        .await?;
+
+    println!("============ fetch_org ============");
+    println!("!dgc-network! res = {:?}", res);
 
     Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
