@@ -8,6 +8,7 @@ use sawtooth_sdk::signing::PrivateKey;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
+use url::Url;
 
 use crate::transaction::BatchBuilder;
 use crate::state::{
@@ -51,7 +52,9 @@ pub async fn list_orgs(
     let orgs = state.get_organizations("organization_org_id").unwrap();
     println!("!dgc-network! orgs = {:?}", orgs);
 */
-    let res = reqwest::get(reqwest::IntoUrl(format!("http://rest-api:8008/state?address={}", "cad11d01")))
+
+    let url = Url::parse(format!("http://rest-api:8008/state?address={}", "cad11d01"))?;
+    let res = reqwest::get(url)
         .await?
         .text()
         .await?;
@@ -75,7 +78,8 @@ pub async fn fetch_org(
     println!("!dgc-network! org = {:?}", org);
 */
 
-    let res = reqwest::get(reqwest::IntoUrl(format!("http://rest-api:8008/state/{}", org_id)))
+    let url = Url::parse(format!("http://rest-api:8008/state/{}", org_id))?;
+    let res = reqwest::get(url)
         .await?
         .text()
         .await?;
