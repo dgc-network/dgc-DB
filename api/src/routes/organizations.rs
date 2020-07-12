@@ -61,7 +61,7 @@ pub async fn fetch_org(
     println!("!dgc-network! org = {:?}", org);
 */
 
-    let res = reqwest::get(format!("http://rest-api:8008/state/{}", oeg_id))
+    let res = reqwest::get(format!("http://rest-api:8008/state/{}", org_id))
         .await?
         .text()
         .await?;
