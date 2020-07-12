@@ -37,13 +37,27 @@ pub struct OrgInput {
     metadata: String,
 }
 
-pub async fn list_orgs(
-) -> Result<HttpResponse, RestApiResponseError> {
+#[derive(Deserialize)]
+struct Info {
+    address: String,
+}
 
+pub async fn list_orgs(
+    //info: web::Query<Info>
+) -> Result<HttpResponse, RestApiResponseError> {
+/*
     let transaction_context = ApiTransactionContext::default();
     let state = ApiState::new(&transaction_context);
     let orgs = state.get_organizations("organization_org_id").unwrap();
     println!("!dgc-network! orgs = {:?}", orgs);
+*/
+    let res = reqwest::get(format!("http://rest-api:8008/state?address={}", "cad11d01"))
+        .await?
+        .text()
+        .await?;
+
+    println!("============ list_org ============");
+    println!("!dgc-network! res = {:?}", res);
 
     Ok(HttpResponse::Ok().body("Hello world! list_org"))
 
