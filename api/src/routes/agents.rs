@@ -49,7 +49,7 @@ pub async fn list_agents(
 */
     // Submitting Batches to the Validator //
     //extern crate reqwest;
-    let res = reqwest::get("http://rest-api:8008/state")
+    let res = reqwest::get("http://rest-api:8008/state?address=cad11d00")
         .await?
         .text()
         .await?;
