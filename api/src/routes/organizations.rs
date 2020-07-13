@@ -53,10 +53,10 @@ pub async fn list_orgs(
     println!("!dgc-network! orgs = {:?}", orgs);
 */
 
-    let url = Url::parse(&format!("http://rest-api:8008/state?address={}", "cad11d01"));
-    let res = reqwest::Client::new()
-        .get(url)
-    //let res = reqwest::get(url)
+    //let url = Url::parse(&format!("http://rest-api:8008/state?address={}", "cad11d01"));
+    //let res = reqwest::Client::new()
+    //    .get(url)
+    let res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
         .await?
         .text()
         .await?;
@@ -79,7 +79,7 @@ pub async fn fetch_org(
     let org = state.get_organization(&org_id).unwrap();
     println!("!dgc-network! org = {:?}", org);
 */
-
+/*
     let url = Url::parse(&format!("http://rest-api:8008/state/{}", org_id));
     let res = reqwest::Client::new()
         .get(url)
@@ -90,7 +90,7 @@ pub async fn fetch_org(
 
     println!("============ fetch_org ============");
     println!("!dgc-network! res = {:?}", res);
-
+*/
     Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
 }
