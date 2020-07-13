@@ -8,7 +8,7 @@ use sawtooth_sdk::signing::PrivateKey;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
-use url::Url;
+//use url::Url;
 
 use crate::transaction::BatchBuilder;
 use crate::state::{
@@ -28,6 +28,7 @@ use grid_sdk::protocol::pike::{
     },
 };
 use grid_sdk::protos::IntoProto;
+use grid_sdk::protos::FromBytes;
 
 #[derive(Deserialize)]
 pub struct OrgInput {
