@@ -20,6 +20,7 @@ use crate::error::RestApiResponseError;
 use grid_sdk::protocol::pike::{
     state::{
         KeyValueEntry, KeyValueEntryBuilder,
+        Organization, OrganizationList,
     },
     payload::{
         Action, PikePayloadBuilder, 
@@ -52,8 +53,10 @@ pub async fn list_orgs(
         .text()
         .await?;
 
+    let orgs = OrganizationList::from_bytes(res.data);
+
     println!("============ list_org ============");
-    println!("!dgc-network! res = {:?}", res);
+    println!("!dgc-network! res = {:?}", orgs);
 
     Ok(HttpResponse::Ok().body(res))
 
