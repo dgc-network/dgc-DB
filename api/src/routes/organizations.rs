@@ -55,7 +55,7 @@ pub async fn list_orgs(
         .bytes()
         .await?;
 
-    let orgs = OrganizationList::from_bytes(res);
+    let orgs = OrganizationList::from_bytes(object!(res).data);
 
     println!("============ list_org ============");
     println!("!dgc-network! res = {:?}", orgs);
