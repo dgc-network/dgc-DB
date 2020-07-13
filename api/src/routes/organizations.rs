@@ -46,6 +46,13 @@ struct Info {
     address: String,
 }
 
+#[derive(Deserialize)]
+struct OrgsRes {
+    data: String,
+    head: String,
+    link: String,
+}
+
 pub async fn list_orgs(
     //info: web::Query<Info>
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -54,7 +61,7 @@ pub async fn list_orgs(
         .await?
         //.text()
         //.bytes()
-        .json()
+        .json::<OrgsRes>()
         .await?;
 
     //let json_res = json!(res);
