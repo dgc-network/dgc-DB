@@ -36,19 +36,7 @@ pub struct AgentInput {
 pub async fn list_agents(
     //req: HttpRequest,
 ) -> Result<HttpResponse, RestApiResponseError> {
-/*    
-    // Get the URL
-    let response_url = match req.url_for_static("agent") {
-        Ok(url) => format!("{}?{}", url, req.query_string()),
-        Err(err) => {
-            return Err(err.into());
-        }
-    };
 
-    Ok(HttpResponse::Ok().body("Hello world! list_agents"))
-*/
-    // Submitting Batches to the Validator //
-    //extern crate reqwest;
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d00")
         .await?
         .text()
@@ -56,19 +44,9 @@ pub async fn list_agents(
 
     println!("============ list_agent ============");
     println!("!dgc-network! res = {:?}", res);
-/*
-    match res {
-        //Ok(_) => Ok(BatchStatusLink { link }),
-        //Ok(_) => Ok(HttpResponse::Ok().body("Hello world! list_agent")),
-        Ok(_) => Ok(HttpResponse::Ok().body(res)),
-        Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
-            "Unable to submit batch: {}",
-            err
-        ))),
-    }
-*/
-    //Ok(HttpResponse::Ok().body(res))
-    Ok(HttpResponse::Ok().body("Hello world! list_agent"))
+
+    Ok(HttpResponse::Ok().body(res))
+    //Ok(HttpResponse::Ok().body("Hello world! list_agent"))
 
 }
 
