@@ -9,6 +9,7 @@ use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
 //use url::Url;
+use serde_json::json;
 
 use crate::transaction::BatchBuilder;
 use crate::state::{
@@ -55,7 +56,8 @@ pub async fn list_orgs(
         //.bytes()
         .await?;
 
-    let orgs = OrganizationList::from_bytes(object!(res).data);
+    //let json_res = json!(res);
+    let orgs = OrganizationList::from_bytes(json!(res)["data"]);
 
     println!("============ list_org ============");
     println!("!dgc-network! res = {:?}", orgs);
