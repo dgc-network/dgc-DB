@@ -84,7 +84,19 @@ pub async fn fetch_org(
     println!("============ fetch_org ============");
     println!("!dgc-network! res = {:?}", res);
 */
-    Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
+
+    let url = format!("http://rest-api:8008/state/{}", org_id);
+    let res = reqwest::get(&url)
+        .await?
+        .text()
+        .await?;
+
+    println!("============ fetch_org ============");
+    println!("!dgc-network! res = {:?}", res);
+
+    Ok(HttpResponse::Ok().body(res))
+
+    //Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
 }
 
