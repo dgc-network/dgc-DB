@@ -53,6 +53,7 @@ pub async fn list_orgs(
     println!("!dgc-network! orgs = {:?}", orgs);
 */
 
+    println!("============ list_org beginning ============");
     //let url = Url::parse(&format!("http://rest-api:8008/state?address={}", "cad11d01"));
     //let res = reqwest::Client::new()
     //    .get(url)
