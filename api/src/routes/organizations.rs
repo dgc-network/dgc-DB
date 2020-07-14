@@ -65,7 +65,7 @@ pub async fn list_orgs(
         .await?;
 
     let json_res = json!(res);
-    let orgs = json_res["data"];
+    let orgs = &json_res["data"];
     //let orgs = OrganizationList::from_bytes(json!(res)["data"]);
 
     println!("============ list_org ============");
