@@ -109,8 +109,13 @@ pub async fn fetch_org(
         .text()
         .await?;
 
+    let json_res = json!(res);
+    let org = &json_res["data"];
+
     println!("============ fetch_org ============");
     println!("!dgc-network! res = {:?}", res);
+    println!("!dgc-network! json_res = {:?}", json_res);
+    println!("!dgc-network! orgs = {:?}", org);
 
     Ok(HttpResponse::Ok().body(res))
 
