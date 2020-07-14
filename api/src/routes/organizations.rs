@@ -2,14 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::{web, HttpRequest, HttpResponse};
-//use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
-//use url::Url;
 use serde_json::json;
+use std::str;
 
 use crate::transaction::BatchBuilder;
 use crate::state::{
@@ -37,10 +36,9 @@ pub struct OrgInput {
     org_id: String,
     name: String,
     address: String,
-    //metadata: Vec<KeyValueEntry>,
     metadata: String,
 }
-
+/*
 #[derive(Deserialize)]
 struct Info {
     address: String,
@@ -52,9 +50,8 @@ struct OrgsRes {
     head: String,
     link: String,
 }
-
+*/
 pub async fn list_orgs(
-    //info: web::Query<Info>
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
