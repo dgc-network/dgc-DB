@@ -64,13 +64,14 @@ pub async fn list_orgs(
         .json::<OrgsRes>()
         .await?;
 
-    //let json_res = json!(res);
+    let json_res = json!(res);
     //let orgs = OrganizationList::from_bytes(json!(res)["data"]);
-    let orgs = res.data;
+    //let orgs = res.data;
 
     println!("============ list_org ============");
     println!("!dgc-network! res = {:?}", res);
-    println!("!dgc-network! orgs = {:?}", orgs);
+    println!("!dgc-network! json_res = {:?}", json_res);
+    //println!("!dgc-network! orgs = {:?}", orgs);
 
     Ok(HttpResponse::Ok().body(res))
 
