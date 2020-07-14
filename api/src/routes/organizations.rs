@@ -60,19 +60,19 @@ pub async fn list_orgs(
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
         .await?
         //.text()
-        .text_with_charset("utf-8")
-        //.bytes()
+        //.text_with_charset("utf-8")
+        .bytes()
         //.json::<OrgsRes>()
         .await?;
 
     let json_res = json!(res);
-    let data = &json_res["data"];
+    //let data = &json_res["data"];
     //let orgs = OrganizationList::from_bytes(json!(res)["data"]);
 
     println!("============ list_org ============");
     println!("!dgc-network! res = {:?}", res);
     println!("!dgc-network! json_res = {:?}", json_res);
-    println!("!dgc-network! data = {:?}", data);
+    //println!("!dgc-network! data = {:?}", data);
 
     Ok(HttpResponse::Ok().body(res))
 
