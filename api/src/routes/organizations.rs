@@ -65,7 +65,9 @@ pub async fn list_orgs(
         //.json::<OrgsRes>()
         .await?;
 
-    let json_res = json!(res);
+    //let json_res = json!(res);
+    let json_res = json!(str::from_utf8(&res).unwrap());
+
     //let data = &json_res["data"];
     //let orgs = OrganizationList::from_bytes(json!(res)["data"]);
 
