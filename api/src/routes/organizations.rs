@@ -59,7 +59,8 @@ pub async fn list_orgs(
 
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
         .await?
-        .text()
+        //.text()
+        .text_with_charset("utf-8")
         //.bytes()
         //.json::<OrgsRes>()
         .await?;
