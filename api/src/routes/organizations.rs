@@ -46,24 +46,26 @@ pub struct OrgInput {
 struct Info {
     address: String,
 }
-
+*/
 #[derive(Deserialize)]
 struct OrgsRes {
     data: String,
     head: String,
     link: String,
+    paging: String,
 }
-*/
+
 pub async fn list_orgs(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
 
     let mut res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
         .await?
-        .text()
+        //.text()
         //.text_with_charset("utf-8")
         //.bytes()
         //.json::.json::<HashMap<String, String>>()
+        .json::<OrgsRes>()
         .await?;
 
     //let json_res = json!(res.pop());
@@ -81,9 +83,9 @@ pub async fn list_orgs(
     //println!("!dgc-network! json_res = {:?}", json_res);
     //println!("!dgc-network! data = {:?}", data);
 
-    Ok(HttpResponse::Ok().body(res))
+    //Ok(HttpResponse::Ok().body(res))
 
-    //Ok(HttpResponse::Ok().body("Hello world! list_org"))
+    Ok(HttpResponse::Ok().body("Hello world! list_org"))
 
 }
 
