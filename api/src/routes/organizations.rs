@@ -41,12 +41,25 @@ pub struct OrgInput {
     address: String,
     metadata: String,
 }
-/*
+
 #[derive(Deserialize)]
-struct Info {
-    address: String,
+struct List {
+    data: Vec<Sub>,
+    head: String,
+    link: String,
+    paging: Paging,
 }
-*/
+
+struct Sub {
+    address: String,
+    data: String,
+}
+
+struct Paging {
+    limit: String,
+    start: String,
+}
+
 #[derive(Deserialize)]
 struct Res {
     data: String,
@@ -60,10 +73,10 @@ pub async fn list_orgs(
 
     let mut res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
         .await?
-        .text()
+        //.text()
         //.text_with_charset("utf-8")
         //.bytes()
-        //.json::.json::<HashMap<String, String>>()
+        .json::<List>()
         .await?;
 
     //let json_res = json!(res.pop());
@@ -76,14 +89,18 @@ pub async fn list_orgs(
     //let res = reqwest::blocking::get("http://rest-api:8008/state?address=cad11d01")?
     //    .json::<HashMap<String, String>>()?;
 
+    let data = res.data.as_bytes();
+    let orgs = OrganizationList::from_bytes(data);
+
     println!("============ list_org ============");
-    println!("!dgc-network! res = {:?}", res);
+    println!("!dgc-network! res = {:?}", res.link);
     //println!("!dgc-network! json_res = {:?}", json_res);
-    //println!("!dgc-network! data = {:?}", data);
+    println!("!dgc-network! data = {:?}", data);
+    println!("!dgc-network! orgs = {:?}", orgs);
 
-    Ok(HttpResponse::Ok().body(res))
+    //Ok(HttpResponse::Ok().body(res))
 
-    //Ok(HttpResponse::Ok().body("Hello world! list_org"))
+    Ok(HttpResponse::Ok().body("Hello world! list_org"))
 
 }
 
