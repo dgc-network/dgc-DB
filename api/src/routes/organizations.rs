@@ -66,7 +66,7 @@ pub async fn list_orgs(
         //.json::.json::<HashMap<String, String>>()
         .await?;
 
-    //let json_res = json!(res);
+    let json_res = json!(res.pop());
     //let json_res = json!(str::from_utf8(&res).unwrap());
     //let json_res: Value = serde_json::from_str(&res);
 
@@ -78,12 +78,12 @@ pub async fn list_orgs(
 
     println!("============ list_org ============");
     println!("!dgc-network! res = {:?}", res);
-    //println!("!dgc-network! json_res = {:?}", json_res);
+    println!("!dgc-network! json_res = {:?}", json_res);
     //println!("!dgc-network! data = {:?}", data);
 
-    //Ok(HttpResponse::Ok().body(res))
+    Ok(HttpResponse::Ok().body(res))
 
-    Ok(HttpResponse::Ok().body("Hello world! list_org"))
+    //Ok(HttpResponse::Ok().body("Hello world! list_org"))
 
 }
 
