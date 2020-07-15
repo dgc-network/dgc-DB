@@ -50,11 +50,13 @@ struct List {
     paging: Paging,
 }
 
+#[derive(Deserialize)]
 struct Sub {
     address: String,
     data: String,
 }
 
+#[derive(Deserialize)]
 struct Paging {
     limit: String,
     start: String,
