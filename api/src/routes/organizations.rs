@@ -79,7 +79,7 @@ pub async fn list_orgs(
     //    .json::<HashMap<String, String>>()?;
 
     println!("============ list_org ============");
-    println!("!dgc-network! res = {:?}", res);
+    println!("!dgc-network! res = {:?}", res.link);
     //println!("!dgc-network! json_res = {:?}", json_res);
     //println!("!dgc-network! data = {:?}", data);
 
