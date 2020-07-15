@@ -8,9 +8,10 @@ use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
 use serde_json::json;
-use std::str;
 //use serde_json::{Result, Value};
 use serde_json::Value;
+use std::str;
+use std::collections::HashMap;
 
 use crate::transaction::BatchBuilder;
 use crate::state::{
@@ -56,24 +57,28 @@ struct OrgsRes {
 pub async fn list_orgs(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
+/*
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
         .await?
         .text()
         //.text_with_charset("utf-8")
         //.bytes()
-        //.json::<OrgsRes>()
+        //.json::.json::<HashMap<String, String>>()
         .await?;
-
+*/
     //let json_res = json!(res);
     //let json_res = json!(str::from_utf8(&res).unwrap());
-    let json_res: Value = serde_json::from_str(&res);
+    //let json_res: Value = serde_json::from_str(&res);
 
     //let data = &json_res["data"];
     //let orgs = OrganizationList::from_bytes(json!(res)["data"]);
 
+    let res = reqwest::blocking::get("http://rest-api:8008/state?address=cad11d01")
+        .json::<HashMap<String, String>>()?;
+
     println!("============ list_org ============");
     println!("!dgc-network! res = {:?}", res);
-    println!("!dgc-network! json_res = {:?}", json_res);
+    //println!("!dgc-network! json_res = {:?}", json_res);
     //println!("!dgc-network! data = {:?}", data);
 
     Ok(HttpResponse::Ok().body(res))
