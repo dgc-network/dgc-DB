@@ -58,8 +58,8 @@ struct Sub {
 
 #[derive(Deserialize)]
 struct Paging {
-    limit: String,
-    start: String,
+    limit: u8,
+    start: u8,
 }
 
 #[derive(Deserialize)]
@@ -73,26 +73,12 @@ pub async fn list_orgs(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
 
-    let mut res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
+    let res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
         .await?
         //.text()
-        //.text_with_charset("utf-8")
-        //.bytes()
         .json::<List>()
         .await?;
 
-    //let json_res = json!(res.pop());
-    //let json_res = json!(str::from_utf8(&res).unwrap());
-    //let json_res: Value = serde_json::from_str(&res);
-
-    //let data = &json_res["data"];
-    //let orgs = OrganizationList::from_bytes(json!(res)["data"]);
-
-    //let res = reqwest::blocking::get("http://rest-api:8008/state?address=cad11d01")?
-    //    .json::<HashMap<String, String>>()?;
-
-    //let data = res.data.as_bytes();
-    //let orgs = OrganizationList::from_bytes(data);
 
     println!("============ list_org ============");
     println!("!dgc-network! res = {:?}", res.link);
