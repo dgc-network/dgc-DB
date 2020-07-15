@@ -48,11 +48,10 @@ struct Info {
 }
 */
 #[derive(Deserialize)]
-struct OrgsRes {
+struct Res {
     data: String,
     head: String,
     link: String,
-    paging: String,
 }
 
 pub async fn list_orgs(
@@ -61,11 +60,10 @@ pub async fn list_orgs(
 
     let mut res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
         .await?
-        //.text()
+        .text()
         //.text_with_charset("utf-8")
         //.bytes()
         //.json::.json::<HashMap<String, String>>()
-        .json::<OrgsRes>()
         .await?;
 
     //let json_res = json!(res.pop());
@@ -79,13 +77,13 @@ pub async fn list_orgs(
     //    .json::<HashMap<String, String>>()?;
 
     println!("============ list_org ============");
-    println!("!dgc-network! res = {:?}", res.link);
+    println!("!dgc-network! res = {:?}", res);
     //println!("!dgc-network! json_res = {:?}", json_res);
     //println!("!dgc-network! data = {:?}", data);
 
-    //Ok(HttpResponse::Ok().body(res))
+    Ok(HttpResponse::Ok().body(res))
 
-    Ok(HttpResponse::Ok().body("Hello world! list_org"))
+    //Ok(HttpResponse::Ok().body("Hello world! list_org"))
 
 }
 
@@ -116,20 +114,21 @@ pub async fn fetch_org(
     let url = format!("http://rest-api:8008/state/{}", org_id);
     let res = reqwest::get(&url)
         .await?
-        .text()
+        //.text()
+        .json::<Res>()
         .await?;
 
-    let json_res = json!(res);
-    let data = &json_res["data"];
+    //let json_res = json!(res);
+    //let data = &json_res["data"];
 
     println!("============ fetch_org ============");
-    println!("!dgc-network! res = {:?}", res);
-    println!("!dgc-network! json_res = {:?}", json_res);
-    println!("!dgc-network! data = {:?}", data);
+    println!("!dgc-network! res = {:?}", res.data);
+    //println!("!dgc-network! json_res = {:?}", json_res);
+    //println!("!dgc-network! data = {:?}", data);
 
-    Ok(HttpResponse::Ok().body(res))
+    //Ok(HttpResponse::Ok().body(res))
 
-    //Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
+    Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
 }
 
