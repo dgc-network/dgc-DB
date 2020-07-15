@@ -73,7 +73,7 @@ pub async fn list_orgs(
     //let data = &json_res["data"];
     //let orgs = OrganizationList::from_bytes(json!(res)["data"]);
 
-    let res = reqwest::blocking::get("http://rest-api:8008/state?address=cad11d01")
+    let res = reqwest::blocking::get("http://rest-api:8008/state?address=cad11d01")?
         .json::<HashMap<String, String>>()?;
 
     println!("============ list_org ============");
