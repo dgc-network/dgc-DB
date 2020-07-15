@@ -121,12 +121,15 @@ pub async fn fetch_org(
     //let json_res = json!(res);
     //let data = &json_res["data"];
 
+    let data = res.data.as_bytes();
+    let org = Organization::from_bytes(data);
+
     println!("============ fetch_org ============");
     println!("!dgc-network! res = {:?}", res.data);
     //println!("!dgc-network! json_res = {:?}", json_res);
     //println!("!dgc-network! data = {:?}", data);
 
-    Ok(HttpResponse::Ok().body(res.data))
+    Ok(HttpResponse::Ok().body(org))
 
     //Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
