@@ -127,8 +127,8 @@ pub async fn fetch_org(
     println!("============ fetch_org ============");
     println!("!dgc-network! res = {:?}", res.data);
     //println!("!dgc-network! json_res = {:?}", json_res);
-    //println!("!dgc-network! data = {:?}", data);
-    println!("!dgc-network! data = {:?}", org);
+    println!("!dgc-network! data = {:?}", data);
+    println!("!dgc-network! org = {:?}", org);
 
     //Ok(HttpResponse::Ok().body(org))
 
