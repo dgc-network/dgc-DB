@@ -57,7 +57,7 @@ struct OrgsRes {
 pub async fn list_orgs(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-/*
+
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
         .await?
         .text()
@@ -65,7 +65,7 @@ pub async fn list_orgs(
         //.bytes()
         //.json::.json::<HashMap<String, String>>()
         .await?;
-*/
+
     //let json_res = json!(res);
     //let json_res = json!(str::from_utf8(&res).unwrap());
     //let json_res: Value = serde_json::from_str(&res);
@@ -73,8 +73,8 @@ pub async fn list_orgs(
     //let data = &json_res["data"];
     //let orgs = OrganizationList::from_bytes(json!(res)["data"]);
 
-    let res = reqwest::blocking::get("http://rest-api:8008/state?address=cad11d01")?
-        .json::<HashMap<String, String>>()?;
+    //let res = reqwest::blocking::get("http://rest-api:8008/state?address=cad11d01")?
+    //    .json::<HashMap<String, String>>()?;
 
     println!("============ list_org ============");
     println!("!dgc-network! res = {:?}", res);
