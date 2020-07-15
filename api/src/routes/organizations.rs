@@ -9,6 +9,7 @@ use protobuf::Message;
 use reqwest;
 use serde_json::json;
 use std::str;
+use serde_json::{Result, Value};
 
 use crate::transaction::BatchBuilder;
 use crate::state::{
@@ -56,14 +57,15 @@ pub async fn list_orgs(
 
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
         .await?
-        //.text()
+        .text()
         //.text_with_charset("utf-8")
-        .bytes()
+        //.bytes()
         //.json::<OrgsRes>()
         .await?;
 
     //let json_res = json!(res);
-    let json_res = json!(str::from_utf8(&res).unwrap());
+    //let json_res = json!(str::from_utf8(&res).unwrap());
+    let json_res: Value = serde_json::from_str(data)?;
 
     //let data = &json_res["data"];
     //let orgs = OrganizationList::from_bytes(json!(res)["data"]);
