@@ -65,7 +65,7 @@ pub async fn list_orgs(
 
     //let json_res = json!(res);
     //let json_res = json!(str::from_utf8(&res).unwrap());
-    let json_res: Value = serde_json::from_str(res)?;
+    let json_res: Value = serde_json::from_str(&res)?;
 
     //let data = &json_res["data"];
     //let orgs = OrganizationList::from_bytes(json!(res)["data"]);
