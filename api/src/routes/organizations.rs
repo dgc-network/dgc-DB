@@ -81,9 +81,9 @@ pub async fn list_orgs(
     //println!("!dgc-network! json_res = {:?}", json_res);
     //println!("!dgc-network! data = {:?}", data);
 
-    Ok(HttpResponse::Ok().body(res))
+    //Ok(HttpResponse::Ok().body(res))
 
-    //Ok(HttpResponse::Ok().body("Hello world! list_org"))
+    Ok(HttpResponse::Ok().body("Hello world! list_org"))
 
 }
 
