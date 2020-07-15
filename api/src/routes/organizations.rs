@@ -58,7 +58,7 @@ pub async fn list_orgs(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
 
-    let res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
+    let mut res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
         .await?
         .text()
         //.text_with_charset("utf-8")
