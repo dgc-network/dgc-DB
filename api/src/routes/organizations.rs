@@ -9,7 +9,8 @@ use protobuf::Message;
 use reqwest;
 use serde_json::json;
 use std::str;
-use serde_json::{Result, Value};
+//use serde_json::{Result, Value};
+use serde_json::Value;
 
 use crate::transaction::BatchBuilder;
 use crate::state::{
