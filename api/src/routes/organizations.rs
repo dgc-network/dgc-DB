@@ -126,9 +126,9 @@ pub async fn fetch_org(
     //println!("!dgc-network! json_res = {:?}", json_res);
     //println!("!dgc-network! data = {:?}", data);
 
-    //Ok(HttpResponse::Ok().body(res))
+    Ok(HttpResponse::Ok().body(res.data))
 
-    Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
+    //Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
 }
 
