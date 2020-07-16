@@ -4,19 +4,20 @@
 use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
+use sawtooth_sdk::messages::state_context::TpStateGetRequest;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
-use serde_json::json;
+//use serde_json::json;
 //use serde_json::{Result, Value};
-use serde_json::Value;
+//use serde_json::Value;
 use std::str;
-use std::collections::HashMap;
+//use std::collections::HashMap;
 
 use crate::transaction::BatchBuilder;
 use crate::state::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
-    ApiTransactionContext, ApiState
+    //ApiTransactionContext, ApiState
 };
 //use crate::state::ApiState::get_organization;
 use crate::error::RestApiResponseError;
@@ -110,7 +111,7 @@ pub async fn fetch_org(
 
     Ok(HttpResponse::Ok().body(res.link))
 */
-
+/*
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
     let list = res.json::<List>().await?;
     //let orgs: OrganizationList = OrganizationList::from_bytes(list.data.as_slice());
@@ -122,6 +123,7 @@ pub async fn fetch_org(
             //return Ok(Some(org.clone()));
         }
     }
+*/
 /*
     let d = list.sub;
     match d {
@@ -148,8 +150,8 @@ pub async fn fetch_org(
         None => Ok(None),
     }
 */
-    
-    //let org = ApiState::new().get_organization(org_id);
+    let context = TpStateGetRequest.new().get_context_id();
+    let org = ApiState::new(context).get_organization(org_id);
 
     Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
