@@ -92,7 +92,7 @@ pub async fn fetch_org(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     println!("!dgc-network! org_id = {:?}", org_id);
-
+/*
     let url = format!("http://rest-api:8008/state/{}", org_id);
     let res = reqwest::get(&url)
         .await?
@@ -108,8 +108,12 @@ pub async fn fetch_org(
     println!("!dgc-network! org = {:?}", org);
 
     Ok(HttpResponse::Ok().body(res.link))
+*/
 
-    //Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
+    let org = ApiState::new().ApiState::get_organization(org_id);
+    println!("!dgc-network! org = {:?}", org);
+
+    Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
 }
 
