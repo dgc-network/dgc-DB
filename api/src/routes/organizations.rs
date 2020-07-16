@@ -113,7 +113,8 @@ pub async fn fetch_org(
 
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
     let list = res.json::<List>().await?;
-    let orgs: OrganizationList = OrganizationList::from_bytes(list.data.as_slice());
+    //let orgs: OrganizationList = OrganizationList::from_bytes(list.data.as_slice());
+    let orgs = OrganizationList::from_bytes(list.data.as_slice());
     for org in orgs.organizations() {
         if org.org_id().to_string() == org_id {
             println!("============ fetch_org ============");
