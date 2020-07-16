@@ -72,21 +72,15 @@ pub async fn list_orgs(
     for sub in list.data.iter() {
         println!("address: {}", sub.address);
         println!("data: {}", sub.data);
-/*        
-        match name {
-            &"Ferris" => println!("There is a rustacean among us!"),
-            _ => println!("Hello {}", name),
-        }
-*/        
+        let data = sub.data.as_bytes();
+        println!("!dgc-network! data = {:?}", data);
+        let org = Organization::from_bytes(data);
+        println!("!dgc-network! org = {:?}", org);
+        println!("============ list_org ============");
     }
 
     println!("============ list_org ============");
-    //println!("!dgc-network! res = {:?}", res.link);
-    println!("!dgc-network! res = {:?}", list.link);
-    //println!("!dgc-network! json_res = {:?}", json_res);
-    //println!("!dgc-network! data = {:?}", data);
-    //println!("!dgc-network! orgs = {:?}", orgs);
-
+    println!("!dgc-network! link = {:?}", list.link);
     Ok(HttpResponse::Ok().body(list.link))
 
     //Ok(HttpResponse::Ok().body("Hello world! list_org"))
