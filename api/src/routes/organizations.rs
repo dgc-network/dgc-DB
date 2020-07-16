@@ -66,19 +66,20 @@ pub async fn list_orgs(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
-    println!("============ list_org ============");
     let list = res.json::<List>().await?;
     for sub in list.data.iter() {
-        println!("address: {}", sub.address);
-        println!("data: {}", sub.data);
-        let data = sub.data.as_bytes();
-        println!("!dgc-network! data = {:?}", data);
-        let org = Organization::from_bytes(data.as_slice());
-        println!("!dgc-network! org = {:?}", org);
+        let bytes = sub.data.as_bytes();
+        let org = Organization::from_bytes(bytes);
+
         println!("============ list_org ============");
+        //println!("address: {}", sub.address);
+        //println!("data: {}", sub.data);
+        println!("!dgc-network! data = {:?}", sub.data);
+        println!("!dgc-network! bytes = {:?}", bytes);
+        println!("!dgc-network! org = {:?}", org);
     }
 
-    //println!("============ list_org ============");
+    println!("============ list_org ============");
     println!("!dgc-network! link = {:?}", list.link);
     Ok(HttpResponse::Ok().body(list.link))
 
@@ -91,42 +92,19 @@ pub async fn fetch_org(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     println!("!dgc-network! org_id = {:?}", org_id);
-/*
-    let transaction_context = ApiTransactionContext::default();
-    let state = ApiState::new(&transaction_context);
-    let org = state.get_organization(&org_id).unwrap();
-    println!("!dgc-network! org = {:?}", org);
-*/
-/*
-    let url = Url::parse(&format!("http://rest-api:8008/state/{}", org_id));
-    let res = reqwest::Client::new()
-        .get(url)
-    //let res = reqwest::get(url)
-        .await?
-        .text()
-        .await?;
-
-    println!("============ fetch_org ============");
-    println!("!dgc-network! res = {:?}", res);
-*/
 
     let url = format!("http://rest-api:8008/state/{}", org_id);
     let res = reqwest::get(&url)
         .await?
-        //.text()
         .json::<Res>()
         .await?;
 
-    //let json_res = json!(res);
-    //let data = &json_res["data"];
-
-    let data = res.data.as_bytes();
-    let org = Organization::from_bytes(data);
+    let bytes = res.data.as_bytes();
+    let org = Organization::from_bytes(bytes);
 
     println!("============ fetch_org ============");
-    println!("!dgc-network! res = {:?}", res.data);
-    //println!("!dgc-network! json_res = {:?}", json_res);
-    println!("!dgc-network! data = {:?}", data);
+    println!("!dgc-network! data = {:?}", res.data);
+    println!("!dgc-network! bytes = {:?}", bytes);
     println!("!dgc-network! org = {:?}", org);
 
     Ok(HttpResponse::Ok().body(res.link))
