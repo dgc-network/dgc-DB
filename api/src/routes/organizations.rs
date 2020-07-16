@@ -18,6 +18,7 @@ use crate::state::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
     ApiTransactionContext, ApiState
 };
+use crate::state::ApiState::get_organization;
 use crate::error::RestApiResponseError;
 
 use grid_sdk::protocol::pike::{
@@ -110,7 +111,7 @@ pub async fn fetch_org(
     Ok(HttpResponse::Ok().body(res.link))
 */
 
-    let org = ApiState::new().ApiState::get_organization(org_id);
+    let org = ApiState::new().get_organization(org_id);
     println!("============ fetch_org ============");
     println!("!dgc-network! org = {:?}", org);
 
