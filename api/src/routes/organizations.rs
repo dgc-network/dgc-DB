@@ -18,7 +18,7 @@ use crate::state::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
     ApiTransactionContext, ApiState
 };
-use crate::state::ApiState::get_organization;
+//use crate::state::ApiState::get_organization;
 use crate::error::RestApiResponseError;
 
 use grid_sdk::protocol::pike::{
@@ -113,6 +113,15 @@ pub async fn fetch_org(
 
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
     let list = res.json::<List>().await?;
+    let orgs: OrganizationList = OrganizationList::from_bytes(list.sub.as_slice())
+    for org in orgs.organizations() {
+        if org.org_id() == org_id {
+            println!("============ fetch_org ============");
+            println!("!dgc-network! org = {:?}", org);
+            //return Ok(Some(org.clone()));
+        }
+    }
+/*
     let d = list.sub;
     match d {
         Some(packed) => {
@@ -137,7 +146,7 @@ pub async fn fetch_org(
         }
         None => Ok(None),
     }
-
+*/
     
     //let org = ApiState::new().get_organization(org_id);
 
