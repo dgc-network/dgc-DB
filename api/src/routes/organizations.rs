@@ -73,12 +73,12 @@ pub async fn list_orgs(
         println!("data: {}", sub.data);
         let data = sub.data.as_bytes();
         println!("!dgc-network! data = {:?}", data);
-        let org = Organization::from_bytes(data);
+        let org = Organization::from_bytes(data.as_slice());
         println!("!dgc-network! org = {:?}", org);
         println!("============ list_org ============");
     }
 
-    println!("============ list_org ============");
+    //println!("============ list_org ============");
     println!("!dgc-network! link = {:?}", list.link);
     Ok(HttpResponse::Ok().body(list.link))
 
