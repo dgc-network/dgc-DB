@@ -47,19 +47,12 @@ struct List {
     data: Vec<Sub>,
     head: String,
     link: String,
-    //paging: Paging,
 }
 
 #[derive(Deserialize)]
 struct Sub {
     address: String,
     data: String,
-}
-
-#[derive(Deserialize)]
-struct Paging {
-    limit: u8,
-    start: u8,
 }
 
 #[derive(Deserialize)]
