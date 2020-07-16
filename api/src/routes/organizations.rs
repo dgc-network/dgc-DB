@@ -111,9 +111,35 @@ pub async fn fetch_org(
     Ok(HttpResponse::Ok().body(res.link))
 */
 
-    let org = ApiState::new().get_organization(org_id);
-    println!("============ fetch_org ============");
-    println!("!dgc-network! org = {:?}", org);
+    let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
+    let list = res.json::<List>().await?;
+    let d = list.sub;
+    match d {
+        Some(packed) => {
+            let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
+                Ok(orgs) => orgs,
+                Err(err) => {
+                    return Err(ApplyError::InternalError(format!(
+                        "Cannot deserialize organization list: {:?}",
+                        err,
+                    )))
+                }
+            };
+
+            for org in orgs.organizations() {
+                if org.org_id() == org_id {
+                    println!("============ fetch_org ============");
+                    println!("!dgc-network! org = {:?}", org);
+                    //return Ok(Some(org.clone()));
+                }
+            }
+            Ok(None)
+        }
+        None => Ok(None),
+    }
+
+    
+    //let org = ApiState::new().get_organization(org_id);
 
     Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
