@@ -111,6 +111,7 @@ pub async fn fetch_org(
 */
 
     let org = ApiState::new().ApiState::get_organization(org_id);
+    println!("============ fetch_org ============");
     println!("!dgc-network! org = {:?}", org);
 
     Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
