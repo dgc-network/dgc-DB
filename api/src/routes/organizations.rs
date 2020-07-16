@@ -74,19 +74,23 @@ pub async fn list_orgs(
 
 
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
-        .await?
+        //.await?
         //.text()
-        .json::<List>()
+        //.json::<List>()
         .await?;
+
+    println!("============ list_org ============");
+    let list = res.json::<List>().await?;
 
 
     println!("============ list_org ============");
-    println!("!dgc-network! res = {:?}", res.link);
+    //println!("!dgc-network! res = {:?}", res.link);
+    println!("!dgc-network! res = {:?}", list.link);
     //println!("!dgc-network! json_res = {:?}", json_res);
     //println!("!dgc-network! data = {:?}", data);
     //println!("!dgc-network! orgs = {:?}", orgs);
 
-    Ok(HttpResponse::Ok().body(res.link))
+    Ok(HttpResponse::Ok().body(list.link))
 
     //Ok(HttpResponse::Ok().body("Hello world! list_org"))
 
@@ -135,9 +139,9 @@ pub async fn fetch_org(
     println!("!dgc-network! data = {:?}", data);
     println!("!dgc-network! org = {:?}", org);
 
-    //Ok(HttpResponse::Ok().body(org))
+    Ok(HttpResponse::Ok().body(res.link))
 
-    Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
+    //Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
 }
 
