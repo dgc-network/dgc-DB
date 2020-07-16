@@ -65,7 +65,6 @@ struct Res {
 pub async fn list_orgs(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
     println!("============ list_org ============");
     let list = res.json::<List>().await?;
