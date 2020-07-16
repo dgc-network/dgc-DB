@@ -73,15 +73,14 @@ pub async fn list_orgs(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
 
-    let res = reqwest::get("http://rest-api:8008/state?address=cad11d01")
-        //.await?
-        //.text()
-        //.json::<List>()
-        .await?;
-
-    println!("============ list_org ============");
+    let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
     let list = res.json::<List>().await?;
-
+    for name in list.data.iter() {
+        match name {
+            &"Ferris" => println!("There is a rustacean among us!"),
+            _ => println!("Hello {}", name),
+        }
+    }
 
     println!("============ list_org ============");
     //println!("!dgc-network! res = {:?}", res.link);
