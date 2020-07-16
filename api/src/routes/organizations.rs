@@ -70,8 +70,8 @@ pub async fn list_orgs(
     println!("============ list_org ============");
     let list = res.json::<List>().await?;
     for sub in list.data.iter() {
-        println!("address: {}", sub.address)
-        println!("data: {}", sub.data)
+        println!("address: {}", sub.address);
+        println!("data: {}", sub.data);
 /*        
         match name {
             &"Ferris" => println!("There is a rustacean among us!"),
