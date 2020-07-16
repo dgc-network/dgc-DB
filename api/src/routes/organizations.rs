@@ -17,7 +17,7 @@ use std::str;
 use crate::transaction::BatchBuilder;
 use crate::state::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
-    //ApiTransactionContext, ApiState
+    ApiTransactionContext, ApiState
 };
 //use crate::state::ApiState::get_organization;
 use crate::error::RestApiResponseError;
@@ -150,7 +150,7 @@ pub async fn fetch_org(
         None => Ok(None),
     }
 */
-    let context = TpStateGetRequest.new().get_context_id();
+    let context = TpStateGetRequest::new().get_context_id();
     let org = ApiState::new(context).get_organization(org_id);
 
     Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
