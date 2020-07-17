@@ -116,7 +116,7 @@ pub async fn fetch_org(
     let list = res.json::<List>().await?;
     for sub in list.data.iter() {
         let bytes = sub.data.as_bytes();
-        let org: Organization = Organization::from_bytes(bytes).unwrap();
+        let org: OrganizationList = OrganizationList::from_bytes(bytes).unwrap();
         println!("============ fetch_org ============");
         println!("!dgc-network! data = {:?}", sub.data);
         println!("!dgc-network! bytes = {:?}", bytes);
