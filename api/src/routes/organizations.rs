@@ -71,7 +71,7 @@ pub async fn list_orgs(
     let list = res.json::<List>().await?;
     for sub in list.data.iter() {
         let bytes = sub.data.as_bytes();
-        let org = Organization::from_bytes(bytes);
+        let org = Organization::from_bytes(bytes).unwrap();
 
         println!("============ list_org ============");
         //println!("address: {}", sub.address);
@@ -114,9 +114,9 @@ pub async fn fetch_org(
 
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
     let list = res.json::<List>().await?;
-    for sub in list.data {
+    for sub in list.data.iter() {
         let bytes = sub.data.as_bytes();
-        let org:Organization = Organization::from_bytes(bytes).unwrap();
+        let org: Organization = Organization::from_bytes(bytes).unwrap();
         println!("============ fetch_org ============");
         println!("!dgc-network! data = {:?}", sub.data);
         println!("!dgc-network! bytes = {:?}", bytes);
