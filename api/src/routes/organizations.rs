@@ -118,7 +118,7 @@ pub async fn fetch_org(
         let bytes = sub.data.as_bytes();
         let orgs: OrganizationList = OrganizationList::from_bytes(bytes).unwrap();
         for org in orgs.organizations() {
-            if org.org_id().to_string() == org_id.clone().into_inner() {
+            if org.org_id().to_string() == org_id.clone() {
                 println!("============ fetch_org ============");
                 println!("!dgc-network! org = {:?}", org);
                 //return Ok(Some(org.clone()));
