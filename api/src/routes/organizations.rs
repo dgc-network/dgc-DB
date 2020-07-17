@@ -116,7 +116,15 @@ pub async fn fetch_org(
     let list = res.json::<List>().await?;
     for sub in list.data.iter() {
         let bytes = sub.data.as_bytes();
-        let org: OrganizationList = OrganizationList::from_bytes(bytes).unwrap();
+        let org: Organization = match Organization::from_bytes(bytes) {
+            Ok(org) => org,
+            Err(err) => {
+                return Err(ApplyError::InternalError(format!(
+                    "Cannot deserialize organization list: {:?}",
+                    err,
+                )))
+            }
+        };
         println!("============ fetch_org ============");
         println!("!dgc-network! data = {:?}", sub.data);
         println!("!dgc-network! bytes = {:?}", bytes);
