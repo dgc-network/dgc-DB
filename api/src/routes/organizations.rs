@@ -119,7 +119,7 @@ pub async fn fetch_org(
         let org: Organization = match Organization::from_bytes(bytes) {
             Ok(org) => org,
             Err(err) => {
-                return Err(ApplyError::InternalError(format!(
+                return Err(RestApiResponseError::UserError(format!(
                     "Cannot deserialize organization list: {:?}",
                     err,
                 )))
