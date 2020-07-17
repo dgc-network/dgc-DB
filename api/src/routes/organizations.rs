@@ -111,19 +111,22 @@ pub async fn fetch_org(
 
     Ok(HttpResponse::Ok().body(res.link))
 */
-/*
+
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
     let list = res.json::<List>().await?;
-    //let orgs: OrganizationList = OrganizationList::from_bytes(list.data.as_slice());
-    let orgs = OrganizationList::from_bytes(list.data.as_slice());
-    for org in orgs.organizations() {
-        if org.org_id().to_string() == org_id {
-            println!("============ fetch_org ============");
-            println!("!dgc-network! org = {:?}", org);
-            //return Ok(Some(org.clone()));
+    for sub in list.data {
+        let orgs = OrganizationList::from_bytes(sub.data.as_slice());
+        for org in orgs.organizations() {
+            if org.org_id().to_string() == org_id {
+                println!("============ fetch_org ============");
+                println!("!dgc-network! org = {:?}", org);
+                //return Ok(Some(org.clone()));
+            }
         }
+    
     }
-*/
+    //let orgs: OrganizationList = OrganizationList::from_bytes(list.data.as_slice());
+
 /*
     let d = list.sub;
     match d {
@@ -150,9 +153,10 @@ pub async fn fetch_org(
         None => Ok(None),
     }
 */
+/*
     let context = TpStateGetRequest::new().get_context_id();
     let org = ApiState::new(context).get_organization(org_id);
-
+*/
     Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
 }

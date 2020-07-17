@@ -82,7 +82,7 @@ impl<'a> ApiState<'a> {
     pub fn new(context: &'a dyn TransactionContext) -> ApiState {
         ApiState { context }
     }
-
+/*
     pub fn get_organizations(&self, id: &str) -> Result<Option<Vec<Organization>>, ApplyError> {
         let address = compute_org_address(id);
         let d = self.context.get_state_entry(&address)?;
@@ -102,7 +102,7 @@ impl<'a> ApiState<'a> {
             None => Ok(None),
         }
     }
-
+*/
     pub fn get_organization(&self, id: &str) -> Result<Option<Organization>, ApplyError> {
         let address = compute_org_address(id);
         let d = self.context.get_state_entry(&address)?;
