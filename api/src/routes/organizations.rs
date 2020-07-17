@@ -114,11 +114,14 @@ pub async fn fetch_org(
 
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
     let list = res.json::<List>().await?;
+    println!("============ fetch_org_1 ============");
     for sub in list.data.iter() {
+        println!("============ fetch_org_2 ============");
         let bytes = sub.data.as_bytes();
         let org: Organization = match Organization::from_bytes(bytes) {
             Ok(org) => org,
             Err(err) => {
+                println!("============ fetch_org_3 ============");
                 return Err(RestApiResponseError::UserError(format!(
                     "Cannot deserialize organization list: {:?}",
                     err,
