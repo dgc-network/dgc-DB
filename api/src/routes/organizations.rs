@@ -116,7 +116,7 @@ pub async fn fetch_org(
     let list = res.json::<List>().await?;
     for sub in list.data {
         let bytes = sub.data.as_bytes();
-        let orgs: OrganizationList = OrganizationList::from_bytes(bytes);
+        let orgs: OrganizationList = OrganizationList::from_bytes(bytes).unwrap();
         for org in orgs.organizations() {
             if org.org_id().to_string() == org_id {
                 println!("============ fetch_org ============");
