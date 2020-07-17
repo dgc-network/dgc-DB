@@ -122,10 +122,7 @@ pub async fn fetch_org(
             Ok(org) => org,
             Err(err) => {
                 println!("============ fetch_org_3 ============");
-                return Err(RestApiResponseError::ApplyError(format!(
-                    "Cannot deserialize organization list: {:?}",
-                    err,
-                )))
+                return Err(RestApiResponseError::ApplyError(err)
             }
         };
         println!("============ fetch_org ============");
