@@ -116,6 +116,13 @@ pub async fn fetch_org(
     let list = res.json::<List>().await?;
     for sub in list.data {
         let bytes = sub.data.as_bytes();
+        let org = Organization::from_bytes(bytes);
+        println!("============ fetch_org ============");
+        println!("!dgc-network! data = {:?}", list.data);
+        println!("!dgc-network! bytes = {:?}", bytes);
+        println!("!dgc-network! org = {:?}", org);
+    
+/*        
         //let orgs: OrganizationList = OrganizationList::from_bytes(bytes).unwrap();
         let orgs: OrganizationList = OrganizationList::from_bytes(bytes);
         for org in orgs.organizations() {
@@ -125,7 +132,7 @@ pub async fn fetch_org(
                 //return Ok(Some(org.clone()));
             }
         }
-    
+*/    
     }
     //let orgs: OrganizationList = OrganizationList::from_bytes(list.data.as_slice());
 
