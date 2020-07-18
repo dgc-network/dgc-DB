@@ -4,8 +4,10 @@
 use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
-use sawtooth_sdk::messages::state_context::TpStateGetRequest;
+//use sawtooth_sdk::messages::state_context::TpStateGetRequest;
 use sawtooth_sdk::processor::handler::ApplyError;
+use sawtooth_sdk::processor::handler::TransactionContext;
+use sawtooth_sdk::processor::handler::ContextError;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
@@ -19,7 +21,7 @@ use crate::transaction::BatchBuilder;
 use crate::state::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
     PIKE_ORG_NAMESPACE, 
-    ApiTransactionContext, ApiState
+    //ApiTransactionContext, ApiState
 };
 //use crate::state::ApiState::get_organization;
 use crate::error::RestApiResponseError;
@@ -40,8 +42,6 @@ use grid_sdk::protos::FromBytes;
 use crypto::sha2::Sha512;
 use std::cell::RefCell;
 use std::collections::HashMap;
-
-use sawtooth_sdk::processor::handler::ContextError;
 
 #[derive(Default)]
 /// An OrgTransactionContext that can be used to test OrgState
