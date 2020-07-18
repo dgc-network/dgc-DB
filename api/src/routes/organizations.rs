@@ -5,6 +5,7 @@ use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::messages::state_context::TpStateGetRequest;
+use sawtooth_sdk::processor::handler::ApplyError;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
@@ -17,6 +18,7 @@ use std::str;
 use crate::transaction::BatchBuilder;
 use crate::state::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
+    PIKE_ORG_NAMESPACE, 
     ApiTransactionContext, ApiState
 };
 //use crate::state::ApiState::get_organization;
@@ -34,6 +36,62 @@ use grid_sdk::protocol::pike::{
 };
 use grid_sdk::protos::IntoProto;
 use grid_sdk::protos::FromBytes;
+
+use crypto::sha2::Sha512;
+use std::cell::RefCell;
+use std::collections::HashMap;
+
+use sawtooth_sdk::processor::handler::ContextError;
+
+#[derive(Default)]
+/// An OrgTransactionContext that can be used to test OrgState
+pub struct OrgTransactionContext {
+    state: RefCell<HashMap<String, Vec<u8>>>,
+}
+
+/// Computes the address a Pike Organization is stored at based on its identifier
+pub fn compute_org_address(identifier: &str) -> String {
+    let mut sha = Sha512::new();
+    sha.input(identifier.as_bytes());
+
+    String::from(PIKE_NAMESPACE) + PIKE_ORG_NAMESPACE + &sha.result_str()[..62]
+}
+
+pub struct OrgState<'a> {
+    context: &'a dyn TransactionContext,
+}
+
+impl<'a> OrgState<'a> {
+    pub fn new(context: &'a dyn TransactionContext) -> OrgState {
+        OrgState { context }
+    }
+
+    pub fn get_organization(&self, id: &str) -> Result<Option<Organization>, ApplyError> {
+        let address = compute_org_address(id);
+        let d = self.context.get_state_entry(&address)?;
+        match d {
+            Some(packed) => {
+                let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
+                    Ok(orgs) => orgs,
+                    Err(err) => {
+                        return Err(ApplyError::InternalError(format!(
+                            "Cannot deserialize organization list: {:?}",
+                            err,
+                        )))
+                    }
+                };
+
+                for org in orgs.organizations() {
+                    if org.org_id() == id {
+                        return Ok(Some(org.clone()));
+                    }
+                }
+                Ok(None)
+            }
+            None => Ok(None),
+        }
+    }
+}
 
 #[derive(Deserialize)]
 pub struct OrgInput {
@@ -110,8 +168,8 @@ pub async fn fetch_org(
     println!("!dgc-network! org = {:?}", org);
 
     Ok(HttpResponse::Ok().body(res.link))
-*/
 
+/*
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
     let list = res.json::<List>().await?;
     println!("============ fetch_org_1 ============");
@@ -129,7 +187,7 @@ pub async fn fetch_org(
         println!("!dgc-network! data = {:?}", sub.data);
         println!("!dgc-network! bytes = {:?}", bytes);
         println!("!dgc-network! org = {:?}", org);
-    
+*/    
 /*        
         //let orgs: OrganizationList = OrganizationList::from_bytes(bytes).unwrap();
         let orgs: OrganizationList = OrganizationList::from_bytes(bytes);
@@ -142,6 +200,7 @@ pub async fn fetch_org(
         }
 */    
     }
+*/    
     //let orgs: OrganizationList = OrganizationList::from_bytes(list.data.as_slice());
 
 /*
@@ -174,6 +233,17 @@ pub async fn fetch_org(
     let context = TpStateGetRequest::new().get_context_id();
     let org = ApiState::new(context).get_organization(org_id);
 */
+
+    println!("============ fetch_org_1 ============");
+    let transaction_context = OrgTransactionContext::default();
+    println!("============ fetch_org_2 ============");
+    let state = OrgState::new(&transaction_context);
+    println!("============ fetch_org_3 ============");
+    let result = state.get_organization(org_id).unwrap();
+    println!("============ fetch_org_4 ============");
+    let agent = result.unwrap();
+    println!("============ fetch_org_5 ============");
+
     Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
 }
