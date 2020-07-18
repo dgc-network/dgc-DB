@@ -283,9 +283,10 @@ pub async fn fetch_org(
     println!("============ fetch_org_2 ============");
     let state = OrgState::new(&transaction_context);
     println!("============ fetch_org_3 ============");
-    let result = state.get_organization(&org_id).unwrap();
+    let org = state.get_organization(&org_id).unwrap();
     println!("============ fetch_org_4 ============");
-    let agent = result.unwrap();
+    println!("!dgc-network! org = {:?}", org);
+    //let agent = result.unwrap();
     println!("============ fetch_org_5 ============");
 
     Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
