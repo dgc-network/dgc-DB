@@ -50,7 +50,47 @@ pub struct OrgTransactionContext {
 }
 
 impl TransactionContext for OrgTransactionContext {
+    fn get_state_entries(
+        &self,
+        addresses: &[String],
+    ) -> Result<Vec<(String, Vec<u8>)>, ContextError> {
+        let mut results = Vec::new();
+        for addr in addresses {
+            let data = match self.state.borrow().get(addr) {
+                Some(data) => data.clone(),
+                None => Vec::new(),
+            };
+            results.push((addr.to_string(), data));
+        }
+        Ok(results)
+    }
 
+    fn set_state_entries(&self, entries: Vec<(String, Vec<u8>)>) -> Result<(), ContextError> {
+        for (addr, data) in entries {
+            self.state.borrow_mut().insert(addr, data);
+        }
+        Ok(())
+    }
+
+    /// this is not needed for these tests
+    fn delete_state_entries(&self, _addresses: &[String]) -> Result<Vec<String>, ContextError> {
+        unimplemented!()
+    }
+
+    /// this is not needed for these tests
+    fn add_receipt_data(&self, _data: &[u8]) -> Result<(), ContextError> {
+        unimplemented!()
+    }
+
+    /// this is not needed for these tests
+    fn add_event(
+        &self,
+        _event_type: String,
+        _attributes: Vec<(String, String)>,
+        _data: &[u8],
+    ) -> Result<(), ContextError> {
+        unimplemented!()
+    }
 }
 
 /// Computes the address a Pike Organization is stored at based on its identifier
