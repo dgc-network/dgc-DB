@@ -23,7 +23,6 @@ use crate::state::{
     PIKE_ORG_NAMESPACE, 
     //ApiTransactionContext, ApiState
 };
-//use crate::state::ApiState::get_organization;
 use crate::error::RestApiResponseError;
 
 use grid_sdk::protocol::pike::{
@@ -39,6 +38,7 @@ use grid_sdk::protocol::pike::{
 use grid_sdk::protos::IntoProto;
 use grid_sdk::protos::FromBytes;
 
+use crypto::digest::Digest;
 use crypto::sha2::Sha512;
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -47,6 +47,10 @@ use std::collections::HashMap;
 /// An OrgTransactionContext that can be used to test OrgState
 pub struct OrgTransactionContext {
     state: RefCell<HashMap<String, Vec<u8>>>,
+}
+
+impl TransactionContext for OrgTransactionContext {
+
 }
 
 /// Computes the address a Pike Organization is stored at based on its identifier
@@ -239,7 +243,7 @@ pub async fn fetch_org(
     println!("============ fetch_org_2 ============");
     let state = OrgState::new(&transaction_context);
     println!("============ fetch_org_3 ============");
-    let result = state.get_organization(org_id).unwrap();
+    let result = state.get_organization(&org_id).unwrap();
     println!("============ fetch_org_4 ============");
     let agent = result.unwrap();
     println!("============ fetch_org_5 ============");
