@@ -4,9 +4,9 @@
 use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
-//use sawtooth_sdk::messages::state_context::TpStateGetRequest;
 use sawtooth_sdk::messages::processor::TpProcessRequest;
 use sawtooth_sdk::messaging::zmq_stream::ZmqMessageConnection;
+use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
 use sawtooth_sdk::processor::handler::ApplyError;
 use sawtooth_sdk::processor::handler::TransactionContext;
 use sawtooth_sdk::processor::handler::ContextError;
@@ -54,14 +54,24 @@ pub struct OrgTransactionContext {
     sender: ZmqMessageSender,
 }
 
-impl TransactionContext for OrgTransactionContext {
-    pub fn new(context_id: &str, sender: ZmqMessageSender) -> Self {
+impl OrgTransactionContext {
+    /// Context provides an interface for getting, setting, and deleting
+    /// validator state. All validator interactions by a handler should be
+    /// through a Context instance.
+    ///
+    /// # Arguments
+    ///
+    /// * `sender` - for client grpc communication
+    /// * `context_id` - the context_id passed in from the validator
+    fn new(context_id: &str, sender: ZmqMessageSender) -> Self {
         OrgTransactionContext {
             context_id: String::from(context_id),
             sender,
         }
     }
+}
 
+impl TransactionContext for OrgTransactionContext {
     fn get_state_entries(
         &self,
         addresses: &[String],
@@ -217,95 +227,14 @@ pub async fn fetch_org(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     println!("!dgc-network! org_id = {:?}", org_id);
-/*
-    let url = format!("http://rest-api:8008/state/{}", org_id);
-    let res = reqwest::get(&url)
-        .await?
-        .json::<Res>()
-        .await?;
-
-    let bytes = res.data.as_bytes();
-    let org = Organization::from_bytes(bytes);
-
-    println!("============ fetch_org ============");
-    println!("!dgc-network! data = {:?}", res.data);
-    println!("!dgc-network! bytes = {:?}", bytes);
-    println!("!dgc-network! org = {:?}", org);
-
-    Ok(HttpResponse::Ok().body(res.link))
-
-/*
-    let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
-    let list = res.json::<List>().await?;
-    println!("============ fetch_org_1 ============");
-    for sub in list.data.iter() {
-        println!("============ fetch_org_2 ============");
-        let bytes = sub.data.as_bytes();
-        let org: Organization = match Organization::from_bytes(bytes) {
-            Ok(org) => org,
-            Err(err) => {
-                println!("============ fetch_org_3 ============");
-                return RestApiResponseError::ApplyError(err)
-            }
-        };
-        println!("============ fetch_org ============");
-        println!("!dgc-network! data = {:?}", sub.data);
-        println!("!dgc-network! bytes = {:?}", bytes);
-        println!("!dgc-network! org = {:?}", org);
-*/    
-/*        
-        //let orgs: OrganizationList = OrganizationList::from_bytes(bytes).unwrap();
-        let orgs: OrganizationList = OrganizationList::from_bytes(bytes);
-        for org in orgs.organizations() {
-            if org.org_id().to_string() == org_id.clone() {
-                println!("============ fetch_org ============");
-                println!("!dgc-network! org = {:?}", org);
-                //return Ok(Some(org.clone()));
-            }
-        }
-*/    
-    }
-*/    
-    //let orgs: OrganizationList = OrganizationList::from_bytes(list.data.as_slice());
-
-/*
-    let d = list.sub;
-    match d {
-        Some(packed) => {
-            let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
-                Ok(orgs) => orgs,
-                Err(err) => {
-                    return Err(ApplyError::InternalError(format!(
-                        "Cannot deserialize organization list: {:?}",
-                        err,
-                    )))
-                }
-            };
-
-            for org in orgs.organizations() {
-                if org.org_id() == org_id {
-                    println!("============ fetch_org ============");
-                    println!("!dgc-network! org = {:?}", org);
-                    //return Ok(Some(org.clone()));
-                }
-            }
-            Ok(None)
-        }
-        None => Ok(None),
-    }
-*/
-/*
-    let context = TpStateGetRequest::new().get_context_id();
-    let org = ApiState::new(context).get_organization(org_id);
-*/
 
     println!("============ fetch_org_1 ============");
 
     let request: TpProcessRequest = TpProcessRequest::new();
     //let conn = ZmqMessageConnection::new(&endpoint);
     let conn = ZmqMessageConnection::new("tcp://localhost:4004");
-    let (mut sender, receiver) = conn.create();
-    let mut transaction_context = OrgTransactionContext::new(
+    let (sender, receiver) = conn.create();
+    let transaction_context = OrgTransactionContext::new(
         request.get_context_id(),
         sender.clone(),
     );
