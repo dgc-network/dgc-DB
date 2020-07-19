@@ -5,6 +5,8 @@ use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
 //use sawtooth_sdk::messages::state_context::TpStateGetRequest;
+use sawtooth_sdk::messages::processor::TpProcessRequest;
+use sawtooth_sdk::messaging::zmq_stream::ZmqMessageConnection;
 use sawtooth_sdk::processor::handler::ApplyError;
 use sawtooth_sdk::processor::handler::TransactionContext;
 use sawtooth_sdk::processor::handler::ContextError;
@@ -43,13 +45,23 @@ use crypto::sha2::Sha512;
 use std::cell::RefCell;
 use std::collections::HashMap;
 
-#[derive(Default)]
+//#[derive(Default)]
+#[derive(Clone)]
 /// An OrgTransactionContext that can be used to test OrgState
 pub struct OrgTransactionContext {
-    state: RefCell<HashMap<String, Vec<u8>>>,
+    //state: RefCell<HashMap<String, Vec<u8>>>,
+    context_id: String,
+    sender: ZmqMessageSender,
 }
 
 impl TransactionContext for OrgTransactionContext {
+    pub fn new(context_id: &str, sender: ZmqMessageSender) -> Self {
+        OrgTransactionContext {
+            context_id: String::from(context_id),
+            sender,
+        }
+    }
+
     fn get_state_entries(
         &self,
         addresses: &[String],
@@ -102,12 +114,21 @@ pub fn compute_org_address(identifier: &str) -> String {
 }
 
 pub struct OrgState<'a> {
-    context: &'a dyn TransactionContext,
+    //context: &'a dyn TransactionContext,
+    context: &'a mut dyn TransactionContext,
+    address_map: HashMap<String, Option<String>>,
 }
 
-impl<'a> OrgState<'a> {
-    pub fn new(context: &'a dyn TransactionContext) -> OrgState {
-        OrgState { context }
+impl<'a> OrgState<'a> {    
+    //pub fn new(context: &'a dyn TransactionContext) -> OrgState {
+    //    OrgState { context }
+    //}
+
+    pub fn new(context: &'a mut dyn TransactionContext) -> OrgState {
+        OrgState {
+            context,
+            address_map: HashMap::new(),
+        }
     }
 
     pub fn get_organization(&self, id: &str) -> Result<Option<Organization>, ApplyError> {
@@ -279,7 +300,17 @@ pub async fn fetch_org(
 */
 
     println!("============ fetch_org_1 ============");
-    let transaction_context = OrgTransactionContext::default();
+
+    let request: TpProcessRequest = TpProcessRequest::new();
+    //let conn = ZmqMessageConnection::new(&endpoint);
+    let conn = ZmqMessageConnection::new("tcp://localhost:4004");
+    let (mut sender, receiver) = conn.create();
+    let mut transaction_context = OrgTransactionContext::new(
+        request.get_context_id(),
+        sender.clone(),
+    );
+
+    //let transaction_context = OrgTransactionContext::default();
     println!("============ fetch_org_2 ============");
     let state = OrgState::new(&transaction_context);
     println!("============ fetch_org_3 ============");
