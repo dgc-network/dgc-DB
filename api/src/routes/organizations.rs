@@ -5,6 +5,7 @@ use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::messages::processor::TpProcessRequest;
+use sawtooth_sdk::messaging::stream::MessageConnection;
 use sawtooth_sdk::messaging::zmq_stream::ZmqMessageConnection;
 use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
 use sawtooth_sdk::processor::handler::ApplyError;
@@ -17,7 +18,6 @@ use reqwest;
 //use serde_json::{Result, Value};
 //use serde_json::Value;
 use std::str;
-//use std::collections::HashMap;
 
 use crate::transaction::BatchBuilder;
 use crate::state::{
