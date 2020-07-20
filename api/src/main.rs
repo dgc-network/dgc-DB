@@ -6,7 +6,7 @@ mod error;
 //mod submitter;
 mod state;
 mod transaction;
-mod 
+mod zmq_context;
 
 use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
 
