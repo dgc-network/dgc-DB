@@ -124,23 +124,23 @@ pub fn compute_org_address(identifier: &str) -> String {
 }
 
 pub struct OrgState<'a> {
-    //context: &'a dyn TransactionContext,
-    context: &'a mut dyn TransactionContext,
-    address_map: HashMap<String, Option<String>>,
+    context: &'a dyn TransactionContext,
+    //context: &'a mut dyn TransactionContext,
+    //address_map: HashMap<String, Option<String>>,
 }
 
 impl<'a> OrgState<'a> {    
-    //pub fn new(context: &'a dyn TransactionContext) -> OrgState {
-    //    OrgState { context }
-    //}
-
+    pub fn new(context: &'a dyn TransactionContext) -> OrgState {
+        OrgState { context }
+    }
+/*
     pub fn new(context: &'a mut dyn TransactionContext) -> OrgState {
         OrgState {
             context,
             address_map: HashMap::new(),
         }
     }
-
+*/
     pub fn get_organization(&self, id: &str) -> Result<Option<Organization>, ApplyError> {
         let address = compute_org_address(id);
         let d = self.context.get_state_entry(&address)?;
