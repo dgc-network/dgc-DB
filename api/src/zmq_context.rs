@@ -4,15 +4,21 @@
 use protobuf::Message as M;
 use protobuf::RepeatedField;
 
-use messages::events::Event;
-use messages::events::Event_Attribute;
-use messages::state_context::*;
-use messages::validator::Message_MessageType;
-use messaging::stream::MessageSender;
-use messaging::zmq_stream::ZmqMessageSender;
-use processor::handler::{ContextError, TransactionContext};
+use sawtooth_sdk::messages::events::Event;
+use sawtooth_sdk::messages::events::Event_Attribute;
+use sawtooth_sdk::messages::state_context::*;
+use sawtooth_sdk::messages::validator::Message_MessageType;
+use sawtooth_sdk::messaging::stream::MessageSender;
+use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
+use sawtooth_sdk::processor::handler::{ContextError, TransactionContext};
 
-use super::generate_correlation_id;
+//use super::generate_correlation_id;
+extern crate rand;
+/// Generates a random correlation id for use in Message
+fn generate_correlation_id() -> String {
+    const LENGTH: usize = 16;
+    rand::thread_rng().gen_ascii_chars().take(LENGTH).collect()
+}
 
 #[derive(Clone)]
 pub struct ZmqTransactionContext {

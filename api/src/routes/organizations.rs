@@ -119,7 +119,7 @@ impl TransactionContext for OrgTransactionContext {
     }
 */    
 }
-
+*/
 /// Computes the address a Pike Organization is stored at based on its identifier
 pub fn compute_org_address(identifier: &str) -> String {
     let mut sha = Sha512::new();
@@ -172,7 +172,7 @@ impl<'a> OrgState<'a> {
         }
     }
 }
-*/
+
 #[derive(Deserialize)]
 pub struct OrgInput {
     private_key: String,
