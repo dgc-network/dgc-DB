@@ -14,6 +14,8 @@ use sawtooth_sdk::processor::handler::{ContextError, TransactionContext};
 
 //use super::generate_correlation_id;
 extern crate rand;
+use self::rand::Rng;
+
 /// Generates a random correlation id for use in Message
 fn generate_correlation_id() -> String {
     const LENGTH: usize = 16;
