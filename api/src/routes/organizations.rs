@@ -45,6 +45,8 @@ use crypto::sha2::Sha512;
 use std::cell::RefCell;
 use std::collections::HashMap;
 
+use crate::zmq_context::ZmqTransactionContext;
+/*
 //#[derive(Default)]
 #[derive(Clone)]
 /// An OrgTransactionContext that can be used to test OrgState
@@ -72,6 +74,8 @@ impl OrgTransactionContext {
 }
 
 impl TransactionContext for OrgTransactionContext {
+    
+/*
     fn get_state_entries(
         &self,
         addresses: &[String],
@@ -113,6 +117,7 @@ impl TransactionContext for OrgTransactionContext {
     ) -> Result<(), ContextError> {
         unimplemented!()
     }
+*/    
 }
 
 /// Computes the address a Pike Organization is stored at based on its identifier
@@ -167,7 +172,7 @@ impl<'a> OrgState<'a> {
         }
     }
 }
-
+*/
 #[derive(Deserialize)]
 pub struct OrgInput {
     private_key: String,
@@ -234,7 +239,7 @@ pub async fn fetch_org(
     //let conn = ZmqMessageConnection::new(&endpoint);
     let conn = ZmqMessageConnection::new("tcp://localhost:4004");
     let (sender, receiver) = conn.create();
-    let transaction_context = OrgTransactionContext::new(
+    let transaction_context = ZmqTransactionContext::new(
         request.get_context_id(),
         sender.clone(),
     );
