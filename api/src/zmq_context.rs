@@ -18,7 +18,7 @@ extern crate rand;
 use rand::{thread_rng, Rng};
 use rand::distributions::{Alphanumeric, Uniform, Standard};
 
-let mut rng = thread_rng();
+//let mut rng = thread_rng();
 /// Generates a random correlation id for use in Message
 fn generate_correlation_id() -> String {
     const LENGTH: usize = 16;
