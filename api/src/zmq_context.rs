@@ -23,7 +23,8 @@ use rand::distributions::{Alphanumeric, Uniform, Standard};
 fn generate_correlation_id() -> String {
     const LENGTH: usize = 16;
     //rand::thread_rng().gen_ascii_chars().take(LENGTH).collect()
-    rand::thread_rng().sample_iter(&Alphanumeric).take(LENGTH).collect()
+    //rand::thread_rng().sample_iter(&Alphanumeric).take(LENGTH).collect()
+    rand::thread_rng().sample_iter(Alphanumeric).take(LENGTH).collect()
 }
 
 #[derive(Clone)]
