@@ -14,12 +14,16 @@ use sawtooth_sdk::processor::handler::{ContextError, TransactionContext};
 
 //use super::generate_correlation_id;
 extern crate rand;
-use self::rand::Rng;
+//use self::rand::Rng;
+use rand::{thread_rng, Rng};
+use rand::distributions::{Alphanumeric, Uniform, Standard};
 
+let mut rng = thread_rng();
 /// Generates a random correlation id for use in Message
 fn generate_correlation_id() -> String {
     const LENGTH: usize = 16;
-    rand::thread_rng().gen_ascii_chars().take(LENGTH).collect()
+    //rand::thread_rng().gen_ascii_chars().take(LENGTH).collect()
+    rand::thread_rng().sample_iter(&Alphanumeric).take(LENGTH).collect()
 }
 
 #[derive(Clone)]
