@@ -14,16 +14,12 @@ use sawtooth_sdk::processor::handler::ContextError;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
-//use serde_json::json;
-//use serde_json::{Result, Value};
-//use serde_json::Value;
 use std::str;
 
 use crate::transaction::BatchBuilder;
 use crate::state::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
     PIKE_ORG_NAMESPACE, 
-    //ApiTransactionContext, ApiState
 };
 use crate::error::RestApiResponseError;
 
@@ -46,80 +42,7 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 
 use crate::zmq_context::ZmqTransactionContext;
-/*
-//#[derive(Default)]
-#[derive(Clone)]
-/// An OrgTransactionContext that can be used to test OrgState
-pub struct OrgTransactionContext {
-    //state: RefCell<HashMap<String, Vec<u8>>>,
-    context_id: String,
-    sender: ZmqMessageSender,
-}
 
-impl OrgTransactionContext {
-    /// Context provides an interface for getting, setting, and deleting
-    /// validator state. All validator interactions by a handler should be
-    /// through a Context instance.
-    ///
-    /// # Arguments
-    ///
-    /// * `sender` - for client grpc communication
-    /// * `context_id` - the context_id passed in from the validator
-    fn new(context_id: &str, sender: ZmqMessageSender) -> Self {
-        OrgTransactionContext {
-            context_id: String::from(context_id),
-            sender,
-        }
-    }
-}
-
-impl TransactionContext for OrgTransactionContext {
-    
-/*
-    fn get_state_entries(
-        &self,
-        addresses: &[String],
-    ) -> Result<Vec<(String, Vec<u8>)>, ContextError> {
-        let mut results = Vec::new();
-        for addr in addresses {
-            let data = match self.state.borrow().get(addr) {
-                Some(data) => data.clone(),
-                None => Vec::new(),
-            };
-            results.push((addr.to_string(), data));
-        }
-        Ok(results)
-    }
-
-    fn set_state_entries(&self, entries: Vec<(String, Vec<u8>)>) -> Result<(), ContextError> {
-        for (addr, data) in entries {
-            self.state.borrow_mut().insert(addr, data);
-        }
-        Ok(())
-    }
-
-    /// this is not needed for these tests
-    fn delete_state_entries(&self, _addresses: &[String]) -> Result<Vec<String>, ContextError> {
-        unimplemented!()
-    }
-
-    /// this is not needed for these tests
-    fn add_receipt_data(&self, _data: &[u8]) -> Result<(), ContextError> {
-        unimplemented!()
-    }
-
-    /// this is not needed for these tests
-    fn add_event(
-        &self,
-        _event_type: String,
-        _attributes: Vec<(String, String)>,
-        _data: &[u8],
-    ) -> Result<(), ContextError> {
-        unimplemented!()
-    }
-*/    
-}
-*/
 /// Computes the address a Pike Organization is stored at based on its identifier
 pub fn compute_org_address(identifier: &str) -> String {
     let mut sha = Sha512::new();
@@ -130,27 +53,19 @@ pub fn compute_org_address(identifier: &str) -> String {
 
 pub struct OrgState<'a> {
     context: &'a dyn TransactionContext,
-    //context: &'a mut dyn TransactionContext,
-    //address_map: HashMap<String, Option<String>>,
 }
 
 impl<'a> OrgState<'a> {    
     pub fn new(context: &'a dyn TransactionContext) -> OrgState {
         OrgState { context }
     }
-/*
-    pub fn new(context: &'a mut dyn TransactionContext) -> OrgState {
-        OrgState {
-            context,
-            address_map: HashMap::new(),
-        }
-    }
-*/
+
     pub fn get_organization(&self, id: &str) -> Result<Option<Organization>, ApplyError> {
         println!("============ get_org_1 ============");
         let address = compute_org_address(id);
-        let d = self.context.get_state_entry(&address)?;
         println!("============ get_org_2 ============");
+        let d = self.context.get_state_entry(&address)?;
+        println!("============ get_org_3 ============");
         match d {
             Some(packed) => {
                 let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
@@ -162,7 +77,7 @@ impl<'a> OrgState<'a> {
                         )))
                     }
                 };
-                println!("============ get_org_3 ============");
+                println!("============ get_org_4 ============");
 
                 for org in orgs.organizations() {
                     if org.org_id() == id {
