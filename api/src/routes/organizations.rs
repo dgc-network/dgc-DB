@@ -147,8 +147,10 @@ impl<'a> OrgState<'a> {
     }
 */
     pub fn get_organization(&self, id: &str) -> Result<Option<Organization>, ApplyError> {
+        println!("============ get_org_1 ============");
         let address = compute_org_address(id);
         let d = self.context.get_state_entry(&address)?;
+        println!("============ get_org_2 ============");
         match d {
             Some(packed) => {
                 let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
@@ -160,6 +162,7 @@ impl<'a> OrgState<'a> {
                         )))
                     }
                 };
+                println!("============ get_org_3 ============");
 
                 for org in orgs.organizations() {
                     if org.org_id() == id {
