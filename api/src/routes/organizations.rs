@@ -64,6 +64,7 @@ impl<'a> OrgState<'a> {
         println!("============ get_org_1 ============");
         let address = compute_org_address(id);
         println!("============ get_org_2 ============");
+        println!("address : {}", address);
         let d = self.context.get_state_entry(&address)?;
         println!("============ get_org_3 ============");
         match d {
