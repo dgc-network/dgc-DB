@@ -75,6 +75,8 @@ impl<'a> OrgState<'a> {
         let v = self.context.get_state_entries(&entries)?;
         match v {
             Some(d) => {
+                Ok(d);
+/*                
                 match d {
                     Some(packed) => {
                         let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
@@ -93,11 +95,12 @@ impl<'a> OrgState<'a> {
                                 return Ok(Some(org.clone()));
                             }
                         }
-                        Ok(None)
+                        Ok(None);
                     }
                     None => Ok(None),
-                }
-                    }
+                };
+/*                
+            }
             None => Ok(None),
         }
         println!("============ get_org_3 ============");
