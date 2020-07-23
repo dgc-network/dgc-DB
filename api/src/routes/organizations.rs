@@ -73,35 +73,29 @@ impl<'a> OrgState<'a> {
         println!("address : {}", address);
         //let d = self.context.get_state_entry(&address)?;
         let v = self.context.get_state_entries(&entries)?;
-        match v {
-            Some(d) => {
-                Ok(d);
-/*                
-                match d {
-                    Some(packed) => {
-                        let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
-                            Ok(orgs) => orgs,
-                            Err(err) => {
-                                return Err(ApplyError::InternalError(format!(
-                                    "Cannot deserialize organization list: {:?}",
-                                    err,
-                                )))
-                            }
-                        };
-                        println!("============ get_org_4 ============");
-        
-                        for org in orgs.organizations() {
-                            if org.org_id() == id {
-                                return Ok(Some(org.clone()));
-                            }
+        for d in v {
+            match d {
+                Some(packed) => {
+                    let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
+                        Ok(orgs) => orgs,
+                        Err(err) => {
+                            return Err(ApplyError::InternalError(format!(
+                                "Cannot deserialize organization list: {:?}",
+                                err,
+                            )))
                         }
-                        Ok(None);
+                    };
+                    println!("============ get_org_4 ============");
+    
+                    for org in orgs.organizations() {
+                        if org.org_id() == id {
+                            return Ok(Some(org.clone()));
+                        }
                     }
-                    None => Ok(None),
-                };
-*/                
-            }
-            None => Ok(None),
+                    Ok(None);
+                }
+                None => Ok(None),
+            };
         }
         println!("============ get_org_3 ============");
 /*
