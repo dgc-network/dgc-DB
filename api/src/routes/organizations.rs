@@ -7,10 +7,10 @@ use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::messages::processor::TpProcessRequest;
 use sawtooth_sdk::messaging::stream::MessageConnection;
 use sawtooth_sdk::messaging::zmq_stream::ZmqMessageConnection;
-use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
+//use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
 use sawtooth_sdk::processor::handler::ApplyError;
 use sawtooth_sdk::processor::handler::TransactionContext;
-use sawtooth_sdk::processor::handler::ContextError;
+//use sawtooth_sdk::processor::handler::ContextError;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
@@ -38,14 +38,14 @@ use grid_sdk::protos::FromBytes;
 
 use crypto::digest::Digest;
 use crypto::sha2::Sha512;
-use std::cell::RefCell;
-use std::collections::HashMap;
+//use std::cell::RefCell;
+//use std::collections::HashMap;
 
 use crate::zmq_context::ZmqTransactionContext;
 
-use sawtk::tp::States;
-use sawtk::tp::get_state_entry;
-use sawtk::signing::create_context;
+//use sawtk::tp::States;
+//use sawtk::tp::get_state_entry;
+//use sawtk::signing::create_context;
 
 /// Computes the address a Pike Organization is stored at based on its identifier
 pub fn compute_org_address(identifier: &str) -> String {
