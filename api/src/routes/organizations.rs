@@ -67,35 +67,42 @@ impl<'a> OrgState<'a> {
     pub fn get_organization(&self, id: &str) -> Result<Option<Organization>, ApplyError> {
         println!("============ get_org_1 ============");
         let address = compute_org_address(id);
-        let mut entries = Vec::new();
-        entries.push(address);
+        let mut addresses = Vec::new().push(address);
+        //let mut entries = Vec::new().push(address);
+        //entries.push(address);
         println!("============ get_org_2 ============");
         println!("address : {}", address);
         //let d = self.context.get_state_entry(&address)?;
-        let v = self.context.get_state_entries(&entries)?;
-        for d in v {
-            match d {
-                Some(packed) => {
-                    let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
-                        Ok(orgs) => orgs,
-                        Err(err) => {
-                            return Err(ApplyError::InternalError(format!(
-                                "Cannot deserialize organization list: {:?}",
-                                err,
-                            )))
+        //let v = self.context.get_state_entries(&entries)?;
+        let entries = self.context.get_state_entries(&addresses)?;
+        for entry in entries {
+            match entry {
+                Some(d) => {
+                    match d {
+                        Some(packed) => {
+                            let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
+                                Ok(orgs) => orgs,
+                                Err(err) => {
+                                    return Err(ApplyError::InternalError(format!(
+                                        "Cannot deserialize organization list: {:?}",
+                                        err,
+                                    )))
+                                }
+                            };
+                            println!("============ get_org_4 ============");
+            
+                            for org in orgs.organizations() {
+                                if org.org_id() == id {
+                                    return Ok(Some(org.clone()));
+                                }
+                            }
+                            Ok(None);
                         }
+                        None => Ok(None),
                     };
-                    println!("============ get_org_4 ============");
-    
-                    for org in orgs.organizations() {
-                        if org.org_id() == id {
-                            return Ok(Some(org.clone()));
-                        }
-                    }
-                    Ok(None);
                 }
                 None => Ok(None),
-            };
+            }
         }
         println!("============ get_org_3 ============");
 /*
