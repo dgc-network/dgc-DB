@@ -67,14 +67,12 @@ impl<'a> OrgState<'a> {
     pub fn get_organization(&self, id: &str) -> Result<Option<Organization>, ApplyError> {
         println!("============ get_org_1 ============");
         let address = compute_org_address(id);
-        //let raw_string = compute_org_address(id);
-        let main_vec = address.lines()
-            .map(|s| s.trim().split(',').map(String::from).collect::<Vec<String>>());
-            //.collect::<Vec<Vec<String>>>();
+        let mut entries = Vec::new();
+        entries.push(address);
         println!("============ get_org_2 ============");
         println!("address : {}", address);
         //let d = self.context.get_state_entry(&address)?;
-        let d = self.context.get_state_entries(&main_vec)?;
+        let d = self.context.get_state_entries(&entries)?;
         println!("============ get_org_3 ============");
         match d {
             Some(packed) => {
