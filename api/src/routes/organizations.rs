@@ -44,6 +44,7 @@ use std::collections::HashMap;
 use crate::zmq_context::ZmqTransactionContext;
 
 use sawtk::tp::States;
+use sawtk::tp;
 
 /// Computes the address a Pike Organization is stored at based on its identifier
 pub fn compute_org_address(identifier: &str) -> String {
@@ -175,10 +176,10 @@ pub async fn fetch_org(
 */
 
         println!("============ get_org_1 ============");
-        let address = compute_org_address(org_id);
+        let address = compute_org_address(&org_id);
         println!("============ get_org_2 ============");
         println!("address : {}", address);
-        let d = States::get_state_entry(&address)?;
+        let d = tp::get_state_entry(&address)?;
         println!("============ get_org_3 ============");
         match d {
             Some(packed) => {
@@ -194,14 +195,14 @@ pub async fn fetch_org(
                 println!("============ get_org_4 ============");
 
                 for org in orgs.organizations() {
-                    if org.org_id() == id {
+                    if org.org_id() == org_id {
                         return Ok(Some(org.clone()));
                     }
                 }
                 Ok(None)
             }
             None => Ok(None),
-        }
+        };
 
     Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
