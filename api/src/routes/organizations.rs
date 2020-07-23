@@ -66,10 +66,12 @@ impl<'a> OrgState<'a> {
 
     pub fn get_organization(&self, id: &str) -> Result<Option<Organization>, ApplyError> {
         println!("============ get_org_1 ============");
-        let address = compute_org_address(id);
+        let mut address = compute_org_address(id);
+        let vec = address.as_mut_vec();
         println!("============ get_org_2 ============");
         println!("address : {}", address);
-        let d = self.context.get_state_entry(&address)?;
+        //let d = self.context.get_state_entry(&address)?;
+        let d = self.context.get_state_entries(&vec)?;
         println!("============ get_org_3 ============");
         match d {
             Some(packed) => {
@@ -155,7 +157,7 @@ pub async fn fetch_org(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     println!("!dgc-network! org_id = {:?}", org_id);
-/*
+
     println!("============ fetch_org_1 ============");
     let request: TpProcessRequest = TpProcessRequest::new();
     //let conn = ZmqMessageConnection::new(&endpoint);
@@ -174,45 +176,6 @@ pub async fn fetch_org(
     println!("!dgc-network! org = {:?}", org);
     //let agent = result.unwrap();
     println!("============ fetch_org_5 ============");
-*/
-
-    println!("============ fetch_org_1 ============");
-    let request: TpProcessRequest = TpProcessRequest::new();
-    //let conn = ZmqMessageConnection::new(&endpoint);
-    let conn = ZmqMessageConnection::new("tcp://localhost:4004");
-    let (sender, receiver) = conn.create();
-    let transaction_context = ZmqTransactionContext::new(
-        request.get_context_id(),
-        sender.clone(),
-    );
-        println!("============ get_org_1 ============");
-        let address = compute_org_address(&org_id);
-        println!("============ get_org_2 ============");
-        println!("address : {}", address);
-        let d = get_state_entry(&transaction_context, &address)?;
-        println!("============ get_org_3 ============");
-        match d {
-            Some(packed) => {
-                let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
-                    Ok(orgs) => orgs,
-                    Err(err) => {
-                        return Err(ApplyError::InternalError(format!(
-                            "Cannot deserialize organization list: {:?}",
-                            err,
-                        )))
-                    }
-                };
-                println!("============ get_org_4 ============");
-
-                for org in orgs.organizations() {
-                    if org.org_id() == &org_id {
-                        return Ok(Some(org.clone()));
-                    }
-                }
-                Ok(None)
-            }
-            None => Ok(None),
-        };
 
     Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
