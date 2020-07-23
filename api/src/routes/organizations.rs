@@ -69,12 +69,12 @@ impl<'a> OrgState<'a> {
         let address = compute_org_address(id);
         //let raw_string = compute_org_address(id);
         let main_vec = address.lines()
-            .map(|s| s.trim().split(',').map(String::from).collect::<Vec<String>>())
-            .collect::<Vec<Vec<String>>>();
+            .map(|s| s.trim().split(',').map(String::from).collect::<Vec<String>>());
+            //.collect::<Vec<Vec<String>>>();
         println!("============ get_org_2 ============");
         println!("address : {}", address);
         //let d = self.context.get_state_entry(&address)?;
-        let d = self.context.get_state_entries(main_vec)?;
+        let d = self.context.get_state_entries(&main_vec)?;
         println!("============ get_org_3 ============");
         match d {
             Some(packed) => {
