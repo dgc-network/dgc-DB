@@ -77,7 +77,7 @@ impl<'a> OrgState<'a> {
         for entry in entries {
             let d = entry;
             match d {
-                Some(packed) => {
+                Ok(packed) => {
                     let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
                         Ok(orgs) => orgs,
                         Err(err) => {
@@ -96,7 +96,7 @@ impl<'a> OrgState<'a> {
                     }
                     Ok(None)
                 }
-                None => Ok(None),
+                Err() => Ok(None),
             }
         }
 /*
