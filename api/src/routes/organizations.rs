@@ -76,7 +76,11 @@ impl<'a> OrgState<'a> {
         let entries = self.context.get_state_entries(&addresses)?;
         for entry in entries {
             let packed = entry;
-            let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
+            let orgs: OrganizationList = match OrganizationList::from_bytes(packed) {
+            //let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
+                // error[E0599]: no method named `as_slice` found 
+                // for tuple `(std::string::String, std::vec::Vec<u8>)` 
+                // in the current scope
                 Ok(orgs) => orgs,
                 Err(err) => {
                     return Err(ApplyError::InternalError(format!(
