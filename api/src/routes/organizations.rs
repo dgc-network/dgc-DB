@@ -75,28 +75,22 @@ impl<'a> OrgState<'a> {
         //let v = self.context.get_state_entries(&entries)?;
         let entries = self.context.get_state_entries(&addresses)?;
         for entry in entries {
-            let d = entry;
-            match d {
-                Ok(packed) => {
-                    let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
-                        Ok(orgs) => orgs,
-                        Err(err) => {
-                            return Err(ApplyError::InternalError(format!(
-                                "Cannot deserialize organization list: {:?}",
-                                err,
-                            )))
-                        }
-                    };
-                    println!("============ get_org_4 ============");
-    
-                    for org in orgs.organizations() {
-                        if org.org_id() == id {
-                            return Ok(Some(org.clone()));
-                        }
-                    }
-                    Ok(None)
+            let packed = entry;
+            let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
+                Ok(orgs) => orgs,
+                Err(err) => {
+                    return Err(ApplyError::InternalError(format!(
+                        "Cannot deserialize organization list: {:?}",
+                        err,
+                    )))
                 }
-                Err() => Ok(None),
+            };
+            println!("============ get_org_4 ============");
+
+            for org in orgs.organizations() {
+                if org.org_id() == id {
+                    return Ok(Some(org.clone()));
+                }
             }
         }
 /*
