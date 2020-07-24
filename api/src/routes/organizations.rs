@@ -67,9 +67,9 @@ impl<'a> OrgState<'a> {
     pub fn get_organization(&self, id: &str) -> Result<Option<Organization>, ApplyError> {
         println!("============ get_org_1 ============");
         let address = compute_org_address(id);
-        let mut addresses = Vec::new().push(address);
         //let mut entries = Vec::new().push(address);
-        //entries.push(address);
+        let mut addresses = Vec::new();
+        addresses.push(address);
         println!("============ get_org_2 ============");
         println!("address : {}", address);
         //let d = self.context.get_state_entry(&address)?;
