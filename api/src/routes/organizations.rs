@@ -72,9 +72,13 @@ impl<'a> OrgState<'a> {
         println!("============ get_org_2 ============");
         println!("address : {}", address.clone());
         let entries = self.context.get_state_entries(&addresses)?;
+        println!("============ get_org_3 ============");
         for entry in entries {
+            println!("============ get_org_4 ============");
             let packed = entry.1;
+            println!("============ get_org_5 ============");
             let orgs: OrganizationList = match OrganizationList::from_bytes(&packed) {
+                println!("============ get_org_6 ============");
                 Ok(orgs) => orgs,
                 Err(err) => {
                     return Err(ApplyError::InternalError(format!(
@@ -84,7 +88,7 @@ impl<'a> OrgState<'a> {
                 }
             };
             
-            println!("============ get_org_4 ============");
+            println!("============ get_org_7 ============");
 
             for org in orgs.organizations() {
                 if org.org_id() == id {
