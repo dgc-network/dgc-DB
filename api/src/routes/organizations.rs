@@ -76,6 +76,8 @@ impl<'a> OrgState<'a> {
         let entries = self.context.get_state_entries(&addresses)?;
         for entry in entries {
             let packed = entry.1;
+            let orgs: OrganizationList = OrganizationList::from_bytes(&packed);
+/*
             let orgs: OrganizationList = match OrganizationList::from_bytes(&packed) {
             //let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
                 // error[E0599]: no method named `as_slice` found 
@@ -89,6 +91,7 @@ impl<'a> OrgState<'a> {
                     )))
                 }
             };
+*/            
             println!("============ get_org_4 ============");
 
             for org in orgs.organizations() {
