@@ -78,7 +78,6 @@ impl<'a> OrgState<'a> {
             let packed = entry.1;
             println!("============ get_org_5 ============");
             let orgs: OrganizationList = match OrganizationList::from_bytes(&packed) {
-                println!("============ get_org_6 ============");
                 Ok(orgs) => orgs,
                 Err(err) => {
                     return Err(ApplyError::InternalError(format!(
@@ -88,7 +87,7 @@ impl<'a> OrgState<'a> {
                 }
             };
             
-            println!("============ get_org_7 ============");
+            println!("============ get_org_6 ============");
 
             for org in orgs.organizations() {
                 if org.org_id() == id {

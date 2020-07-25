@@ -57,6 +57,7 @@ impl TransactionContext for ZmqTransactionContext {
         &self,
         addresses: &[String],
     ) -> Result<Vec<(String, Vec<u8>)>, ContextError> {
+        println!("============ get_state_entries_1 ============");
         let mut request = TpStateGetRequest::new();
         request.set_context_id(self.context_id.clone());
         request.set_addresses(RepeatedField::from_vec(addresses.to_vec()));
