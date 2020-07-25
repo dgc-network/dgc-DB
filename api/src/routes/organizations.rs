@@ -91,7 +91,7 @@ impl<'a> OrgState<'a> {
             for org in orgs.organizations() {
                 if org.org_id() == id {
                     //return Ok(Some(org.clone()));
-                    return org.clone();
+                    return Ok(org.clone());
                 }
             }
         }
