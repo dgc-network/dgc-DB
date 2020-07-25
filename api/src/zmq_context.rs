@@ -72,6 +72,7 @@ impl TransactionContext for ZmqTransactionContext {
 
         println!("============ get_state_entries_2 ============");
         let response: TpStateGetResponse = protobuf::parse_from_bytes(future.get()?.get_content())?;
+        println!("============ get_state_entries_3 ============");
         match response.get_status() {
             TpStateGetResponse_Status::OK => {
                 println!("============ get_state_entries_3 ============");
