@@ -68,9 +68,9 @@ impl<'a> OrgState<'a> {
         println!("============ get_org_1 ============");
         let address = compute_org_address(id);
         let mut addresses = Vec::new();
-        addresses.push(address);
+        addresses.push(address.clone());
         println!("============ get_org_2 ============");
-        println!("address : {}", address);
+        println!("address : {}", address.clone());
         let entries = self.context.get_state_entries(&addresses)?;
         for entry in entries {
             let packed = entry.1;
@@ -94,30 +94,6 @@ impl<'a> OrgState<'a> {
         }
 
         Ok(None)
-/*
-        match d {
-            Some(packed) => {
-                let orgs: OrganizationList = match OrganizationList::from_bytes(packed.as_slice()) {
-                    Ok(orgs) => orgs,
-                    Err(err) => {
-                        return Err(ApplyError::InternalError(format!(
-                            "Cannot deserialize organization list: {:?}",
-                            err,
-                        )))
-                    }
-                };
-                println!("============ get_org_4 ============");
-
-                for org in orgs.organizations() {
-                    if org.org_id() == id {
-                        return Ok(Some(org.clone()));
-                    }
-                }
-                Ok(None)
-            }
-            None => Ok(None),
-        }
-*/        
     }
 }
 
