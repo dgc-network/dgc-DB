@@ -96,7 +96,7 @@ impl TransactionContext for ZmqTransactionContext {
                 println!("============ get_state_entries_5 ============");
                 Err(ContextError::ResponseAttributeError(
                 String::from("Status was not set for TpStateGetResponse"),
-                )),
+                ))
             }
         }
     }
