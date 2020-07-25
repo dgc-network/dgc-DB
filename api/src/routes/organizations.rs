@@ -71,8 +71,6 @@ impl<'a> OrgState<'a> {
         addresses.push(address);
         println!("============ get_org_2 ============");
         println!("address : {}", address);
-        //let d = self.context.get_state_entry(&address)?;
-        //let v = self.context.get_state_entries(&entries)?;
         let entries = self.context.get_state_entries(&addresses)?;
         for entry in entries {
             let packed = entry.1;
@@ -90,11 +88,12 @@ impl<'a> OrgState<'a> {
 
             for org in orgs.organizations() {
                 if org.org_id() == id {
-                    //return Ok(Some(org.clone()));
                     return Ok(Some(org.clone()));
                 }
             }
         }
+
+        Ok(None)
 /*
         match d {
             Some(packed) => {
