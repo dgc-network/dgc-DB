@@ -34,6 +34,7 @@ use grid_sdk::protocol::pike::{
         CreateOrganizationActionBuilder, UpdateOrganizationActionBuilder, 
     },
 };
+use grid_sdk::protos;
 use grid_sdk::protos::IntoProto;
 use grid_sdk::protos::FromBytes;
 
@@ -142,9 +143,16 @@ pub async fn list_orgs(
         println!("!dgc-network! bytes = {:?}", bytes);
 
         //let org = Organization::from_bytes(bytes).unwrap();
-        let response: TpStateGetResponse = protobuf::parse_from_bytes(&bytes)?;
+        //let response: TpStateGetResponse = protobuf::parse_from_bytes(&bytes)?;
+        let proto: protos::pike_state::Organization =
+            protobuf::parse_from_bytes(&bytes).map_err(|_| {
+                ProtoConversionError::SerializationError(
+                    "Unable to get Organization from bytes".to_string(),
+                )
+            })?;
+        proto.into_native()
         println!("============ list_org_2 ============");
-        println!("!dgc-network! response = {:?}", response);
+        //println!("!dgc-network! response = {:?}", response);
     }
 
     println!("============ list_org ============");
