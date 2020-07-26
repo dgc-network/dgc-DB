@@ -70,7 +70,7 @@ impl TransactionContext for ZmqTransactionContext {
             x,
         )?;
         println!("============ get_state_entries_2 ============");
-        println!("!dgc.network! future = {}", future);
+        println!("!dgc.network! x = {}", x);
 
         let response: TpStateGetResponse = protobuf::parse_from_bytes(future.get()?.get_content())?;
         println!("============ get_state_entries_3 ============");
