@@ -150,9 +150,9 @@ pub async fn list_orgs(
                     "Unable to get Organization from bytes".to_string(),
                 )
             })?;
-        proto.into_native()
+        let org = proto.into_native();
         println!("============ list_org_2 ============");
-        //println!("!dgc-network! response = {:?}", response);
+        println!("!dgc-network! org = {:?}", org);
     }
 
     println!("============ list_org ============");
