@@ -137,15 +137,13 @@ pub async fn list_orgs(
     let list = res.json::<List>().await?;
     for sub in list.data.iter() {
         let bytes = sub.data.as_bytes();
-        //let org = Organization::from_bytes(bytes).unwrap();
-        let response: TpStateGetResponse = protobuf::parse_from_bytes(&bytes)?;
-
-        println!("============ list_org ============");
-        //println!("address: {}", sub.address);
-        //println!("data: {}", sub.data);
+        println!("============ list_org_1 ============");
         println!("!dgc-network! data = {:?}", sub.data);
         println!("!dgc-network! bytes = {:?}", bytes);
-        //println!("!dgc-network! org = {:?}", org);
+
+        //let org = Organization::from_bytes(bytes).unwrap();
+        let response: TpStateGetResponse = protobuf::parse_from_bytes(&bytes)?;
+        println!("============ list_org_2 ============");
         println!("!dgc-network! response = {:?}", response);
     }
 
