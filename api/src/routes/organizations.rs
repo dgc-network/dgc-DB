@@ -146,12 +146,12 @@ pub async fn list_orgs(
         //let org = Organization::from_bytes(bytes).unwrap();
         //let response: TpStateGetResponse = protobuf::parse_from_bytes(&bytes)?;
         let proto: protos::pike_state::Organization =
-            protobuf::parse_from_bytes(&bytes).map_err(|_| {
+            protobuf::parse_from_bytes(&bytes)?;
+            //protobuf::parse_from_bytes(&bytes).map_err(|_| {
                 //ProtoConversionError::SerializationError(
-                RestApiResponseError::GridProtoError(
-                    "Unable to get Organization from bytes".to_string(),
-                )
-            })?;
+            //        "Unable to get Organization from bytes".to_string(),
+            //    )
+            //})?;
         proto.into_native();
         println!("============ list_org_2 ============");
         //println!("!dgc-network! org = {:?}", org);
