@@ -138,22 +138,21 @@ pub async fn list_orgs(
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
     let list = res.json::<List>().await?;
     for sub in list.data.iter() {
-        let bytes = sub.data.as_bytes();
+        let msg = sub.data.as_bytes();
         println!("============ list_org_1 ============");
         println!("!dgc-network! data = {:?}", sub.data);
-        println!("!dgc-network! bytes = {:?}", bytes);
+        println!("!dgc-network! bytes = {:?}", msg);
 
+        let org: Organization = protobuf::parse_from_bytes(&msg).unwrap();
+        println!("serialized: {:?}", org);
         //let org = Organization::from_bytes(bytes).unwrap();
         //let response: TpStateGetResponse = protobuf::parse_from_bytes(&bytes)?;
-        let proto: protos::pike_state::Organization =
-            protobuf::parse_from_bytes(&bytes)?;
             //protobuf::parse_from_bytes(&bytes).map_err(|_| {
                 //ProtoConversionError::SerializationError(
             //        "Unable to get Organization from bytes".to_string(),
             //    )
             //})?;
         println!("============ list_org_2 ============");
-        proto.into_native();
         println!("============ list_org_3 ============");
         //println!("!dgc-network! org = {:?}", org);
     }
