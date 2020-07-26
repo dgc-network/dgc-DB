@@ -4,6 +4,7 @@
 use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
+use sawtooth_sdk::messages::state_context::*;
 use sawtooth_sdk::messages::processor::TpProcessRequest;
 use sawtooth_sdk::messaging::stream::MessageConnection;
 use sawtooth_sdk::messaging::zmq_stream::ZmqMessageConnection;
@@ -136,14 +137,16 @@ pub async fn list_orgs(
     let list = res.json::<List>().await?;
     for sub in list.data.iter() {
         let bytes = sub.data.as_bytes();
-        let org = Organization::from_bytes(bytes).unwrap();
+        //let org = Organization::from_bytes(bytes).unwrap();
+        let response: TpStateGetResponse = protobuf::parse_from_bytes(&bytes)?;
 
         println!("============ list_org ============");
         //println!("address: {}", sub.address);
         //println!("data: {}", sub.data);
         println!("!dgc-network! data = {:?}", sub.data);
         println!("!dgc-network! bytes = {:?}", bytes);
-        println!("!dgc-network! org = {:?}", org);
+        //println!("!dgc-network! org = {:?}", org);
+        println!("!dgc-network! response = {:?}", response);
     }
 
     println!("============ list_org ============");
