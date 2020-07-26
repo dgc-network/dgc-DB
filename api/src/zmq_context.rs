@@ -69,13 +69,14 @@ impl TransactionContext for ZmqTransactionContext {
             &generate_correlation_id(),
             x,
         )?;
-
         println!("============ get_state_entries_2 ============");
+        println!("!dgc.network! future = {}", future);
+
         let response: TpStateGetResponse = protobuf::parse_from_bytes(future.get()?.get_content())?;
         println!("============ get_state_entries_3 ============");
         match response.get_status() {
             TpStateGetResponse_Status::OK => {
-                println!("============ get_state_entries_3 ============");
+                println!("============ get_state_entries_4 ============");
                 let mut entries = Vec::new();
                 for entry in response.get_entries() {
                     match entry.get_data().len() {
@@ -87,14 +88,14 @@ impl TransactionContext for ZmqTransactionContext {
                 Ok(entries)
             }
             TpStateGetResponse_Status::AUTHORIZATION_ERROR => {
-                println!("============ get_state_entries_4 ============");
+                println!("============ get_state_entries_5 ============");
                 Err(ContextError::AuthorizationError(format!(
                     "Tried to get unauthorized addresses: {:?}",
                     addresses
                 )))
             }
             TpStateGetResponse_Status::STATUS_UNSET => {
-                println!("============ get_state_entries_5 ============");
+                println!("============ get_state_entries_6 ============");
                 Err(ContextError::ResponseAttributeError(
                 String::from("Status was not set for TpStateGetResponse"),
                 ))
