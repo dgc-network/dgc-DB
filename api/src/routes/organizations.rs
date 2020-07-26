@@ -147,7 +147,8 @@ pub async fn list_orgs(
         //let response: TpStateGetResponse = protobuf::parse_from_bytes(&bytes)?;
         let proto: protos::pike_state::Organization =
             protobuf::parse_from_bytes(&bytes).map_err(|_| {
-                RestApiResponseError::ProtoConversionError::SerializationError(
+                //ProtoConversionError::SerializationError(
+                RestApiResponseError::GridProtoError(
                     "Unable to get Organization from bytes".to_string(),
                 )
             })?;
