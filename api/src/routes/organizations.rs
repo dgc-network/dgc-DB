@@ -147,10 +147,10 @@ pub async fn list_orgs(
         let org: protos::pike_state::Organization = match protobuf::parse_from_bytes(&msg){
             Ok(org) => org,
             Err(err) => {
-                return Err(ApplyError::InternalError(format!(
+                return Err(error::RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
                     "Cannot deserialize organization: {:?}",
                     err,
-                )))
+                ))))
             }
         };
         println!("serialized: {:?}", org);
