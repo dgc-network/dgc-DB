@@ -37,6 +37,7 @@ use grid_sdk::protocol::pike::{
 use grid_sdk::protos;
 use grid_sdk::protos::IntoProto;
 use grid_sdk::protos::FromBytes;
+use grid_sdk::protos::IntoNative;
 
 use crypto::digest::Digest;
 use crypto::sha2::Sha512;
@@ -146,13 +147,13 @@ pub async fn list_orgs(
         //let response: TpStateGetResponse = protobuf::parse_from_bytes(&bytes)?;
         let proto: protos::pike_state::Organization =
             protobuf::parse_from_bytes(&bytes).map_err(|_| {
-                ProtoConversionError::SerializationError(
+                RestApiResponseError::ProtoConversionError::SerializationError(
                     "Unable to get Organization from bytes".to_string(),
                 )
             })?;
-        let org = proto.into_native();
+        proto.into_native();
         println!("============ list_org_2 ============");
-        println!("!dgc-network! org = {:?}", org);
+        //println!("!dgc-network! org = {:?}", org);
     }
 
     println!("============ list_org ============");
