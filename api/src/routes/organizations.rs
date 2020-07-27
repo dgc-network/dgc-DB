@@ -142,7 +142,7 @@ pub async fn list_orgs(
     let list = res.json::<List>().await?;
     for sub in list.data.iter() {
         //let msg = sub.data.as_bytes();
-        let msg = base64::decode(sub.data).unwrap();
+        let msg = base64::decode(&sub.data).unwrap();
         //println!("{:?}", bytes);
         println!("============ list_org_1 ============");
         println!("!dgc-network! data = {:?}", sub.data);
