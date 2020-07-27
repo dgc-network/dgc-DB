@@ -145,7 +145,6 @@ pub async fn list_orgs(
         println!("!dgc-network! data = {:?}", sub.data);
         println!("!dgc-network! bytes = {:?}", msg);
 
-        //let org: protos::pike_state::Organization = protobuf::parse_from_bytes(&msg).unwrap();
         let org: protos::pike_state::Organization = match protobuf::parse_from_bytes(&msg){
             Ok(org) => org,
             Err(err) => {
@@ -156,13 +155,6 @@ pub async fn list_orgs(
             }
         };
         println!("serialized: {:?}", org);
-        //let org = Organization::from_bytes(bytes).unwrap();
-        //let response: TpStateGetResponse = protobuf::parse_from_bytes(&bytes)?;
-            //protobuf::parse_from_bytes(&bytes).map_err(|_| {
-                //ProtoConversionError::SerializationError(
-            //        "Unable to get Organization from bytes".to_string(),
-            //    )
-            //})?;
         println!("============ list_org_2 ============");
         println!("============ list_org_3 ============");
         //println!("!dgc-network! org = {:?}", org);
