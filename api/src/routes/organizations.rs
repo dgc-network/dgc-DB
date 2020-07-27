@@ -141,9 +141,7 @@ pub async fn list_orgs(
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
     let list = res.json::<List>().await?;
     for sub in list.data.iter() {
-        //let msg = sub.data.as_bytes();
         let msg = base64::decode(&sub.data).unwrap();
-        //println!("{:?}", bytes);
         println!("============ list_org_1 ============");
         println!("!dgc-network! data = {:?}", sub.data);
         println!("!dgc-network! bytes = {:?}", msg);
@@ -158,8 +156,6 @@ pub async fn list_orgs(
             }
         };
         println!("serialized: {:?}", org);
-        println!("============ list_org_2 ============");
-        println!("============ list_org_3 ============");
         //println!("!dgc-network! org = {:?}", org);
     }
 
@@ -176,7 +172,35 @@ pub async fn fetch_org(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     println!("!dgc-network! org_id = {:?}", org_id);
+    println!("============ fetch_org_1 ============");
+    let address = compute_org_address(&org_id);
+    let url = format!("http://rest-api:8008/state/{}", address);
+    let res = reqwest::get(url).await?;
+    let msg = base64::decode(&res.data).unwrap();
+    println!("============ fetch_org_2 ============");
+    println!("!dgc-network! data = {:?}", res.data);
+    println!("!dgc-network! bytes = {:?}", msg);
 
+    let org: protos::pike_state::Organization = match protobuf::parse_from_bytes(&msg){
+        Ok(org) => org,
+        Err(err) => {
+            return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
+                "Cannot deserialize organization: {:?}",
+                err,
+            ))))
+        }
+    };
+    println!("serialized: {:?}", org);
+    //println!("!dgc-network! org = {:?}", org);
+
+    println!("============ fetch_org ============");
+    println!("!dgc-network! link = {:?}", list.link);
+    Ok(HttpResponse::Ok().body(list.link))
+
+
+
+
+/*
     println!("============ fetch_org_1 ============");
     let request: TpProcessRequest = TpProcessRequest::new();
     //let conn = ZmqMessageConnection::new(&endpoint);
@@ -195,8 +219,9 @@ pub async fn fetch_org(
     println!("!dgc-network! org = {:?}", org);
     //let agent = result.unwrap();
     println!("============ fetch_org_5 ============");
+*/
 
-    Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
+    //Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
 }
 
