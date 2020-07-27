@@ -79,6 +79,7 @@ impl<'a> OrgState<'a> {
         for entry in entries {
             println!("============ get_org_4 ============");
             let packed = entry.1;
+            println!("data : {}", packed.clone());
             println!("============ get_org_5 ============");
             let orgs: OrganizationList = match OrganizationList::from_bytes(&packed) {
                 Ok(orgs) => orgs,
