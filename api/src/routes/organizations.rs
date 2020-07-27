@@ -175,7 +175,7 @@ pub async fn fetch_org(
     println!("============ fetch_org_1 ============");
     let address = compute_org_address(&org_id);
     let url = format!("http://rest-api:8008/state/{}", address);
-    let res = reqwest::get(&url).await?;
+    let res = reqwest::get(&url).await?.json::<Res>().await?;
     let msg = base64::decode(&res.data).unwrap();
     println!("============ fetch_org_2 ============");
     println!("!dgc-network! data = {:?}", res.data);
