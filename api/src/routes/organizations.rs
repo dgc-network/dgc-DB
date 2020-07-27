@@ -145,8 +145,7 @@ pub async fn list_orgs(
         println!("!dgc-network! data = {:?}", sub.data);
         println!("!dgc-network! bytes = {:?}", msg);
 
-        //let org: protos::pike_state::Organization = match protobuf::parse_from_bytes(&msg){
-        let org = match protobuf::parse_from_bytes(&msg){
+        let org: protos::pike_state::Organization = match protobuf::parse_from_bytes(&msg){
             Ok(org) => org,
             Err(err) => {
                 return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
