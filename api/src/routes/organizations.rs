@@ -4,10 +4,10 @@
 use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
-use sawtooth_sdk::messages::state_context::*;
-use sawtooth_sdk::messages::processor::TpProcessRequest;
-use sawtooth_sdk::messaging::stream::MessageConnection;
-use sawtooth_sdk::messaging::zmq_stream::ZmqMessageConnection;
+//use sawtooth_sdk::messages::state_context::*;
+//use sawtooth_sdk::messages::processor::TpProcessRequest;
+//use sawtooth_sdk::messaging::stream::MessageConnection;
+//use sawtooth_sdk::messaging::zmq_stream::ZmqMessageConnection;
 //use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
 use sawtooth_sdk::processor::handler::ApplyError;
 use sawtooth_sdk::processor::handler::TransactionContext;
@@ -38,14 +38,14 @@ use grid_sdk::protocol::pike::{
 use grid_sdk::protos;
 use grid_sdk::protos::IntoProto;
 use grid_sdk::protos::FromBytes;
-use grid_sdk::protos::IntoNative;
+//use grid_sdk::protos::IntoNative;
 
 use crypto::digest::Digest;
 use crypto::sha2::Sha512;
 //use std::cell::RefCell;
 //use std::collections::HashMap;
 
-use crate::zmq_context::ZmqTransactionContext;
+//use crate::zmq_context::ZmqTransactionContext;
 
 //use sawtk::tp::States;
 //use sawtk::tp::get_state_entry;
@@ -175,7 +175,7 @@ pub async fn fetch_org(
     println!("============ fetch_org_1 ============");
     let address = compute_org_address(&org_id);
     let url = format!("http://rest-api:8008/state/{}", address);
-    let res = reqwest::get(url).await?;
+    let res = reqwest::get(&url).await?;
     let msg = base64::decode(&res.data).unwrap();
     println!("============ fetch_org_2 ============");
     println!("!dgc-network! data = {:?}", res.data);
@@ -194,8 +194,8 @@ pub async fn fetch_org(
     //println!("!dgc-network! org = {:?}", org);
 
     println!("============ fetch_org ============");
-    println!("!dgc-network! link = {:?}", list.link);
-    Ok(HttpResponse::Ok().body(list.link))
+    println!("!dgc-network! link = {:?}", res.link);
+    Ok(HttpResponse::Ok().body(res.link))
 
 
 
