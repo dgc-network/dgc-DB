@@ -140,7 +140,9 @@ pub async fn list_orgs(
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
     let list = res.json::<List>().await?;
     for sub in list.data.iter() {
-        let msg = sub.data.as_bytes();
+        //let msg = sub.data.as_bytes();
+        let msg = base64::decode(sub.data).unwrap();
+        //println!("{:?}", bytes);
         println!("============ list_org_1 ============");
         println!("!dgc-network! data = {:?}", sub.data);
         println!("!dgc-network! bytes = {:?}", msg);
