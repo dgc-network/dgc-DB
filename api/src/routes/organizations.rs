@@ -16,6 +16,7 @@ use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
 use std::str;
+use base64;
 
 use crate::transaction::BatchBuilder;
 use crate::state::{
