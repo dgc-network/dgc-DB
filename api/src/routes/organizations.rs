@@ -58,7 +58,7 @@ pub fn compute_org_address(identifier: &str) -> String {
 
     String::from(PIKE_NAMESPACE) + PIKE_ORG_NAMESPACE + &sha.result_str()[..62]
 }
-
+/*
 pub struct OrgState<'a> {
     context: &'a dyn TransactionContext,
 }
@@ -105,7 +105,7 @@ impl<'a> OrgState<'a> {
         Ok(None)
     }
 }
-
+*/
 #[derive(Deserialize)]
 pub struct OrgInput {
     private_key: String,
@@ -196,30 +196,6 @@ pub async fn fetch_org(
     println!("============ fetch_org ============");
     println!("!dgc-network! link = {:?}", res.link);
     Ok(HttpResponse::Ok().body(res.link))
-
-
-
-
-/*
-    println!("============ fetch_org_1 ============");
-    let request: TpProcessRequest = TpProcessRequest::new();
-    //let conn = ZmqMessageConnection::new(&endpoint);
-    let conn = ZmqMessageConnection::new("tcp://localhost:4004");
-    let (sender, receiver) = conn.create();
-    let transaction_context = ZmqTransactionContext::new(
-        request.get_context_id(),
-        sender.clone(),
-    );
-    //let transaction_context = OrgTransactionContext::default();
-    println!("============ fetch_org_2 ============");
-    let state = OrgState::new(&transaction_context);
-    println!("============ fetch_org_3 ============");
-    let org = state.get_organization(&org_id).unwrap();
-    println!("============ fetch_org_4 ============");
-    println!("!dgc-network! org = {:?}", org);
-    //let agent = result.unwrap();
-    println!("============ fetch_org_5 ============");
-*/
 
     //Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
