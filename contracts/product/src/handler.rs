@@ -471,7 +471,8 @@ mod tests {
             let builder = AgentListBuilder::new();
             let agent_list = builder.with_agents(vec![agent.clone()]).build().unwrap();
             let agent_bytes = agent_list.into_bytes().unwrap();
-            let agent_address = compute_agent_address(public_key);
+            //let agent_address = compute_agent_address(public_key);
+            let agent_address = make_agent_address(public_key);
             self.set_state_entry(agent_address, agent_bytes).unwrap();
         }
 
@@ -488,7 +489,8 @@ mod tests {
             let builder = AgentListBuilder::new();
             let agent_list = builder.with_agents(vec![agent.clone()]).build().unwrap();
             let agent_bytes = agent_list.into_bytes().unwrap();
-            let agent_address = compute_agent_address(public_key);
+            //let agent_address = compute_agent_address(public_key);
+            let agent_address = make_agent_address(public_key);
             self.set_state_entry(agent_address, agent_bytes).unwrap();
         }
 
@@ -517,7 +519,7 @@ mod tests {
                 .build()
                 .unwrap();
             let org_bytes = org_list.into_bytes().unwrap();
-            let org_address = compute_org_address(org_id);
+            let org_address = make_org_address(org_id);
             self.set_state_entry(org_address, org_bytes).unwrap();
         }
 
@@ -536,7 +538,7 @@ mod tests {
                 .build()
                 .unwrap();
             let org_bytes = org_list.into_bytes().unwrap();
-            let org_address = compute_org_address(org_id);
+            let org_address = make_org_address(org_id);
             self.set_state_entry(org_address, org_bytes).unwrap();
         }
 

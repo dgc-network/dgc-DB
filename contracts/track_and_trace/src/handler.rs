@@ -1145,6 +1145,7 @@ mod tests {
             let agent_list = builder.with_agents(vec![agent.clone()]).build().unwrap();
             let agent_bytes = agent_list.into_bytes().unwrap();
             let agent_address = make_agent_address(public_key);
+            //let agent_address = compute_agent_address(public_key);
             self.set_state_entry(agent_address, agent_bytes).unwrap();
         }
 

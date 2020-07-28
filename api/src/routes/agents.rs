@@ -85,7 +85,8 @@ pub async fn fetch_agent(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     println!("!dgc-network! public_key = {:?}", public_key);
-    let address = compute_agent_address(&public_key);
+    //let address = compute_agent_address(&public_key);
+    let address = make_agent_address(&public_key);
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Res>().await?;
     let msg = base64::decode(&res.data).unwrap();

@@ -159,7 +159,8 @@ impl<'a> ProductState<'a> {
 
     /// Gets a Pike Agent. Handles retrieving the correct agent from an AgentList.
     pub fn get_agent(&self, public_key: &str) -> Result<Option<Agent>, ApplyError> {
-        let address = compute_agent_address(public_key);
+        //let address = compute_agent_address(public_key);
+        let address = make_agent_address(public_key);
         let d = self.context.get_state_entry(&address)?;
         match d {
             Some(packed) => {
@@ -186,7 +187,7 @@ impl<'a> ProductState<'a> {
     }
 
     pub fn get_organization(&self, id: &str) -> Result<Option<Organization>, ApplyError> {
-        let address = compute_org_address(id);
+        let address = make_org_address(id);
         let d = self.context.get_state_entry(&address)?;
         match d {
             Some(packed) => {

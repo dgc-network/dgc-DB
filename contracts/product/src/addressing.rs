@@ -52,7 +52,7 @@ pub fn compute_agent_address(public_key: &str) -> String {
 }
 
 /// Computes the address a Pike Organization is stored at based on its identifier
-pub fn compute_org_address(identifier: &str) -> String {
+pub fn make_org_address(identifier: &str) -> String {
     let mut sha = Sha512::new();
     sha.input(identifier.as_bytes());
 

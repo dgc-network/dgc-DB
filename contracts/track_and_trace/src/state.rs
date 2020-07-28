@@ -140,6 +140,7 @@ impl<'a> TrackAndTraceState<'a> {
     /// Gets a Pike Agent. Handles retrieving the correct agent from an AgentList.
     pub fn get_agent(&self, public_key: &str) -> Result<Option<Agent>, ApplyError> {
         let address = make_agent_address(public_key);
+        //let address = compute_agent_address(public_key);
         let d = self.context.get_state_entry(&address)?;
         match d {
             Some(packed) => {
@@ -473,6 +474,7 @@ mod tests {
                 .unwrap();
             let agent_bytes = agent_list.into_bytes().unwrap();
             let agent_address = make_agent_address(public_key);
+            //let agent_address = compute_agent_address(public_key);
             self.set_state_entry(agent_address, agent_bytes).unwrap();
         }
     }

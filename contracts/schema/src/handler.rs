@@ -1,16 +1,5 @@
-// Copyright 2019 Cargill Incorporated
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright (c) The dgc.network
+// SPDX-License-Identifier: Apache-2.0
 
 cfg_if! {
     if #[cfg(target_arch = "wasm32")] {
@@ -27,6 +16,7 @@ cfg_if! {
     }
 }
 
+use dgc_config::addressing::*;
 use dgc_config::permissions::PermissionChecker;
 use dgc_config::protocol::schema::payload::{
     Action, SchemaCreateAction, SchemaPayload, SchemaUpdateAction,
@@ -37,8 +27,8 @@ use dgc_config::protos::FromBytes;
 use crate::payload::validate_payload;
 use crate::state::GridSchemaState;
 
-pub const GRID_NAMESPACE: &str = "621dee";
-pub const PIKE_NAMESPACE: &str = "cad11d";
+//pub const GRID_NAMESPACE: &str = "621dee";
+//pub const PIKE_NAMESPACE: &str = "cad11d";
 
 #[cfg(target_arch = "wasm32")]
 // Sabre apply must return a bool
@@ -262,6 +252,7 @@ mod tests {
     use std::cell::RefCell;
     use std::collections::HashMap;
 
+    use dgc_config::addressing::*;
     use dgc_config::protocol::pike::state::{AgentBuilder, AgentListBuilder};
     use dgc_config::protocol::schema::payload::{SchemaCreateBuilder, SchemaUpdateBuilder};
     use dgc_config::protocol::schema::state::{
@@ -271,7 +262,7 @@ mod tests {
     use sawtooth_sdk::processor::handler::ApplyError;
     use sawtooth_sdk::processor::handler::{ContextError, TransactionContext};
 
-    use crate::state::{compute_agent_address, compute_schema_address};
+    //use crate::state::{compute_agent_address, compute_schema_address};
 
     #[derive(Default)]
     /// A MockTransactionContext that can be used to test GridSchemaState
@@ -340,7 +331,8 @@ mod tests {
             let builder = AgentListBuilder::new();
             let agent_list = builder.with_agents(vec![agent.clone()]).build().unwrap();
             let agent_bytes = agent_list.into_bytes().unwrap();
-            let agent_address = compute_agent_address("agent_public_key");
+            //let agent_address = compute_agent_address("agent_public_key");
+            let agent_address = make_agent_address("agent_public_key");
             self.set_state_entry(agent_address, agent_bytes).unwrap();
         }
 
@@ -360,7 +352,8 @@ mod tests {
             let builder = AgentListBuilder::new();
             let agent_list = builder.with_agents(vec![agent.clone()]).build().unwrap();
             let agent_bytes = agent_list.into_bytes().unwrap();
-            let agent_address = compute_agent_address("agent_public_key");
+            //let agent_address = compute_agent_address("agent_public_key");
+            let agent_address = make_agent_address("agent_public_key");
             self.set_state_entry(agent_address, agent_bytes).unwrap();
         }
 
@@ -380,7 +373,8 @@ mod tests {
             let builder = AgentListBuilder::new();
             let agent_list = builder.with_agents(vec![agent.clone()]).build().unwrap();
             let agent_bytes = agent_list.into_bytes().unwrap();
-            let agent_address = compute_agent_address("agent_public_key");
+            //let agent_address = compute_agent_address("agent_public_key");
+            let agent_address = make_agent_address("agent_public_key");
             self.set_state_entry(agent_address, agent_bytes).unwrap();
         }
 
@@ -396,7 +390,8 @@ mod tests {
             let builder = AgentListBuilder::new();
             let agent_list = builder.with_agents(vec![agent.clone()]).build().unwrap();
             let agent_bytes = agent_list.into_bytes().unwrap();
-            let agent_address = compute_agent_address("agent_public_key");
+            //let agent_address = compute_agent_address("agent_public_key");
+            let agent_address = make_agent_address("agent_public_key");
             self.set_state_entry(agent_address, agent_bytes).unwrap();
         }
 
@@ -426,7 +421,8 @@ mod tests {
             let builder = SchemaListBuilder::new();
             let schema_list = builder.with_schemas(vec![schema]).build().unwrap();
             let schema_bytes = schema_list.into_bytes().unwrap();
-            let schema_address = compute_schema_address("TestSchema");
+            //let schema_address = compute_schema_address("TestSchema");
+            let schema_address = make_schema_address("TestSchema");
             self.set_state_entry(schema_address, schema_bytes).unwrap();
         }
     }

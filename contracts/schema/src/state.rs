@@ -1,22 +1,12 @@
-// Copyright 2019 Cargill Incorporated
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright (c) The dgc.network
+// SPDX-License-Identifier: Apache-2.0
 
 use crypto::digest::Digest;
 use crypto::sha2::Sha512;
 use dgc_config::protocol::pike::state::{Agent, AgentList};
 use dgc_config::protocol::schema::state::{Schema, SchemaList, SchemaListBuilder};
 use dgc_config::protos::{FromBytes, IntoBytes};
+use dgc_config::addressing::*;
 
 cfg_if! {
     if #[cfg(target_arch = "wasm32")] {
@@ -27,7 +17,7 @@ cfg_if! {
         use sawtooth_sdk::processor::handler::TransactionContext;
     }
 }
-
+/*
 pub const GRID_NAMESPACE: &str = "621dee";
 pub const GRID_SCHEMA_NAMESPACE: &str = "01";
 
@@ -49,7 +39,7 @@ pub fn compute_schema_address(name: &str) -> String {
 
     String::from(GRID_NAMESPACE) + GRID_SCHEMA_NAMESPACE + &sha.result_str()[..62].to_string()
 }
-
+*/
 /// GridSchemaState is in charge of handling getting and setting state.
 pub struct GridSchemaState<'a> {
     context: &'a dyn TransactionContext,
@@ -62,7 +52,8 @@ impl<'a> GridSchemaState<'a> {
 
     /// Gets a Pike Agent. Handles retrieving the correct agent from an AgentList.
     pub fn get_agent(&self, public_key: &str) -> Result<Option<Agent>, ApplyError> {
-        let address = compute_agent_address(public_key);
+        //let address = compute_agent_address(public_key);
+        let address = make_agent_address(public_key);
         let d = self.context.get_state_entry(&address)?;
         match d {
             Some(packed) => {
@@ -90,7 +81,8 @@ impl<'a> GridSchemaState<'a> {
 
     /// Gets a Grid Schema. Handles retrieving the correct Schema from a SchemaList
     pub fn get_schema(&self, name: &str) -> Result<Option<Schema>, ApplyError> {
-        let address = compute_schema_address(name);
+        //let address = compute_schema_address(name);
+        let address = make_schema_address(name);
         let d = self.context.get_state_entry(&address)?;
         match d {
             Some(packed) => {
@@ -121,7 +113,8 @@ impl<'a> GridSchemaState<'a> {
     /// been a hash collision. The Schema is stored in the SchemaList, sorted by the Schema name,
     /// and set in state.
     pub fn set_schema(&self, name: &str, new_schema: Schema) -> Result<(), ApplyError> {
-        let address = compute_schema_address(name);
+        //let address = compute_schema_address(name);
+        let address = make_schema_address(name);
         let d = self.context.get_state_entry(&address)?;
         // get list of existing schemas, or an empty vec if none
         let mut schemas = match d {
@@ -263,7 +256,8 @@ mod tests {
         let builder = AgentListBuilder::new();
         let agent_list = builder.with_agents(vec![agent.clone()]).build().unwrap();
         let agent_bytes = agent_list.into_bytes().unwrap();
-        let agent_address = compute_agent_address("agent_public_key");
+        //let agent_address = compute_agent_address("agent_public_key");
+        let agent_address = make_agent_address("agent_public_key");
         transaction_context
             .set_state_entry(agent_address, agent_bytes)
             .unwrap();
