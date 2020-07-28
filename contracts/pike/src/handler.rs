@@ -20,7 +20,8 @@ cfg_if! {
     }
 }
 
-use addresser::{resource_to_byte, Resource};
+//use addresser::{resource_to_byte, Resource};
+use dgc_config::addressing::{resource_to_byte, Resource};
 use dgc_config::protos::pike_payload::{
     CreateAgentAction, CreateOrganizationAction, PikePayload, PikePayload_Action as Action,
     UpdateAgentAction, UpdateOrganizationAction,
