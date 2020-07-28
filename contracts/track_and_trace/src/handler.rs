@@ -29,18 +29,18 @@ cfg_if! {
     }
 }
 
-use grid_sdk::protocol::errors::BuilderError;
-use grid_sdk::protocol::schema::state::{PropertyDefinition, PropertyValue};
-use grid_sdk::protocol::track_and_trace::payload::{
+use dgc_config::protocol::errors::BuilderError;
+use dgc_config::protocol::schema::state::{PropertyDefinition, PropertyValue};
+use dgc_config::protocol::track_and_trace::payload::{
     Action, AnswerProposalAction, CreateProposalAction, CreateRecordAction, FinalizeRecordAction,
     Response, RevokeReporterAction, TrackAndTracePayload, UpdatePropertiesAction,
 };
-use grid_sdk::protocol::track_and_trace::state::{
+use dgc_config::protocol::track_and_trace::state::{
     AssociatedAgentBuilder, PropertyBuilder, PropertyPageBuilder, ProposalBuilder,
     ProposalListBuilder, RecordBuilder, ReportedValueBuilder, ReporterBuilder, Role, Status,
 };
 
-use grid_sdk::protos::FromBytes;
+use dgc_config::protos::FromBytes;
 
 use crate::addressing::*;
 use crate::payload::validate_payload;
@@ -1067,20 +1067,20 @@ mod tests {
     use std::cell::RefCell;
     use std::collections::HashMap;
 
-    use grid_sdk::protocol::pike::state::{AgentBuilder, AgentListBuilder};
-    use grid_sdk::protocol::schema::state::{
+    use dgc_config::protocol::pike::state::{AgentBuilder, AgentListBuilder};
+    use dgc_config::protocol::schema::state::{
         DataType, PropertyDefinitionBuilder, PropertyValueBuilder, SchemaBuilder, SchemaListBuilder,
     };
-    use grid_sdk::protocol::track_and_trace::payload::{
+    use dgc_config::protocol::track_and_trace::payload::{
         AnswerProposalActionBuilder, CreateProposalActionBuilder, CreateRecordActionBuilder,
         FinalizeRecordActionBuilder, RevokeReporterActionBuilder, UpdatePropertiesAction,
         UpdatePropertiesActionBuilder,
     };
-    use grid_sdk::protocol::track_and_trace::state::{
+    use dgc_config::protocol::track_and_trace::state::{
         Property, PropertyListBuilder, PropertyPage, PropertyPageListBuilder, Proposal, Record,
         RecordListBuilder, Role, Status,
     };
-    use grid_sdk::protos::IntoBytes;
+    use dgc_config::protos::IntoBytes;
     use sawtooth_sdk::processor::handler::{ContextError, TransactionContext};
 
     const TIMESTAMP: u64 = 1;

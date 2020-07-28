@@ -5,7 +5,7 @@ References
 .. toctree::
    :maxdepth: 2
 
-   grid_sdk.rst
+   dgc_config.rst
    rest_api.rst
 
 .. Licensed under Creative Commons Attribution 4.0 International License

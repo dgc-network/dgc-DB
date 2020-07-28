@@ -27,13 +27,13 @@ cfg_if! {
     }
 }
 
-use grid_sdk::permissions::PermissionChecker;
-use grid_sdk::protocol::product::payload::{
+use dgc_config::permissions::PermissionChecker;
+use dgc_config::protocol::product::payload::{
     Action, ProductCreateAction, ProductDeleteAction, ProductPayload, ProductUpdateAction,
 };
-use grid_sdk::protocol::product::state::{ProductBuilder, ProductType};
+use dgc_config::protocol::product::state::{ProductBuilder, ProductType};
 
-use grid_sdk::protos::FromBytes;
+use dgc_config::protos::FromBytes;
 
 use crate::addressing::*;
 use crate::payload::validate_payload;
@@ -392,19 +392,19 @@ mod tests {
     use std::cell::RefCell;
     use std::collections::HashMap;
 
-    use grid_sdk::protocol::pike::state::{
+    use dgc_config::protocol::pike::state::{
         AgentBuilder, AgentListBuilder, KeyValueEntryBuilder, OrganizationBuilder,
         OrganizationListBuilder,
     };
-    use grid_sdk::protocol::product::payload::{
+    use dgc_config::protocol::product::payload::{
         ProductCreateAction, ProductCreateActionBuilder, ProductDeleteAction,
         ProductDeleteActionBuilder, ProductUpdateAction, ProductUpdateActionBuilder,
     };
-    use grid_sdk::protocol::product::state::{
+    use dgc_config::protocol::product::state::{
         Product, ProductBuilder, ProductListBuilder, ProductType,
     };
-    use grid_sdk::protocol::schema::state::{DataType, PropertyValue, PropertyValueBuilder};
-    use grid_sdk::protos::IntoBytes;
+    use dgc_config::protocol::schema::state::{DataType, PropertyValue, PropertyValueBuilder};
+    use dgc_config::protos::IntoBytes;
 
     use sawtooth_sdk::processor::handler::{ContextError, TransactionContext};
 

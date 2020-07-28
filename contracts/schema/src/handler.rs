@@ -27,12 +27,12 @@ cfg_if! {
     }
 }
 
-use grid_sdk::permissions::PermissionChecker;
-use grid_sdk::protocol::schema::payload::{
+use dgc_config::permissions::PermissionChecker;
+use dgc_config::protocol::schema::payload::{
     Action, SchemaCreateAction, SchemaPayload, SchemaUpdateAction,
 };
-use grid_sdk::protocol::schema::state::SchemaBuilder;
-use grid_sdk::protos::FromBytes;
+use dgc_config::protocol::schema::state::SchemaBuilder;
+use dgc_config::protos::FromBytes;
 
 use crate::payload::validate_payload;
 use crate::state::GridSchemaState;
@@ -262,12 +262,12 @@ mod tests {
     use std::cell::RefCell;
     use std::collections::HashMap;
 
-    use grid_sdk::protocol::pike::state::{AgentBuilder, AgentListBuilder};
-    use grid_sdk::protocol::schema::payload::{SchemaCreateBuilder, SchemaUpdateBuilder};
-    use grid_sdk::protocol::schema::state::{
+    use dgc_config::protocol::pike::state::{AgentBuilder, AgentListBuilder};
+    use dgc_config::protocol::schema::payload::{SchemaCreateBuilder, SchemaUpdateBuilder};
+    use dgc_config::protocol::schema::state::{
         DataType, PropertyDefinitionBuilder, SchemaBuilder, SchemaListBuilder,
     };
-    use grid_sdk::protos::IntoBytes;
+    use dgc_config::protos::IntoBytes;
     use sawtooth_sdk::processor::handler::ApplyError;
     use sawtooth_sdk::processor::handler::{ContextError, TransactionContext};
 

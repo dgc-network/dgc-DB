@@ -17,7 +17,7 @@ use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
 use crate::{List, Res};
 
-use grid_sdk::protocol::pike::{
+use dgc_config::protocol::pike::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, PIKE_ORG_NAMESPACE, 
     state::{
         KeyValueEntry, KeyValueEntryBuilder,
@@ -27,8 +27,8 @@ use grid_sdk::protocol::pike::{
         CreateOrganizationActionBuilder, UpdateOrganizationActionBuilder, 
     },
 };
-use grid_sdk::protos;
-use grid_sdk::protos::IntoProto;
+use dgc_config::protos;
+use dgc_config::protos::IntoProto;
 
 pub fn compute_org_address(identifier: &str) -> String {
     let mut sha = Sha512::new();

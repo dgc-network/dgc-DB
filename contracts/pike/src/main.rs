@@ -15,7 +15,7 @@
 #[macro_use]
 extern crate cfg_if;
 extern crate crypto;
-extern crate grid_sdk;
+extern crate dgc_config;
 extern crate protobuf;
 
 cfg_if! {

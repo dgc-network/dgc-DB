@@ -14,9 +14,9 @@
 
 use crypto::digest::Digest;
 use crypto::sha2::Sha512;
-use grid_sdk::protocol::pike::state::{Agent, AgentList};
-use grid_sdk::protocol::schema::state::{Schema, SchemaList, SchemaListBuilder};
-use grid_sdk::protos::{FromBytes, IntoBytes};
+use dgc_config::protocol::pike::state::{Agent, AgentList};
+use dgc_config::protocol::schema::state::{Schema, SchemaList, SchemaListBuilder};
+use dgc_config::protos::{FromBytes, IntoBytes};
 
 cfg_if! {
     if #[cfg(target_arch = "wasm32")] {
@@ -182,8 +182,8 @@ mod tests {
     use std::cell::RefCell;
     use std::collections::HashMap;
 
-    use grid_sdk::protocol::pike::state::{AgentBuilder, AgentListBuilder};
-    use grid_sdk::protocol::schema::state::{DataType, PropertyDefinitionBuilder, SchemaBuilder};
+    use dgc_config::protocol::pike::state::{AgentBuilder, AgentListBuilder};
+    use dgc_config::protocol::schema::state::{DataType, PropertyDefinitionBuilder, SchemaBuilder};
     use sawtooth_sdk::processor::handler::{ContextError, TransactionContext};
 
     #[derive(Default)]

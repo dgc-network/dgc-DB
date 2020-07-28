@@ -21,11 +21,11 @@ cfg_if! {
 }
 
 use addresser::{resource_to_byte, Resource};
-use grid_sdk::protos::pike_payload::{
+use dgc_config::protos::pike_payload::{
     CreateAgentAction, CreateOrganizationAction, PikePayload, PikePayload_Action as Action,
     UpdateAgentAction, UpdateOrganizationAction,
 };
-use grid_sdk::protos::pike_state::{Agent, AgentList, Organization, OrganizationList};
+use dgc_config::protos::pike_state::{Agent, AgentList, Organization, OrganizationList};
 
 pub struct PikeTransactionHandler {
     family_name: String,

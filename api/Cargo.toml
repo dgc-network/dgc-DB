@@ -4,7 +4,7 @@
 [package]
 name = "dgc-api"
 version = "0.1.0"
-authors = ["Contributors to Hyperledger Grid"]
+authors = ["dgc.network"]
 edition = "2018"
 license = "Apache-2.0"
 description = """\
@@ -23,7 +23,7 @@ actix-rt = "1.0"
 actix-web = "2.0"
 sabre-sdk = "0.5"
 sawtooth-sdk = "0.4"
-grid-sdk = { path = "../sdk" }
+dgc-config = { path = "../config" }
 serde = "1.0"
 futures = "0.3"
 url = "2.1"
@@ -35,11 +35,6 @@ validator = "0.10.0"
 rust-crypto = "0.2"
 dirs = "1"
 users = "0.9"
-#reqwest = "0.10.6"
 reqwest = { version = "0.10", features = ["blocking", "json"] }
 log = "0.4"
 uuid = "0.6"
-#serde_cbor = "0.10"
-#json = "0.12.4"
-#rand = "0.7.3"
-#sawtk = "0.2.0"

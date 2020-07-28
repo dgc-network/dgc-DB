@@ -20,7 +20,7 @@ cfg_if! {
     }
 }
 
-use grid_sdk::protocol::product::payload::{Action, ProductCreateAction, ProductPayload};
+use dgc_config::protocol::product::payload::{Action, ProductCreateAction, ProductPayload};
 
 pub fn validate_payload(payload: &ProductPayload) -> Result<(), ApplyError> {
     validate_timestamp(*payload.timestamp())?;
@@ -59,12 +59,12 @@ fn validate_timestamp(timestamp: u64) -> Result<(), ApplyError> {
 mod tests {
     use super::*;
 
-    use grid_sdk::protos::product_payload::{
+    use dgc_config::protos::product_payload::{
         ProductCreateAction as ProductCreateActionProto, ProductPayload as ProductPayloadProto,
         ProductPayload_Action as ActionProto,
     };
-    use grid_sdk::protos::product_state::Product_ProductType;
-    use grid_sdk::protos::IntoNative;
+    use dgc_config::protos::product_state::Product_ProductType;
+    use dgc_config::protos::IntoNative;
 
     #[test]
     /// Test that an ok is returned if the payload with ProductCreateAction is valid. This test

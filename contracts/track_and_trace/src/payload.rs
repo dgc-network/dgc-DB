@@ -20,7 +20,7 @@ cfg_if! {
     }
 }
 
-use grid_sdk::protocol::track_and_trace::payload::{
+use dgc_config::protocol::track_and_trace::payload::{
     Action, CreateRecordAction, TrackAndTracePayload,
 };
 
@@ -62,12 +62,12 @@ fn validate_timestamp(timestamp: u64) -> Result<(), ApplyError> {
 mod tests {
     use super::*;
 
-    use grid_sdk::protos::track_and_trace_payload::{
+    use dgc_config::protos::track_and_trace_payload::{
         CreateRecordAction as CreateRecordActionProto,
         TrackAndTracePayload as TrackAndTracePayloadProto,
         TrackAndTracePayload_Action as ActionProto,
     };
-    use grid_sdk::protos::IntoNative;
+    use dgc_config::protos::IntoNative;
 
     #[test]
     /// Test that an error is returned if the payload is missing the timestamp. This test needs

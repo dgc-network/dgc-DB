@@ -22,10 +22,10 @@ cfg_if! {
     }
 }
 
-use grid_sdk::protocol::pike::state::{Agent, AgentList};
-use grid_sdk::protocol::pike::state::{Organization, OrganizationList};
-use grid_sdk::protocol::product::state::{Product, ProductList, ProductListBuilder};
-use grid_sdk::protos::{FromBytes, IntoBytes};
+use dgc_config::protocol::pike::state::{Agent, AgentList};
+use dgc_config::protocol::pike::state::{Organization, OrganizationList};
+use dgc_config::protocol::product::state::{Product, ProductList, ProductListBuilder};
+use dgc_config::protos::{FromBytes, IntoBytes};
 
 use crate::addressing::*;
 
@@ -229,9 +229,9 @@ mod tests {
     use std::cell::RefCell;
     use std::collections::HashMap;
 
-    use grid_sdk::protocol::pike::state::{AgentBuilder, AgentListBuilder};
-    use grid_sdk::protocol::product::state::{ProductBuilder, ProductType};
-    use grid_sdk::protocol::schema::state::{DataType, PropertyValue, PropertyValueBuilder};
+    use dgc_config::protocol::pike::state::{AgentBuilder, AgentListBuilder};
+    use dgc_config::protocol::product::state::{ProductBuilder, ProductType};
+    use dgc_config::protocol::schema::state::{DataType, PropertyValue, PropertyValueBuilder};
 
     use sawtooth_sdk::processor::handler::{ContextError, TransactionContext};
 

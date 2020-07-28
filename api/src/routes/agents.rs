@@ -14,7 +14,7 @@ use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
 use crate::{List, Res};
 
-use grid_sdk::protocol::pike::{
+use dgc_config::protocol::pike::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, PIKE_AGENT_NAMESPACE, 
     state::{
         KeyValueEntry, KeyValueEntryBuilder,
@@ -24,8 +24,8 @@ use grid_sdk::protocol::pike::{
         CreateAgentActionBuilder, UpdateAgentActionBuilder, 
     },
 };
-use grid_sdk::protos;
-use grid_sdk::protos::IntoProto;
+use dgc_config::protos;
+use dgc_config::protos::IntoProto;
 
 #[derive(Deserialize)]
 pub struct AgentInput {

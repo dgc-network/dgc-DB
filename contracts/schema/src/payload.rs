@@ -20,7 +20,7 @@ cfg_if! {
     }
 }
 
-use grid_sdk::protocol::schema::payload::{
+use dgc_config::protocol::schema::payload::{
     Action, SchemaCreateAction, SchemaPayload, SchemaUpdateAction,
 };
 
@@ -65,12 +65,12 @@ fn validate_schema_update_action(update_action: &SchemaUpdateAction) -> Result<(
 mod tests {
     use super::*;
 
-    use grid_sdk::protocol::schema::payload::{
+    use dgc_config::protocol::schema::payload::{
         Action, SchemaCreateBuilder, SchemaPayloadBuilder, SchemaUpdateBuilder,
     };
-    use grid_sdk::protocol::schema::state::{DataType, PropertyDefinitionBuilder};
-    use grid_sdk::protos;
-    use grid_sdk::protos::IntoNative;
+    use dgc_config::protocol::schema::state::{DataType, PropertyDefinitionBuilder};
+    use dgc_config::protos;
+    use dgc_config::protos::IntoNative;
 
     #[test]
     // Test a payload with a schema create action is properly validated. This test needs to use

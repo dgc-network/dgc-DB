@@ -11,7 +11,7 @@ use futures::future::{Future, TryFutureExt};
 use std::{error::Error, fmt, io};
 use sawtooth_sdk::signing;
 use sawtooth_sdk::processor::handler;
-use grid_sdk::protos;
+use dgc_config::protos;
 
 #[derive(Debug)]
 pub enum RestApiServerError {
