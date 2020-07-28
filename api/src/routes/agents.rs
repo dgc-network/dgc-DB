@@ -68,7 +68,7 @@ pub async fn list_agents(
         //println!("!dgc-network! org = {:?}", org);
     }
 
-    println!("============ list_org ============");
+    println!("============ list_agent ============");
     println!("!dgc-network! link = {:?}", list.link);
     Ok(HttpResponse::Ok().body(list.link))
     
@@ -85,7 +85,6 @@ pub async fn fetch_agent(
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Res>().await?;
     let msg = base64::decode(&res.data).unwrap();
-    println!("============ fetch_org_2 ============");
     println!("!dgc-network! data = {:?}", res.data);
     println!("!dgc-network! bytes = {:?}", msg);
 
@@ -101,7 +100,7 @@ pub async fn fetch_agent(
     println!("serialized: {:?}", agent);
     //println!("!dgc-network! org = {:?}", org);
 
-    println!("============ fetch_org ============");
+    println!("============ fetch_agent ============");
     println!("!dgc-network! link = {:?}", res.link);
     Ok(HttpResponse::Ok().body(res.link))
 
