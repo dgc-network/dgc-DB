@@ -10,34 +10,37 @@ use crypto::sha2::Sha512;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
-use std::str;
+//use std::str;
 use base64;
 
 use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
 use crate::{List, Res};
 
+use dgc_config::protos::*;
 use dgc_config::addressing::*;
-use dgc_config::protocol::pike::{
+use dgc_config::protocol::pike::state::*;
+use dgc_config::protocol::pike::payload::*;
+//use dgc_config::protocol::pike::{
     //PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, PIKE_ORG_NAMESPACE, 
-    state::{
-        KeyValueEntry, KeyValueEntryBuilder,
-    },
-    payload::{
-        Action, PikePayloadBuilder, 
-        CreateOrganizationActionBuilder, UpdateOrganizationActionBuilder, 
-    },
-};
-use dgc_config::protos;
-use dgc_config::protos::IntoProto;
-
+//    state::{
+//        KeyValueEntry, KeyValueEntryBuilder,
+//    },
+//    payload::{
+//        Action, PikePayloadBuilder, 
+//        CreateOrganizationActionBuilder, UpdateOrganizationActionBuilder, 
+//    },
+//};
+//use dgc_config::protos;
+//use dgc_config::protos::IntoProto;
+/*
 pub fn compute_org_address(identifier: &str) -> String {
     let mut sha = Sha512::new();
     sha.input(identifier.as_bytes());
 
     String::from(PIKE_NAMESPACE) + PIKE_ORG_NAMESPACE + &sha.result_str()[..62]
 }
-
+*/
 #[derive(Deserialize)]
 pub struct OrgInput {
     private_key: String,

@@ -14,19 +14,22 @@ use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
 use crate::{List, Res};
 
+use dgc_config::protos::*;
 use dgc_config::addressing::*;
-use dgc_config::protocol::pike::{
+use dgc_config::protocol::pike::state::*;
+use dgc_config::protocol::pike::payload::*;
+//use dgc_config::protocol::pike::{
     //PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, PIKE_AGENT_NAMESPACE, 
-    state::{
-        KeyValueEntry, KeyValueEntryBuilder,
-    },
-    payload::{
-        Action, PikePayloadBuilder, 
-        CreateAgentActionBuilder, UpdateAgentActionBuilder, 
-    },
-};
-use dgc_config::protos;
-use dgc_config::protos::IntoProto;
+//    state::{
+//        KeyValueEntry, KeyValueEntryBuilder,
+//    },
+//    payload::{
+//        Action, PikePayloadBuilder, 
+//        CreateAgentActionBuilder, UpdateAgentActionBuilder, 
+//    },
+//};
+//use dgc_config::protos;
+//use dgc_config::protos::IntoProto;
 
 #[derive(Deserialize)]
 pub struct AgentInput {
@@ -35,7 +38,7 @@ pub struct AgentInput {
     roles: String,
     metadata: String,
 }
-
+/*
 /// Computes the address a Pike Agent is stored at based on its public_key
 pub fn compute_agent_address(public_key: &str) -> String {
     let mut sha = Sha512::new();
@@ -43,7 +46,7 @@ pub fn compute_agent_address(public_key: &str) -> String {
 
     String::from(PIKE_NAMESPACE) + PIKE_AGENT_NAMESPACE + &sha.result_str()[..62]
 }
-
+*/
 pub async fn list_agents(
     //req: HttpRequest,
 ) -> Result<HttpResponse, RestApiResponseError> {
