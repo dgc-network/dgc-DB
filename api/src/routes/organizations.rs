@@ -18,10 +18,10 @@ use crate::transaction::BatchBuilder;
 //    PIKE_ORG_NAMESPACE, 
 //};
 use crate::error::RestApiResponseError;
+use crate::{List, Sub, Res};
 
 use grid_sdk::protocol::pike::{
-    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
-    PIKE_ORG_NAMESPACE, 
+    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, PIKE_ORG_NAMESPACE, 
     state::{
         KeyValueEntry, KeyValueEntryBuilder,
         Organization, OrganizationList,
@@ -110,7 +110,7 @@ pub struct OrgInput {
     address: String,
     metadata: String,
 }
-
+/*
 #[derive(Deserialize)]
 struct List {
     data: Vec<Sub>,
@@ -130,12 +130,14 @@ struct Res {
     head: String,
     link: String,
 }
-
+*/
 pub async fn list_orgs(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
-    let list = res.json::<List>().await?;
+    //let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
+    //let list = res.json::<List>().await?;
+    let url = format!("http://rest-api:8008/state?address={}{}", PIKE_NAMESPACE, PIKE_ORG_NAMESPACE);
+    let list = reqwest::get(&url).await?.json::<List>().await?;
     for sub in list.data.iter() {
         let msg = base64::decode(&sub.data).unwrap();
         println!("============ list_org_1 ============");

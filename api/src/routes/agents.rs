@@ -13,9 +13,10 @@ use crate::transaction::BatchBuilder;
 //    ApiTransactionContext, ApiState
 //};
 use crate::error::RestApiResponseError;
+use crate::{List, Sub, Res};
 
 use grid_sdk::protocol::pike::{
-    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
+    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, PIKE_AGENT_NAMESPACE, 
     state::{
         KeyValueEntry, KeyValueEntryBuilder,
     },
@@ -34,10 +35,48 @@ pub struct AgentInput {
     metadata: String,
 }
 
+/// Computes the address a Pike Agent is stored at based on its public_key
+pub fn compute_agent_address(public_key: &str) -> String {
+    let mut sha = Sha512::new();
+    sha.input(public_key.as_bytes());
+
+    String::from(PIKE_NAMESPACE) + PIKE_AGENT_NAMESPACE + &sha.result_str()[..62]
+}
+
 pub async fn list_agents(
     //req: HttpRequest,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
+    //let res = reqwest::get("http://rest-api:8008/state?address=cad11d00").await?;
+    //let list = res.json::<List>().await?;
+
+    let url = format!("http://rest-api:8008/state?address={}{}", PIKE_NAMESPACE, PIKE_AGENT_NAMESPACE);
+    let list = reqwest::get(&url).await?.json::<List>().await?;
+    for sub in list.data.iter() {
+        let msg = base64::decode(&sub.data).unwrap();
+        println!("============ list_org_1 ============");
+        println!("!dgc-network! data = {:?}", sub.data);
+        println!("!dgc-network! bytes = {:?}", msg);
+
+        let agent: protos::pike_state::Agent = match protobuf::parse_from_bytes(&msg){
+            Ok(agent) => agent,
+            Err(err) => {
+                return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
+                    "Cannot deserialize organization: {:?}",
+                    err,
+                ))))
+            }
+        };
+        println!("serialized: {:?}", agent);
+        //println!("!dgc-network! org = {:?}", org);
+    }
+
+    println!("============ list_org ============");
+    println!("!dgc-network! link = {:?}", list.link);
+    Ok(HttpResponse::Ok().body(list.link))
+
+
+/*
     let res = reqwest::get("http://rest-api:8008/state?address=cad11d00")
         .await?
         .text()
@@ -47,6 +86,7 @@ pub async fn list_agents(
     println!("!dgc-network! res = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
+*/    
     //Ok(HttpResponse::Ok().body("Hello world! list_agent"))
 
 }
@@ -56,6 +96,31 @@ pub async fn fetch_agent(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     println!("!dgc-network! public_key = {:?}", public_key);
+    let address = compute_agent_address(&public_key);
+    let url = format!("http://rest-api:8008/state/{}", address);
+    let res = reqwest::get(&url).await?.json::<Res>().await?;
+    let msg = base64::decode(&res.data).unwrap();
+    println!("============ fetch_org_2 ============");
+    println!("!dgc-network! data = {:?}", res.data);
+    println!("!dgc-network! bytes = {:?}", msg);
+
+    let agent: protos::pike_state::Agent = match protobuf::parse_from_bytes(&msg){
+        Ok(agent) => agent,
+        Err(err) => {
+            return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
+                "Cannot deserialize organization: {:?}",
+                err,
+            ))))
+        }
+    };
+    println!("serialized: {:?}", agent);
+    //println!("!dgc-network! org = {:?}", org);
+
+    println!("============ fetch_org ============");
+    println!("!dgc-network! link = {:?}", res.link);
+    Ok(HttpResponse::Ok().body(res.link))
+
+/*
     let mut transaction_context = ApiTransactionContext::default();
     let state = ApiState::new(&mut transaction_context);
     //let result = state.get_agent(&public_key).unwrap();
@@ -79,8 +144,8 @@ pub async fn fetch_agent(
     //let agent = result.unwrap();
     //let org_id = agent.org_id();
     println!("!dgc-network! result = {:?}", result);
-
-    Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
+*/
+    //Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 
 }
 

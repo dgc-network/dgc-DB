@@ -13,6 +13,27 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
 //use crate::routes::batches::{submit_batches, get_batch_statuses};
 use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};
 use crate::routes::organizations::{create_org, update_org, list_orgs, fetch_org};
+
+#[derive(Deserialize)]
+pub struct List {
+    data: Vec<Sub>,
+    head: String,
+    link: String,
+}
+
+#[derive(Deserialize)]
+pub struct Sub {
+    address: String,
+    data: String,
+}
+
+#[derive(Deserialize)]
+pub struct Res {
+    data: String,
+    head: String,
+    link: String,
+}
+
 /*
 #[derive(Clone)]
 pub struct AppState {
