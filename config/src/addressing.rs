@@ -84,10 +84,10 @@ const FAMILY_NAME: &str = "grid_track_and_trace";
 const PROPERTY: &str = "ea";
 const PROPOSAL: &str = "aa";
 const RECORD: &str = "ec";
-const GRID_NAMESPACE: &str = "621dee";
+//const GRID_NAMESPACE: &str = "621dee";
 const GRID_SCHEMA_NAMESPACE: &str = "01";
-const PIKE_NAMESPACE: &str = "cad11d";
-const PIKE_AGENT_NAMESPACE: &str = "00";
+//const PIKE_NAMESPACE: &str = "cad11d";
+//const PIKE_AGENT_NAMESPACE: &str = "00";
 
 pub fn get_track_and_trace_prefix() -> String {
     let mut sha = Sha512::new();
@@ -102,7 +102,7 @@ pub fn get_grid_prefix() -> String {
 pub fn get_pike_prefix() -> String {
     PIKE_NAMESPACE.to_string()
 }
-
+/*
 pub fn hash(to_hash: &str, num: usize) -> String {
     let mut sha = Sha512::new();
     sha.input_str(to_hash);
@@ -113,7 +113,7 @@ pub fn hash(to_hash: &str, num: usize) -> String {
     };
     hash.to_string()
 }
-
+*/
 pub fn make_record_address(record_id: &str) -> String {
     get_track_and_trace_prefix() + RECORD + &hash(record_id, 62)
 }
