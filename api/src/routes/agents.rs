@@ -8,13 +8,14 @@ use protobuf::Message;
 use reqwest;
 
 use crate::transaction::BatchBuilder;
-use crate::state::{
-    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
-    ApiTransactionContext, ApiState
-};
+//use crate::state::{
+//    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
+//    ApiTransactionContext, ApiState
+//};
 use crate::error::RestApiResponseError;
 
 use grid_sdk::protocol::pike::{
+    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
     state::{
         KeyValueEntry, KeyValueEntryBuilder,
     },

@@ -4,14 +4,8 @@
 use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
-//use sawtooth_sdk::messages::state_context::*;
-//use sawtooth_sdk::messages::processor::TpProcessRequest;
-//use sawtooth_sdk::messaging::stream::MessageConnection;
-//use sawtooth_sdk::messaging::zmq_stream::ZmqMessageConnection;
-//use sawtooth_sdk::messaging::zmq_stream::ZmqMessageSender;
 use sawtooth_sdk::processor::handler::ApplyError;
 use sawtooth_sdk::processor::handler::TransactionContext;
-//use sawtooth_sdk::processor::handler::ContextError;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
@@ -19,13 +13,15 @@ use std::str;
 use base64;
 
 use crate::transaction::BatchBuilder;
-use crate::state::{
-    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
-    PIKE_ORG_NAMESPACE, 
-};
+//use crate::state::{
+//    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
+//    PIKE_ORG_NAMESPACE, 
+//};
 use crate::error::RestApiResponseError;
 
 use grid_sdk::protocol::pike::{
+    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
+    PIKE_ORG_NAMESPACE, 
     state::{
         KeyValueEntry, KeyValueEntryBuilder,
         Organization, OrganizationList,

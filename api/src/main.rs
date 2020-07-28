@@ -4,9 +4,9 @@
 mod routes;
 mod error;
 //mod submitter;
-mod state;
+//mod state;
 mod transaction;
-mod zmq_context;
+//mod zmq_context;
 
 use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
 
