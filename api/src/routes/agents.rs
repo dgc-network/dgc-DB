@@ -4,8 +4,8 @@
 use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::processor::handler::ApplyError;
-use crypto::digest::Digest;
-use crypto::sha2::Sha512;
+//use crypto::digest::Digest;
+//use crypto::sha2::Sha512;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
@@ -59,7 +59,8 @@ pub async fn list_agents(
         println!("!dgc-network! data = {:?}", sub.data);
         println!("!dgc-network! bytes = {:?}", msg);
 
-        let agent: protos::pike_state::Agent = match protobuf::parse_from_bytes(&msg){
+        //let agent: protos::pike_state::Agent = match protobuf::parse_from_bytes(&msg){
+        let agent: pike_state::Agent = match protobuf::parse_from_bytes(&msg){
             Ok(agent) => agent,
             Err(err) => {
                 return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
@@ -93,7 +94,8 @@ pub async fn fetch_agent(
     println!("!dgc-network! data = {:?}", res.data);
     println!("!dgc-network! bytes = {:?}", msg);
 
-    let agent: protos::pike_state::Agent = match protobuf::parse_from_bytes(&msg){
+    //let agent: protos::pike_state::Agent = match protobuf::parse_from_bytes(&msg){
+    let agent: pike_state::Agent = match protobuf::parse_from_bytes(&msg){
         Ok(agent) => agent,
         Err(err) => {
             return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(

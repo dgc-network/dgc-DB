@@ -5,8 +5,8 @@ use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
-use crypto::digest::Digest;
-use crypto::sha2::Sha512;
+//use crypto::digest::Digest;
+//use crypto::sha2::Sha512;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
@@ -61,7 +61,8 @@ pub async fn list_orgs(
         println!("!dgc-network! data = {:?}", sub.data);
         println!("!dgc-network! bytes = {:?}", msg);
 
-        let org: protos::pike_state::Organization = match protobuf::parse_from_bytes(&msg){
+        //let org: protos::pike_state::Organization = match protobuf::parse_from_bytes(&msg){
+        let org: pike_state::Organization = match protobuf::parse_from_bytes(&msg){
             Ok(org) => org,
             Err(err) => {
                 return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
@@ -96,7 +97,8 @@ pub async fn fetch_org(
     println!("!dgc-network! data = {:?}", res.data);
     println!("!dgc-network! bytes = {:?}", msg);
 
-    let org: protos::pike_state::Organization = match protobuf::parse_from_bytes(&msg){
+    //let org: protos::pike_state::Organization = match protobuf::parse_from_bytes(&msg){
+    let org: pike_state::Organization = match protobuf::parse_from_bytes(&msg){
         Ok(org) => org,
         Err(err) => {
             return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
