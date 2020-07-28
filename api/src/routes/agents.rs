@@ -4,6 +4,8 @@
 use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::processor::handler::ApplyError;
+use crypto::digest::Digest;
+use crypto::sha2::Sha512;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;

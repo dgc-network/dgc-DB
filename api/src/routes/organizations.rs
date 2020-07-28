@@ -6,6 +6,8 @@ use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
 //use sawtooth_sdk::processor::handler::TransactionContext;
+use crypto::digest::Digest;
+use crypto::sha2::Sha512;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
@@ -36,8 +38,6 @@ use grid_sdk::protos::IntoProto;
 //use grid_sdk::protos::FromBytes;
 //use grid_sdk::protos::IntoNative;
 
-use crypto::digest::Digest;
-use crypto::sha2::Sha512;
 //use std::cell::RefCell;
 //use std::collections::HashMap;
 
