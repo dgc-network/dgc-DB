@@ -9,6 +9,7 @@ mod transaction;
 //mod zmq_context;
 
 use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
+use serde::Deserialize;
 
 //use crate::routes::batches::{submit_batches, get_batch_statuses};
 use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};

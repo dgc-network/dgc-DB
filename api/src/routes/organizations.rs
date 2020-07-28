@@ -5,7 +5,7 @@ use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
-use sawtooth_sdk::processor::handler::TransactionContext;
+//use sawtooth_sdk::processor::handler::TransactionContext;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
@@ -18,13 +18,13 @@ use crate::transaction::BatchBuilder;
 //    PIKE_ORG_NAMESPACE, 
 //};
 use crate::error::RestApiResponseError;
-use crate::{List, Sub, Res};
+use crate::{List, Res};
 
 use grid_sdk::protocol::pike::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, PIKE_ORG_NAMESPACE, 
     state::{
         KeyValueEntry, KeyValueEntryBuilder,
-        Organization, OrganizationList,
+        //Organization, OrganizationList,
     },
     payload::{
         Action, PikePayloadBuilder, 
@@ -33,7 +33,7 @@ use grid_sdk::protocol::pike::{
 };
 use grid_sdk::protos;
 use grid_sdk::protos::IntoProto;
-use grid_sdk::protos::FromBytes;
+//use grid_sdk::protos::FromBytes;
 //use grid_sdk::protos::IntoNative;
 
 use crypto::digest::Digest;

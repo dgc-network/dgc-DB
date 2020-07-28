@@ -3,6 +3,7 @@
 
 use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::create_context;
+use sawtooth_sdk::processor::handler::ApplyError;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
@@ -13,7 +14,7 @@ use crate::transaction::BatchBuilder;
 //    ApiTransactionContext, ApiState
 //};
 use crate::error::RestApiResponseError;
-use crate::{List, Sub, Res};
+use crate::{List, Res};
 
 use grid_sdk::protocol::pike::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, PIKE_AGENT_NAMESPACE, 
@@ -25,6 +26,7 @@ use grid_sdk::protocol::pike::{
         CreateAgentActionBuilder, UpdateAgentActionBuilder, 
     },
 };
+use grid_sdk::protos;
 use grid_sdk::protos::IntoProto;
 
 #[derive(Deserialize)]
