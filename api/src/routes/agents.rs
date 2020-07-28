@@ -4,8 +4,6 @@
 use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::processor::handler::ApplyError;
-//use crypto::digest::Digest;
-//use crypto::sha2::Sha512;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
@@ -18,18 +16,6 @@ use dgc_config::protos::*;
 use dgc_config::addressing::*;
 use dgc_config::protocol::pike::state::*;
 use dgc_config::protocol::pike::payload::*;
-//use dgc_config::protocol::pike::{
-    //PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, PIKE_AGENT_NAMESPACE, 
-//    state::{
-//        KeyValueEntry, KeyValueEntryBuilder,
-//    },
-//    payload::{
-//        Action, PikePayloadBuilder, 
-//        CreateAgentActionBuilder, UpdateAgentActionBuilder, 
-//    },
-//};
-//use dgc_config::protos;
-//use dgc_config::protos::IntoProto;
 
 #[derive(Deserialize)]
 pub struct AgentInput {
@@ -38,15 +24,7 @@ pub struct AgentInput {
     roles: String,
     metadata: String,
 }
-/*
-/// Computes the address a Pike Agent is stored at based on its public_key
-pub fn compute_agent_address(public_key: &str) -> String {
-    let mut sha = Sha512::new();
-    sha.input(public_key.as_bytes());
 
-    String::from(PIKE_NAMESPACE) + PIKE_AGENT_NAMESPACE + &sha.result_str()[..62]
-}
-*/
 pub async fn list_agents(
     //req: HttpRequest,
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -59,7 +37,6 @@ pub async fn list_agents(
         println!("!dgc-network! data = {:?}", sub.data);
         println!("!dgc-network! bytes = {:?}", msg);
 
-        //let agent: protos::pike_state::Agent = match protobuf::parse_from_bytes(&msg){
         let agent: pike_state::Agent = match protobuf::parse_from_bytes(&msg){
             Ok(agent) => agent,
             Err(err) => {
@@ -86,7 +63,6 @@ pub async fn fetch_agent(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     println!("!dgc-network! public_key = {:?}", public_key);
-    //let address = compute_agent_address(&public_key);
     let address = make_agent_address(&public_key);
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Res>().await?;

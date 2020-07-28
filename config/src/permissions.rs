@@ -1,8 +1,6 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
-//use crypto::digest::Digest;
-//use crypto::sha2::Sha512;
 use std::error::Error;
 use std::fmt;
 
@@ -19,16 +17,7 @@ cfg_if! {
 use crate::addressing::*;
 use crate::protocol::pike::state::{Agent, AgentList};
 use crate::protos::{FromBytes, ProtoConversionError};
-/*
-const PIKE_NAMESPACE: &str = "cad11d";
-const PIKE_AGENT_RESOURCE: &str = "00";
 
-fn compute_agent_address(public_key: &str) -> String {
-    let mut sha = Sha512::new();
-    sha.input(public_key.as_bytes());
-    String::from(PIKE_NAMESPACE) + PIKE_AGENT_RESOURCE + &sha.result_str()[..62].to_string()
-}
-*/
 #[derive(Debug)]
 pub enum PermissionCheckerError {
     /// Returned for an error originating at the TransactionContext.
@@ -114,7 +103,6 @@ impl<'a> PermissionChecker<'a> {
     }
 
     fn get_agent(&self, public_key: &str) -> Result<Option<Agent>, PermissionCheckerError> {
-        //let address = compute_agent_address(public_key);
         let address = make_agent_address(public_key);
         let d = self.context.get_state_entry(&address)?;
         match d {
@@ -214,7 +202,6 @@ mod tests {
         let builder = AgentListBuilder::new();
         let agent_list = builder.with_agents(vec![agent.clone()]).build().unwrap();
         let agent_bytes = agent_list.into_bytes().unwrap();
-        //let agent_address = compute_agent_address(PUBLIC_KEY);
         let agent_address = make_agent_address(PUBLIC_KEY);
         context.set_state_entry(agent_address, agent_bytes).unwrap();
 
@@ -239,7 +226,6 @@ mod tests {
         let builder = AgentListBuilder::new();
         let agent_list = builder.with_agents(vec![agent.clone()]).build().unwrap();
         let agent_bytes = agent_list.into_bytes().unwrap();
-        //let agent_address = compute_agent_address(PUBLIC_KEY);
         let agent_address = make_agent_address(PUBLIC_KEY);
         context.set_state_entry(agent_address, agent_bytes).unwrap();
 
@@ -264,7 +250,6 @@ mod tests {
         let builder = AgentListBuilder::new();
         let agent_list = builder.with_agents(vec![agent.clone()]).build().unwrap();
         let agent_bytes = agent_list.into_bytes().unwrap();
-        //let agent_address = compute_agent_address(PUBLIC_KEY);
         let agent_address = make_agent_address(PUBLIC_KEY);
         context.set_state_entry(agent_address, agent_bytes).unwrap();
 
@@ -289,7 +274,6 @@ mod tests {
         let builder = AgentListBuilder::new();
         let agent_list = builder.with_agents(vec![agent.clone()]).build().unwrap();
         let agent_bytes = agent_list.into_bytes().unwrap();
-        //let agent_address = compute_agent_address(PUBLIC_KEY);
         let agent_address = make_agent_address(PUBLIC_KEY);
         context.set_state_entry(agent_address, agent_bytes).unwrap();
 
@@ -314,7 +298,6 @@ mod tests {
         let builder = AgentListBuilder::new();
         let agent_list = builder.with_agents(vec![agent.clone()]).build().unwrap();
         let agent_bytes = agent_list.into_bytes().unwrap();
-        //let agent_address = compute_agent_address(PUBLIC_KEY);
         let agent_address = make_agent_address(PUBLIC_KEY);
         context.set_state_entry(agent_address, agent_bytes).unwrap();
 

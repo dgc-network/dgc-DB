@@ -5,12 +5,9 @@ use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
-//use crypto::digest::Digest;
-//use crypto::sha2::Sha512;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
-//use std::str;
 use base64;
 
 use crate::transaction::BatchBuilder;
@@ -21,26 +18,7 @@ use dgc_config::protos::*;
 use dgc_config::addressing::*;
 use dgc_config::protocol::pike::state::*;
 use dgc_config::protocol::pike::payload::*;
-//use dgc_config::protocol::pike::{
-    //PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, PIKE_ORG_NAMESPACE, 
-//    state::{
-//        KeyValueEntry, KeyValueEntryBuilder,
-//    },
-//    payload::{
-//        Action, PikePayloadBuilder, 
-//        CreateOrganizationActionBuilder, UpdateOrganizationActionBuilder, 
-//    },
-//};
-//use dgc_config::protos;
-//use dgc_config::protos::IntoProto;
-/*
-pub fn make_org_address(identifier: &str) -> String {
-    let mut sha = Sha512::new();
-    sha.input(identifier.as_bytes());
 
-    String::from(PIKE_NAMESPACE) + PIKE_ORG_NAMESPACE + &sha.result_str()[..62]
-}
-*/
 #[derive(Deserialize)]
 pub struct OrgInput {
     private_key: String,
@@ -61,7 +39,6 @@ pub async fn list_orgs(
         println!("!dgc-network! data = {:?}", sub.data);
         println!("!dgc-network! bytes = {:?}", msg);
 
-        //let org: protos::pike_state::Organization = match protobuf::parse_from_bytes(&msg){
         let org: pike_state::Organization = match protobuf::parse_from_bytes(&msg){
             Ok(org) => org,
             Err(err) => {
@@ -97,7 +74,6 @@ pub async fn fetch_org(
     println!("!dgc-network! data = {:?}", res.data);
     println!("!dgc-network! bytes = {:?}", msg);
 
-    //let org: protos::pike_state::Organization = match protobuf::parse_from_bytes(&msg){
     let org: pike_state::Organization = match protobuf::parse_from_bytes(&msg){
         Ok(org) => org,
         Err(err) => {

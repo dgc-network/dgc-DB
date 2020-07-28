@@ -1,3 +1,6 @@
+// Copyright (c) The dgc.network
+// SPDX-License-Identifier: Apache-2.0
+
 #[derive(Debug)]
 pub enum BuilderError {
     MissingField(String),

@@ -4,34 +4,23 @@
 use crypto::digest::Digest;
 use crypto::sha2::Sha512;
 
-//pub const PIKE_NAMESPACE: &str = "cad11d";
 pub const PIKE_FAMILY_NAME: &str = "pike";
 pub const PIKE_FAMILY_VERSION: &str = "0.1";
 pub const PIKE_NAMESPACE: &str = "cad11d";
 pub const PIKE_AGENT_NAMESPACE: &str = "00";
 pub const PIKE_ORG_NAMESPACE: &str = "01";
 
-//pub const PIKE_AGENT_NAMESPACE: &str = "00";
-//pub const PIKE_ORG_NAMESPACE: &str = "01";
 const GRID_ADDRESS_LEN: usize = 70;
 const GS1_NAMESPACE: &str = "01"; // Indicates GS1 standard
 const PRODUCT_NAMESPACE: &str = "02"; // Indicates product under GS1 standard
-//const GRID_NAMESPACE: &str = "621dee"; // Grid prefix
 
 pub const GRID_NAMESPACE: &str = "621dee";
 pub const GRID_SCHEMA_NAMESPACE: &str = "01";
 
-const FAMILY_NAME: &str = "grid_track_and_trace";
+const TNT_FAMILY_NAME: &str = "grid_track_and_trace";
 const PROPERTY: &str = "ea";
 const PROPOSAL: &str = "aa";
 const RECORD: &str = "ec";
-//const GRID_NAMESPACE: &str = "621dee";
-//const GRID_SCHEMA_NAMESPACE: &str = "01";
-//const PIKE_NAMESPACE: &str = "cad11d";
-//const PIKE_AGENT_NAMESPACE: &str = "00";
-
-//pub const PIKE_NAMESPACE: &str = "cad11d";
-//pub const PIKE_AGENT_NAMESPACE: &str = "00";
 
 /// Represents part of address that designates resource type
 #[derive(Debug)]
@@ -64,22 +53,6 @@ pub fn byte_to_resource(bytes: &str) -> Result<Resource, ResourceError> {
 pub enum ResourceError {
     UnknownResource(String),
 }
-/*
-/// Computes the address a Pike Agent is stored at based on its public_key
-pub fn compute_agent_address(public_key: &str) -> String {
-    let mut sha = Sha512::new();
-    sha.input(public_key.as_bytes());
-
-    String::from(PIKE_NAMESPACE) + PIKE_AGENT_NAMESPACE + &sha.result_str()[..62].to_string()
-}
-*/
-
-/// Computes the address a Grid Schema is stored at based on its name
-pub fn make_schema_address(name: &str) -> String {
-    let mut sha = Sha512::new();
-    sha.input(name.as_bytes());
-    String::from(GRID_NAMESPACE) + GRID_SCHEMA_NAMESPACE + &sha.result_str()[..62].to_string()
-}
 
 /// Computes the address a Pike Agent is stored at based on its public_key
 pub fn make_agent_address(public_key: &str) -> String {
@@ -87,15 +60,6 @@ pub fn make_agent_address(public_key: &str) -> String {
     sha.input(public_key.as_bytes());
 
     String::from(PIKE_NAMESPACE) + PIKE_AGENT_NAMESPACE + &sha.result_str()[..62].to_string()
-}
-
-
-/// Computes the address a Pike Agent is stored at based on its public_key
-pub fn compute_agent_address(public_key: &str) -> String {
-    let mut sha = Sha512::new();
-    sha.input(public_key.as_bytes());
-
-    String::from(PIKE_NAMESPACE) + PIKE_AGENT_NAMESPACE + &sha.result_str()[..62]
 }
 
 /// Computes the address a Pike Organization is stored at based on its identifier
@@ -107,10 +71,9 @@ pub fn make_org_address(identifier: &str) -> String {
 }
 
 /// Computes the address a Grid Schema is stored at based on its name
-pub fn compute_schema_address(name: &str) -> String {
+pub fn make_schema_address(name: &str) -> String {
     let mut sha = Sha512::new();
     sha.input(name.as_bytes());
-
     String::from(GRID_NAMESPACE) + GRID_SCHEMA_NAMESPACE + &sha.result_str()[..62].to_string()
 }
 
@@ -136,7 +99,7 @@ pub fn make_product_address(product_id: &str) -> String {
 
 pub fn get_track_and_trace_prefix() -> String {
     let mut sha = Sha512::new();
-    sha.input_str(&FAMILY_NAME);
+    sha.input_str(&TNT_FAMILY_NAME);
     sha.result_str()[..6].to_string()
 }
 
@@ -147,18 +110,7 @@ pub fn get_grid_prefix() -> String {
 pub fn get_pike_prefix() -> String {
     PIKE_NAMESPACE.to_string()
 }
-/*
-pub fn hash(to_hash: &str, num: usize) -> String {
-    let mut sha = Sha512::new();
-    sha.input_str(to_hash);
-    let temp = sha.result_str();
-    let hash = match temp.get(..num) {
-        Some(x) => x,
-        None => "",
-    };
-    hash.to_string()
-}
-*/
+
 pub fn make_record_address(record_id: &str) -> String {
     get_track_and_trace_prefix() + RECORD + &hash(record_id, 62)
 }

@@ -5,12 +5,9 @@
 //! Contains functions which assist with signing key management
 
 use std::time::Instant;
-//use std::env;
-//use std::fs::File;
-//use std::io::prelude::*;
-
 use crypto::digest::Digest;
 use crypto::sha2::Sha512;
+use protobuf::Message;
 
 use sabre_sdk::protocol::payload::ExecuteContractActionBuilder;
 use sabre_sdk::protos::IntoBytes;
@@ -23,42 +20,14 @@ use sawtooth_sdk::messages::transaction::TransactionHeader;
 use sawtooth_sdk::signing;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 
-use protobuf::Message;
-
-//use users::get_current_username;
-
 use crate::error::RestApiResponseError as CliError;
-/*
-pub const PIKE_NAMESPACE: &str = "cad11d";
-const PIKE_FAMILY_NAME: &str = "pike";
-const PIKE_FAMILY_VERSION: &str = "0.1";
 
-pub const GRID_SCHEMA_NAMESPACE: &str = "621dee01";
-const GRID_SCHEMA_FAMILY_NAME: &str = "grid_schema";
-const GRID_SCHEMA_FAMILY_VERSION: &str = "1.0";
-
-pub const GRID_PRODUCT_NAMESPACE: &str = "621dee02";
-const GRID_PRODUCT_FAMILY_NAME: &str = "grid_product";
-const GRID_PRODUCT_FAMILY_VERSION: &str = "1.0";
-*/
 const SABRE_FAMILY_NAME: &str = "sabre";
 const SABRE_FAMILY_VERSION: &str = "0.5";
 const SABRE_NAMESPACE_REGISTRY_PREFIX: &str = "00ec00";
 const SABRE_CONTRACT_REGISTRY_PREFIX: &str = "00ec01";
 const SABRE_CONTRACT_PREFIX: &str = "00ec02";
-/*
-pub fn schema_batch_builder(key: Option<String>) -> BatchBuilder {
-    BatchBuilder::new(GRID_SCHEMA_FAMILY_NAME, GRID_SCHEMA_FAMILY_VERSION, key)
-}
 
-pub fn pike_batch_builder(key: Option<String>) -> BatchBuilder {
-    BatchBuilder::new(PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, key)
-}
-
-pub fn product_batch_builder(key: Option<String>) -> BatchBuilder {
-    BatchBuilder::new(GRID_PRODUCT_FAMILY_NAME, GRID_PRODUCT_FAMILY_VERSION, key)
-}
-*/
 #[derive(Clone)]
 pub struct BatchBuilder {
     family_name: String,
@@ -142,8 +111,6 @@ impl BatchBuilder {
         }
         output_addresses.append(&mut outputs.to_vec());
 
-        //let private_key = key::load_signing_key(self.key_name.clone())?;
-        //let private_key = load_signing_key(self.key_name.clone())?;
         let private_key = Secp256k1PrivateKey::from_hex(&self.key_str)?;
         let context = signing::create_context("secp256k1")?;
         let public_key = context.get_public_key(&private_key)?.as_hex();
@@ -279,79 +246,3 @@ fn compute_namespace_registry_address(namespace: &str) -> Result<String, CliErro
 
     Ok(String::from(SABRE_NAMESPACE_REGISTRY_PREFIX) + &bytes_to_hex_str(hash)[..64])
 }
-/*
-/// Return a signing key loaded from the user's environment
-///
-/// This method attempts to load the user's key from a file.  The filename
-/// is constructed by appending ".priv" to the key's name.  If the name argument
-/// is None, then the USER environment variable is used in its place.
-///
-/// The directory containing the keys is determined using the HOME
-/// environment variable:
-///
-///   $HOME/.grid/keys/
-///
-/// # Arguments
-///
-/// * `name` - The name of the signing key, which is used to construct the
-///            key's filename
-///
-/// # Errors
-///
-/// If a signing error occurs, a CliError::SigningError is returned.
-///
-/// If a HOME or USER environment variable is required but cannot be
-/// retrieved from the environment, a CliError::VarError is returned.
-
-pub fn load_signing_key(name: Option<String>) -> Result<Secp256k1PrivateKey, CliError> {
-    let username: String = name
-        .ok_or_else(|| env::var("USER"))
-        .or_else(|_| {
-            get_current_username()
-                .ok_or(0)
-                .and_then(|os_str| os_str.into_string().map_err(|_| 0))
-        })
-        .map_err(|_| {
-            CliError::UserError(String::from(
-                "Could not load signing key: unable to determine username",
-            ))
-        })?;
-
-    let private_key_filename = dirs::home_dir()
-        .ok_or_else(|| {
-            CliError::UserError(String::from(
-                "Could not load signing key: unable to determine home directory",
-            ))
-        })
-        .and_then(|mut p| {
-            p.push(".grid");
-            p.push("keys");
-            p.push(format!("{}.priv", &username));
-            Ok(p)
-        })?;
-
-    if !private_key_filename.as_path().exists() {
-        return Err(CliError::UserError(format!(
-            "No such key file: {}",
-            private_key_filename.display()
-        )));
-    }
-
-    let mut f = File::open(&private_key_filename)?;
-
-    let mut contents = String::new();
-    f.read_to_string(&mut contents)?;
-
-    let key_str = match contents.lines().next() {
-        Some(k) => k.trim(),
-        None => {
-            return Err(CliError::UserError(format!(
-                "Empty key file: {}",
-                private_key_filename.display()
-            )));
-        }
-    };
-
-    Ok(Secp256k1PrivateKey::from_hex(&key_str)?)
-}
-*/
