@@ -14,8 +14,9 @@ use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
 use crate::{List, Res};
 
+use dgc_config::addressing::*;
 use dgc_config::protocol::pike::{
-    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, PIKE_AGENT_NAMESPACE, 
+    //PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, PIKE_AGENT_NAMESPACE, 
     state::{
         KeyValueEntry, KeyValueEntryBuilder,
     },
