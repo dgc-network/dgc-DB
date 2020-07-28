@@ -3,15 +3,11 @@
 
 mod routes;
 mod error;
-//mod submitter;
-//mod state;
 mod transaction;
-//mod zmq_context;
 
 use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
 use serde::Deserialize;
 
-//use crate::routes::batches::{submit_batches, get_batch_statuses};
 use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};
 use crate::routes::organizations::{create_org, update_org, list_orgs, fetch_org};
 
@@ -35,29 +31,6 @@ pub struct Res {
     link: String,
 }
 
-/*
-#[derive(Clone)]
-pub struct AppState {
-    batch_submitter: Box<dyn BatchSubmitter + 'static>,
-    //database_connection: Addr<DbExecutor>,
-}
-
-impl AppState {
-    pub fn new(
-        batch_submitter: Box<dyn BatchSubmitter + 'static>,
-        //connection_pool: ConnectionPool,
-    ) -> Self {
-        //let database_connection = SyncArbiter::start(SYNC_ARBITER_THREAD_COUNT, move || {
-        //    DbExecutor::new(connection_pool.clone())
-        //});
-
-        AppState {
-            batch_submitter,
-            //database_connection,
-        }
-    }
-}
-*/
 async fn index() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
 }

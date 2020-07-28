@@ -11,10 +11,6 @@ use protobuf::Message;
 use reqwest;
 
 use crate::transaction::BatchBuilder;
-//use crate::state::{
-//    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
-//    ApiTransactionContext, ApiState
-//};
 use crate::error::RestApiResponseError;
 use crate::{List, Res};
 
@@ -51,9 +47,6 @@ pub async fn list_agents(
     //req: HttpRequest,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    //let res = reqwest::get("http://rest-api:8008/state?address=cad11d00").await?;
-    //let list = res.json::<List>().await?;
-
     let url = format!("http://rest-api:8008/state?address={}{}", PIKE_NAMESPACE, PIKE_AGENT_NAMESPACE);
     let list = reqwest::get(&url).await?.json::<List>().await?;
     for sub in list.data.iter() {
@@ -78,19 +71,7 @@ pub async fn list_agents(
     println!("============ list_org ============");
     println!("!dgc-network! link = {:?}", list.link);
     Ok(HttpResponse::Ok().body(list.link))
-
-
-/*
-    let res = reqwest::get("http://rest-api:8008/state?address=cad11d00")
-        .await?
-        .text()
-        .await?;
-
-    println!("============ list_agent ============");
-    println!("!dgc-network! res = {:?}", res);
-
-    Ok(HttpResponse::Ok().body(res))
-*/    
+    
     //Ok(HttpResponse::Ok().body("Hello world! list_agent"))
 
 }
@@ -124,31 +105,6 @@ pub async fn fetch_agent(
     println!("!dgc-network! link = {:?}", res.link);
     Ok(HttpResponse::Ok().body(res.link))
 
-/*
-    let mut transaction_context = ApiTransactionContext::default();
-    let state = ApiState::new(&mut transaction_context);
-    //let result = state.get_agent(&public_key).unwrap();
-    let result = state.get_agents(&public_key);
-/*        
-    let result = match state.get_agent(&public_key){
-        Ok(x)  => {
-            if x != None {
-                x.unwrap();
-            } else {
-                return Err(RestApiResponseError::BadRequest(format!(
-                    "Cannot find the data for public_key : {:?}",
-                    public_key.to_string()
-                )));
-            }
-        }
-        Err(e) => return Err(e),
-    };
-*/    
-    //let org_id = result.org_id();
-    //let agent = result.unwrap();
-    //let org_id = agent.org_id();
-    println!("!dgc-network! result = {:?}", result);
-*/
     //Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 
 }
@@ -249,16 +205,7 @@ pub async fn create_agent(
     println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     println!("!dgc-network! public_key = {:?}", public_key.as_hex());
     println!("!dgc-network! res = {:?}", res);
-/*
-    match res {
-        //Ok(_) => Ok(BatchStatusLink { link }),
-        Ok(_) => Ok(HttpResponse::Ok().body("Hello world! create_agent")),
-        Err(err) => Err(RestApiResponseError::RequestHandlerError(format!(
-            "Unable to submit batch: {}",
-            err
-        ))),
-    }
-*/
+
     Ok(HttpResponse::Ok().body(res))
 }
 

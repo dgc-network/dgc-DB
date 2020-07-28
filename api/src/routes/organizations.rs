@@ -5,7 +5,6 @@ use actix_web::{web, HttpRequest, HttpResponse};
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
-//use sawtooth_sdk::processor::handler::TransactionContext;
 use crypto::digest::Digest;
 use crypto::sha2::Sha512;
 use serde::Deserialize;
@@ -15,10 +14,6 @@ use std::str;
 use base64;
 
 use crate::transaction::BatchBuilder;
-//use crate::state::{
-//    PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION,
-//    PIKE_ORG_NAMESPACE, 
-//};
 use crate::error::RestApiResponseError;
 use crate::{List, Res};
 
@@ -26,7 +21,6 @@ use grid_sdk::protocol::pike::{
     PIKE_NAMESPACE, PIKE_FAMILY_NAME, PIKE_FAMILY_VERSION, PIKE_ORG_NAMESPACE, 
     state::{
         KeyValueEntry, KeyValueEntryBuilder,
-        //Organization, OrganizationList,
     },
     payload::{
         Action, PikePayloadBuilder, 
@@ -35,73 +29,14 @@ use grid_sdk::protocol::pike::{
 };
 use grid_sdk::protos;
 use grid_sdk::protos::IntoProto;
-//use grid_sdk::protos::FromBytes;
-//use grid_sdk::protos::IntoNative;
 
-//use std::cell::RefCell;
-//use std::collections::HashMap;
-
-//use crate::zmq_context::ZmqTransactionContext;
-
-//use sawtk::tp::States;
-//use sawtk::tp::get_state_entry;
-//use sawtk::signing::create_context;
-
-/// Computes the address a Pike Organization is stored at based on its identifier
 pub fn compute_org_address(identifier: &str) -> String {
     let mut sha = Sha512::new();
     sha.input(identifier.as_bytes());
 
     String::from(PIKE_NAMESPACE) + PIKE_ORG_NAMESPACE + &sha.result_str()[..62]
 }
-/*
-pub struct OrgState<'a> {
-    context: &'a dyn TransactionContext,
-}
 
-impl<'a> OrgState<'a> {    
-    pub fn new(context: &'a dyn TransactionContext) -> OrgState {
-        OrgState { context }
-    }
-
-    pub fn get_organization(&self, id: &str) -> Result<Option<Organization>, ApplyError> {
-        println!("============ get_org_1 ============");
-        let address = compute_org_address(id);
-        let mut addresses = Vec::new();
-        addresses.push(address.clone());
-        println!("============ get_org_2 ============");
-        println!("address : {}", address.clone());
-        let entries = self.context.get_state_entries(&addresses)?;
-        println!("============ get_org_3 ============");
-        for entry in entries {
-            println!("============ get_org_4 ============");
-            let packed = entry.1;
-            println!("address : {}", entry.0.clone());
-            //println!("data    : {}", entry.1.clone());
-            println!("============ get_org_5 ============");
-            let orgs: OrganizationList = match OrganizationList::from_bytes(&packed) {
-                Ok(orgs) => orgs,
-                Err(err) => {
-                    return Err(ApplyError::InternalError(format!(
-                        "Cannot deserialize organization list: {:?}",
-                        err,
-                    )))
-                }
-            };
-            
-            println!("============ get_org_6 ============");
-
-            for org in orgs.organizations() {
-                if org.org_id() == id {
-                    return Ok(Some(org.clone()));
-                }
-            }
-        }
-
-        Ok(None)
-    }
-}
-*/
 #[derive(Deserialize)]
 pub struct OrgInput {
     private_key: String,
@@ -110,32 +45,10 @@ pub struct OrgInput {
     address: String,
     metadata: String,
 }
-/*
-#[derive(Deserialize)]
-struct List {
-    data: Vec<Sub>,
-    head: String,
-    link: String,
-}
 
-#[derive(Deserialize)]
-struct Sub {
-    address: String,
-    data: String,
-}
-
-#[derive(Deserialize)]
-struct Res {
-    data: String,
-    head: String,
-    link: String,
-}
-*/
 pub async fn list_orgs(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    //let res = reqwest::get("http://rest-api:8008/state?address=cad11d01").await?;
-    //let list = res.json::<List>().await?;
     let url = format!("http://rest-api:8008/state?address={}{}", PIKE_NAMESPACE, PIKE_ORG_NAMESPACE);
     let list = reqwest::get(&url).await?.json::<List>().await?;
     for sub in list.data.iter() {
