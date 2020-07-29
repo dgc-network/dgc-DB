@@ -103,9 +103,9 @@ pub async fn create_agent(
         .expect("Error creating the right context");
     let private_key = context.new_random_private_key()
         .expect("Error generating a new Private Key");
-    let public_key = context.get_public_key(private_key.as_ref())
-        .expect("Error generating a new Public Key");
-
+    //let public_key = context.get_public_key(private_key.as_ref())
+    //    .expect("Error generating a new Public Key");
+/*
     // Creating the Payload //
     let org_id = &input_data.org_id;
     let roles_as_string = &input_data.roles;
@@ -174,6 +174,17 @@ pub async fn create_agent(
     let batch_list_bytes = batch_list
         .write_to_bytes()
         .expect("Error converting batch list to bytes");
+*/
+    // let batch_list_bytes //
+    let batch_list_bytes = match do_batches(input_data, &private_key){
+        Ok(agent) => agent,
+        Err(err) => {
+            return Err(RestApiResponseError::UserError(format!(
+                "Cannot deserialize organization: {:?}",
+                err,
+            )))
+        }
+    };
 
     // Submitting Batches to the Validator //
     let res = reqwest::Client::new()
@@ -193,7 +204,7 @@ pub async fn create_agent(
     Ok(HttpResponse::Ok().body(res))
 }
 
-fn do_create(
+fn do_batches(
     input_data: web::Json<AgentData>,
     private_key: &dyn PrivateKey,
 ) -> Result<Vec<u8>, RestApiResponseError> {
@@ -284,8 +295,8 @@ pub async fn update_agent(
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
         .expect("Error generating a new Private Key");
 
-    //let batch_list_bytes = do_create(input_data, &private_key);
-    let batch_list_bytes = match do_create(input_data, &private_key){
+    // let batch_list_bytes //
+    let batch_list_bytes = match do_batches(input_data, &private_key){
         Ok(agent) => agent,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
@@ -294,7 +305,7 @@ pub async fn update_agent(
             )))
         }
     };
-    
+
     // Submitting Batches to the Validator //
     let res = reqwest::Client::new()
         .post("http://rest-api:8008/batches")
@@ -310,7 +321,7 @@ pub async fn update_agent(
     //println!("!dgc-network! public_key = {:?}", public_key.as_hex());
     println!("!dgc-network! res = {:?}", res);
 
-    //Ok(HttpResponse::Ok().body(res))
+    Ok(HttpResponse::Ok().body(res))
     
-    Ok(HttpResponse::Ok().body("Hello world! update_agent"))
+    //Ok(HttpResponse::Ok().body("Hello world! update_agent"))
 }
