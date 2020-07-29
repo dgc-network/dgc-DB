@@ -1,7 +1,6 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
-//use actix_web::{web, HttpRequest, HttpResponse};
 use actix_web::*;
 use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::processor::handler::ApplyError;
@@ -87,6 +86,7 @@ pub async fn fetch_agent(
     println!("============ fetch_agent ============");
     println!("!dgc-network! link = {:?}", res.link);
     Ok(HttpResponse::Ok().body(res.link))
+    //Ok(HttpResponse::Ok().body(res))
 
     //Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 
@@ -193,7 +193,7 @@ pub async fn create_agent(
 }
 
 pub async fn update_agent(
-    req: HttpRequest,
+    //req: HttpRequest,
     agent_input: web::Json<AgentInput>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 /*
