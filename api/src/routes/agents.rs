@@ -294,12 +294,12 @@ pub async fn update_agent(
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
         .expect("Error generating a new Private Key");
 
-    let res = do_create(input_data, &private_key);
+    let res = do_create(input_data, &private_key).unwrap();
 
     println!("============ update_agent ============");
     //println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     //println!("!dgc-network! public_key = {:?}", public_key.as_hex());
-    //println!("!dgc-network! res = {:?}", res);
+    println!("!dgc-network! res = {:?}", res);
 
     //Ok(HttpResponse::Ok().body(res))
     
