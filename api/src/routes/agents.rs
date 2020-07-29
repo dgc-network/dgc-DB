@@ -195,12 +195,12 @@ pub async fn create_agent(
 
 async fn do_create(
     input_data: web::Json<AgentData>,
-    private_key: &PrivateKey,
+    private_key: &dyn PrivateKey,
 ) -> Result<String, RestApiResponseError> {
 
     let context = create_context("secp256k1")
         .expect("Error creating the right context");
-    let public_key = context.get_public_key(private_key.as_ref())
+    let public_key = context.get_public_key(private_key)
         .expect("Error generating a new Public Key");
 
     // Creating the Payload //
@@ -294,14 +294,14 @@ pub async fn update_agent(
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
         .expect("Error generating a new Private Key");
 
-    let res = do_create(input_data, private_key);
+    let res = do_create(input_data, &private_key);
 
     println!("============ update_agent ============");
     //println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     //println!("!dgc-network! public_key = {:?}", public_key.as_hex());
-    println!("!dgc-network! res = {:?}", res);
+    //println!("!dgc-network! res = {:?}", res);
 
-    Ok(HttpResponse::Ok().body(res))
+    //Ok(HttpResponse::Ok().body(res))
     
-    //Ok(HttpResponse::Ok().body("Hello world! update_agent"))
+    Ok(HttpResponse::Ok().body("Hello world! update_agent"))
 }
