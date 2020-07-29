@@ -196,7 +196,7 @@ pub async fn create_agent(
 fn do_create(
     input_data: web::Json<AgentData>,
     private_key: &dyn PrivateKey,
-) -> Result<Vec, RestApiResponseError> {
+) -> Result<Vec<u8>, RestApiResponseError> {
 
     let context = create_context("secp256k1")
         .expect("Error creating the right context");
@@ -271,7 +271,7 @@ fn do_create(
         .write_to_bytes()
         .expect("Error converting batch list to bytes");
 
-    return Ok(res);
+    return Ok(batch_list_bytes);
 }
 
 pub async fn update_agent(
