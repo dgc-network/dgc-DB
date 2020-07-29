@@ -20,8 +20,9 @@ use dgc_config::addressing::*;
 use dgc_config::protocol::pike::state::*;
 use dgc_config::protocol::pike::payload::*;
 
-#[derive(Deserialize)]
-pub struct OrgInput {
+//#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
+struct OrgInput {
     private_key: String,
     org_id: String,
     name: String,
@@ -91,7 +92,7 @@ pub async fn fetch_org(
     println!("!dgc-network! link = {:?}", res.link);
     //Ok(HttpResponse::Ok().body(res.link))
     //Ok(HttpResponse::Ok().body(org.org_id))
-    Ok(HttpResponse::Ok().json(Organization {
+    Ok(HttpResponse::Ok().json(OrgInput {
         name: org.name.to_string(),
     }))
 
