@@ -193,10 +193,10 @@ pub async fn create_agent(
     Ok(HttpResponse::Ok().body(res))
 }
 
-async fn do_create(
+fn do_create(
     input_data: web::Json<AgentData>,
     private_key: &dyn PrivateKey,
-) -> Result<String, RestApiResponseError> {
+) -> Result<Vec, RestApiResponseError> {
 
     let context = create_context("secp256k1")
         .expect("Error creating the right context");
@@ -271,16 +271,6 @@ async fn do_create(
         .write_to_bytes()
         .expect("Error converting batch list to bytes");
 
-    // Submitting Batches to the Validator //
-    let res = reqwest::Client::new()
-        .post("http://rest-api:8008/batches")
-        .header("Content-Type", "application/octet-stream")
-        .body(batch_list_bytes)
-        .send()
-        .await?
-        .text()
-        .await?;
-
     return Ok(res);
 }
 
@@ -294,7 +284,19 @@ pub async fn update_agent(
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
         .expect("Error generating a new Private Key");
 
-    //let res = do_create(input_data, &private_key);
+    let batch_list_bytes = do_create(input_data, &private_key);
+    // Submitting Batches to the Validator //
+    let res = reqwest::Client::new()
+        .post("http://rest-api:8008/batches")
+        .header("Content-Type", "application/octet-stream")
+        .body(batch_list_bytes)
+        .send()
+        .await?
+        .text()
+        .await?;
+
+
+/*
     let res = match do_create(input_data, &private_key){
         Ok(agent) => agent,
         Err(err) => {
@@ -304,7 +306,7 @@ pub async fn update_agent(
             )))
         }
     };
-
+*/
     println!("============ update_agent ============");
     //println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     //println!("!dgc-network! public_key = {:?}", public_key.as_hex());
