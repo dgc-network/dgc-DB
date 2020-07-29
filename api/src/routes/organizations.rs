@@ -90,7 +90,7 @@ pub async fn fetch_org(
     println!("============ fetch_org ============");
     println!("!dgc-network! link = {:?}", res.link);
     //Ok(HttpResponse::Ok().body(res.link))
-    Ok(HttpResponse::Ok().body(res))
+    Ok(HttpResponse::Ok().body(org))
 
     //Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
 
