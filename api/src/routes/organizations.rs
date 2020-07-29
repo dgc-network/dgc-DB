@@ -93,10 +93,11 @@ pub async fn fetch_org(
     //Ok(HttpResponse::Ok().body(res.link))
     //Ok(HttpResponse::Ok().body(org.org_id))
     Ok(HttpResponse::Ok().json(OrgInput {
+        private_key: "".to_string(),
         org_id: org.org_id.to_string(),
         name: org.name.to_string(),
         address: org.address.to_string(),
-        metadata: org.metadata.to_string(),
+        metadata: "".to_string(),
     }))
 
     //Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
