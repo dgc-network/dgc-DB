@@ -1,7 +1,6 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
-//use actix_web::{web, HttpRequest, HttpResponse};
 use actix_web::*;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;

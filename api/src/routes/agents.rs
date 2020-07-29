@@ -3,6 +3,8 @@
 
 use actix_web::*;
 use sawtooth_sdk::signing::create_context;
+use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
+use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
 use serde::Deserialize;
 use protobuf::Message;
@@ -191,11 +193,13 @@ pub async fn create_agent(
     Ok(HttpResponse::Ok().body(res))
 }
 
-fn do_create(
+async fn do_create(
     input_data: web::Json<AgentData>,
     private_key: &PrivateKey,
 ) -> Result<String, RestApiResponseError> {
 
+    let context = create_context("secp256k1")
+        .expect("Error creating the right context");
     let public_key = context.get_public_key(private_key.as_ref())
         .expect("Error generating a new Public Key");
 
@@ -277,7 +281,7 @@ fn do_create(
         .text()
         .await?;
 
-    return res;
+    return Ok(res);
 }
 
 pub async fn update_agent(
