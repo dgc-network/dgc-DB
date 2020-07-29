@@ -22,7 +22,7 @@ use dgc_config::protocol::pike::payload::*;
 
 //#[derive(Deserialize)]
 #[derive(Serialize, Deserialize)]
-struct OrgInput {
+pub struct OrgData {
     private_key: String,
     org_id: String,
     name: String,
@@ -92,12 +92,12 @@ pub async fn fetch_org(
     println!("!dgc-network! link = {:?}", res.link);
     //Ok(HttpResponse::Ok().body(res.link))
     //Ok(HttpResponse::Ok().body(org.org_id))
-    Ok(HttpResponse::Ok().json(OrgInput {
-        private_key: "".to_string(),
+    Ok(HttpResponse::Ok().json(OrgData {
+        private_key: "private_key".to_string(),
         org_id: org.org_id.to_string(),
         name: org.name.to_string(),
         address: org.address.to_string(),
-        metadata: "".to_string(),
+        metadata: "metadata".to_string(),
     }))
 
     //Ok(HttpResponse::Ok().body("Hello world! fetch_org"))
@@ -105,7 +105,7 @@ pub async fn fetch_org(
 }
 
 pub async fn create_org(
-    org_input: web::Json<OrgInput>,
+    org_input: web::Json<OrgData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Creating a Private Key and Signer //
@@ -193,7 +193,7 @@ pub async fn create_org(
 }
 
 pub async fn update_org(
-    org_input: web::Json<OrgInput>,
+    org_input: web::Json<OrgData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Creating a Private Key and Signer //

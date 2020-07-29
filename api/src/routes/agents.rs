@@ -18,7 +18,7 @@ use dgc_config::protocol::pike::state::*;
 use dgc_config::protocol::pike::payload::*;
 
 #[derive(Deserialize)]
-pub struct AgentInput {
+pub struct AgentData {
     private_key: String,
     org_id: String,
     roles: String,
@@ -93,7 +93,7 @@ pub async fn fetch_agent(
 
 pub async fn create_agent(
     //req: HttpRequest,
-    agent_input: web::Json<AgentInput>,
+    agent_input: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Creating a Private Key and Signer //
@@ -193,7 +193,7 @@ pub async fn create_agent(
 
 pub async fn update_agent(
     //req: HttpRequest,
-    agent_input: web::Json<AgentInput>,
+    agent_input: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 /*
     let response_url = req.url_for_static("agent")?;
