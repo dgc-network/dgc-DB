@@ -4,23 +4,61 @@
 use crypto::digest::Digest;
 use crypto::sha2::Sha512;
 
+pub const SABRE_FAMILY_NAME: &str = "sabre";
+pub const SABRE_FAMILY_VERSION: &str = "0.5";
+pub const SABRE_NAMESPACE_REGISTRY_PREFIX: &str = "00ec00";
+pub const SABRE_CONTRACT_REGISTRY_PREFIX: &str = "00ec01";
+pub const SABRE_CONTRACT_PREFIX: &str = "00ec02";
+
+pub const GRID_NAMESPACE: &str = "621dee";
+const GRID_ADDRESS_LEN: usize = 70;
+
 pub const PIKE_FAMILY_NAME: &str = "pike";
 pub const PIKE_FAMILY_VERSION: &str = "0.1";
 pub const PIKE_NAMESPACE: &str = "cad11d";
 pub const PIKE_AGENT_NAMESPACE: &str = "00";
 pub const PIKE_ORG_NAMESPACE: &str = "01";
 
-const GRID_ADDRESS_LEN: usize = 70;
+pub const PRODUCT_FAMILY_NAME: &str = "grid_product";
+pub const PRODUCT_FAMILY_VERSION: &str = "1.0";
 const GS1_NAMESPACE: &str = "01"; // Indicates GS1 standard
 const PRODUCT_NAMESPACE: &str = "02"; // Indicates product under GS1 standard
 
-pub const GRID_NAMESPACE: &str = "621dee";
+pub const SCHEMA_FAMILY_NAME: &str = "grid_product";
+pub const SCHEMA_FAMILY_VERSION: &str = "1.0";
 pub const GRID_SCHEMA_NAMESPACE: &str = "01";
 
-const TNT_FAMILY_NAME: &str = "grid_track_and_trace";
+pub const TNT_FAMILY_NAME: &str = "grid_track_and_trace";
+pub const TNT_FAMILY_VERSION: &str = "1.0";
 const PROPERTY: &str = "ea";
 const PROPOSAL: &str = "aa";
 const RECORD: &str = "ec";
+
+pub fn get_track_and_trace_prefix() -> String {
+    let mut sha = Sha512::new();
+    sha.input_str(&TNT_FAMILY_NAME);
+    sha.result_str()[..6].to_string()
+}
+
+pub fn get_grid_prefix() -> String {
+    GRID_NAMESPACE.to_string()
+}
+
+pub fn get_pike_prefix() -> String {
+    PIKE_NAMESPACE.to_string()
+}
+
+pub fn get_product_prefix() -> String {
+    GRID_NAMESPACE.to_string()
+}
+
+pub fn hash(to_hash: &str, num: usize) -> String {
+    let mut sha = Sha512::new();
+    sha.input_str(to_hash);
+    let temp = sha.result_str();
+    let hash = temp.get(..num).expect("PANIC! Hashing Out of Bounds Error");
+    hash.to_string()
+}
 
 /// Represents part of address that designates resource type
 #[derive(Debug)]
@@ -77,38 +115,12 @@ pub fn make_schema_address(name: &str) -> String {
     String::from(GRID_NAMESPACE) + GRID_SCHEMA_NAMESPACE + &sha.result_str()[..62].to_string()
 }
 
-pub fn get_product_prefix() -> String {
-    GRID_NAMESPACE.to_string()
-}
-
-pub fn hash(to_hash: &str, num: usize) -> String {
-    let mut sha = Sha512::new();
-    sha.input_str(to_hash);
-    let temp = sha.result_str();
-    let hash = temp.get(..num).expect("PANIC! Hashing Out of Bounds Error");
-    hash.to_string()
-}
-
 pub fn make_product_address(product_id: &str) -> String {
     let grid_product_gs1_prefix = get_product_prefix() + PRODUCT_NAMESPACE + GS1_NAMESPACE;
     let grid_product_gs1_prefix_len = grid_product_gs1_prefix.chars().count();
     let hash_len = GRID_ADDRESS_LEN - grid_product_gs1_prefix_len;
 
     grid_product_gs1_prefix + &hash(product_id, hash_len)
-}
-
-pub fn get_track_and_trace_prefix() -> String {
-    let mut sha = Sha512::new();
-    sha.input_str(&TNT_FAMILY_NAME);
-    sha.result_str()[..6].to_string()
-}
-
-pub fn get_grid_prefix() -> String {
-    GRID_NAMESPACE.to_string()
-}
-
-pub fn get_pike_prefix() -> String {
-    PIKE_NAMESPACE.to_string()
 }
 
 pub fn make_record_address(record_id: &str) -> String {
