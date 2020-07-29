@@ -284,7 +284,17 @@ pub async fn update_agent(
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
         .expect("Error generating a new Private Key");
 
-    let batch_list_bytes = do_create(input_data, &private_key);
+    //let batch_list_bytes = do_create(input_data, &private_key);
+    let batch_list_bytes = match do_create(input_data, &private_key){
+        Ok(agent) => agent,
+        Err(err) => {
+            return Err(RestApiResponseError::UserError(format!(
+                "Cannot deserialize organization: {:?}",
+                err,
+            )))
+        }
+    };
+    
     // Submitting Batches to the Validator //
     let res = reqwest::Client::new()
         .post("http://rest-api:8008/batches")
@@ -295,18 +305,6 @@ pub async fn update_agent(
         .text()
         .await?;
 
-
-/*
-    let res = match do_create(input_data, &private_key){
-        Ok(agent) => agent,
-        Err(err) => {
-            return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize organization: {:?}",
-                err,
-            )))
-        }
-    };
-*/
     println!("============ update_agent ============");
     //println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     //println!("!dgc-network! public_key = {:?}", public_key.as_hex());
