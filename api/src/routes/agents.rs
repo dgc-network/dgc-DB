@@ -33,7 +33,7 @@ pub async fn list_agents(
     let list = reqwest::get(&url).await?.json::<List>().await?;
     for sub in list.data.iter() {
         let msg = base64::decode(&sub.data).unwrap();
-        println!("============ list_org_1 ============");
+        println!("============ list_agent_1 ============");
         println!("!dgc-network! data = {:?}", sub.data);
         println!("!dgc-network! bytes = {:?}", msg);
 
@@ -70,7 +70,6 @@ pub async fn fetch_agent(
     println!("!dgc-network! data = {:?}", res.data);
     println!("!dgc-network! bytes = {:?}", msg);
 
-    //let agent: protos::pike_state::Agent = match protobuf::parse_from_bytes(&msg){
     let agent: pike_state::Agent = match protobuf::parse_from_bytes(&msg){
         Ok(agent) => agent,
         Err(err) => {
