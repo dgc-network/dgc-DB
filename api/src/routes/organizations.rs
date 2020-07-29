@@ -105,19 +105,19 @@ pub async fn fetch_org(
 }
 
 pub async fn create_org(
-    org_input: web::Json<OrgData>,
+    input_data: web::Json<OrgData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Creating a Private Key and Signer //
-    let private_key_as_hex = &org_input.private_key;
+    let private_key_as_hex = &input_data.private_key;
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
         .expect("Error generating a new Private Key");
 
     // Creating the Payload //
-    let org_id = &org_input.org_id;
-    let name = &org_input.name;
-    let address = &org_input.address;
-    let metadata_as_string = &org_input.metadata;
+    let org_id = &input_data.org_id;
+    let name = &input_data.name;
+    let address = &input_data.address;
+    let metadata_as_string = &input_data.metadata;
 
     let mut metadata = Vec::<KeyValueEntry>::new();
     for meta in metadata_as_string.chars() {
@@ -193,19 +193,19 @@ pub async fn create_org(
 }
 
 pub async fn update_org(
-    org_input: web::Json<OrgData>,
+    input_data: web::Json<OrgData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Creating a Private Key and Signer //
-    let private_key_as_hex = &org_input.private_key;
+    let private_key_as_hex = &input_data.private_key;
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
         .expect("Error generating a new Private Key");
 
     // Creating the Payload //
-    let org_id = &org_input.org_id;
-    let name = &org_input.name;
-    let address = &org_input.address;
-    let metadata_as_string = &org_input.metadata;
+    let org_id = &input_data.org_id;
+    let name = &input_data.name;
+    let address = &input_data.address;
+    let metadata_as_string = &input_data.metadata;
 
     let mut metadata = Vec::<KeyValueEntry>::new();
     for meta in metadata_as_string.chars() {

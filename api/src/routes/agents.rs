@@ -93,7 +93,7 @@ pub async fn fetch_agent(
 
 pub async fn create_agent(
     //req: HttpRequest,
-    agent_input: web::Json<AgentData>,
+    input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Creating a Private Key and Signer //
@@ -105,9 +105,9 @@ pub async fn create_agent(
         .expect("Error generating a new Public Key");
 
     // Creating the Payload //
-    let org_id = &agent_input.org_id;
-    let roles_as_string = &agent_input.roles;
-    let metadata_as_string = &agent_input.metadata;
+    let org_id = &input_data.org_id;
+    let roles_as_string = &input_data.roles;
+    let metadata_as_string = &input_data.metadata;
 
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
@@ -193,15 +193,15 @@ pub async fn create_agent(
 
 pub async fn update_agent(
     //req: HttpRequest,
-    agent_input: web::Json<AgentData>,
+    input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 /*
     let response_url = req.url_for_static("agent")?;
 
-    let private_key_as_hex = &agent_input.private_key;
-    let org_id = &agent_input.org_id;
-    let roles_as_string = &agent_input.roles;
-    let metadata_as_string = &agent_input.metadata;
+    let private_key_as_hex = &input_data.private_key;
+    let org_id = &input_data.org_id;
+    let roles_as_string = &input_data.roles;
+    let metadata_as_string = &input_data.metadata;
 
     let context = Secp256k1Context::new();
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
