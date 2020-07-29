@@ -6,7 +6,7 @@ use actix_web::*;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use protobuf::Message;
 use reqwest;
 use base64;
