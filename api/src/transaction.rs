@@ -21,6 +21,7 @@ use sawtooth_sdk::signing;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 
 use crate::error::RestApiResponseError as CliError;
+use dgc_config::addressing::*;
 /*
 const SABRE_FAMILY_NAME: &str = "sabre";
 const SABRE_FAMILY_VERSION: &str = "0.5";
