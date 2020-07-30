@@ -960,12 +960,18 @@ impl PikePayloadBuilder {
         self
     }
 
-    pub fn with_create_agent(mut self, create_agent: CreateAgentAction) -> PikePayloadBuilder {
+    pub fn with_create_agent(
+        mut self, 
+        create_agent: CreateAgentAction
+    ) -> PikePayloadBuilder {
         self.create_agent = Some(create_agent);
         self
     }
 
-    pub fn with_update_agent(mut self, update_agent: UpdateAgentAction) -> PikePayloadBuilder {
+    pub fn with_update_agent(
+        mut self, 
+        update_agent: UpdateAgentAction
+    ) -> PikePayloadBuilder {
         self.update_agent = Some(update_agent);
         self
     }

@@ -107,7 +107,7 @@ pub async fn create_agent(
 
     // batch_list_bytes //
     //let batch_list_bytes = match do_batches(input_data, &private_key, Action::CreateAgent){
-    let batch_list_bytes = match do_batches(input_data, &ptr, Action::CreateAgent){
+    let batch_list_bytes = match do_batches(input_data, &dyn ptr, Action::CreateAgent){
         Ok(agent) => agent,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
@@ -221,7 +221,7 @@ fn do_batches(
         metadata.push(key_value.clone());
     }
 
-    let payload = PikePayloadBuilder::new();
+    let mut payload = PikePayloadBuilder::new();
 
     if action_plan == Action::CreateAgent {
         let action = CreateAgentActionBuilder::new()
@@ -262,7 +262,7 @@ fn do_batches(
     let batch_list = BatchBuilder::new(
         PIKE_FAMILY_NAME, 
         PIKE_FAMILY_VERSION, 
-        &private_key.as_hex()
+        &private_key.as_hex(),
     )
     .add_transaction(
         &payload.into_proto()?,
