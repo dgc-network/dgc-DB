@@ -15,7 +15,6 @@ use crate::error::RestApiResponseError;
 use crate::{List, Res};
 
 use dgc_config::protos::*;
-use dgc_config::protos::IntoProto;
 use dgc_config::addressing::*;
 use dgc_config::protocol::pike::state::*;
 use dgc_config::protocol::pike::payload::*;
@@ -104,7 +103,7 @@ pub async fn create_agent(
         .expect("Error creating the right context");
     let private_key = context.new_random_private_key()
         .expect("Error generating a new Private Key");
-    let ptr = dyn Box::into_raw(private_key);
+    let dyn ptr = Box::into_raw(private_key);
 
     // batch_list_bytes //
     //let batch_list_bytes = match do_batches(input_data, &private_key, Action::CreateAgent){
@@ -160,10 +159,8 @@ pub async fn update_agent(
         .post("http://rest-api:8008/batches")
         .header("Content-Type", "application/octet-stream")
         .body(batch_list_bytes)
-        .send()
-        .await?
-        .text()
-        .await?;
+        .send().await?
+        .text().await?;
 
     println!("============ update_agent ============");
     //println!("!dgc-network! private_key = {:?}", private_key.as_hex());
@@ -222,7 +219,7 @@ fn do_batches(
         metadata.push(key_value.clone());
     }
 
-    let mut payload = PikePayloadBuilder::new();
+    let payload = PikePayloadBuilder::new();
 
     if action_plan == Action::CreateAgent {
         let action = CreateAgentActionBuilder::new()
