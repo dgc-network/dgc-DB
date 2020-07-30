@@ -176,7 +176,7 @@ pub async fn create_agent(
         .expect("Error converting batch list to bytes");
 */
     // let batch_list_bytes //
-    let batch_list_bytes = match do_batches(input_data, &private_key){
+    let batch_list_bytes = match do_batches(input_data, &private_key, Action::CreateAgent){
         Ok(agent) => agent,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
@@ -204,9 +204,51 @@ pub async fn create_agent(
     Ok(HttpResponse::Ok().body(res))
 }
 
+pub async fn update_agent(
+    //req: HttpRequest,
+    input_data: web::Json<AgentData>,
+) -> Result<HttpResponse, RestApiResponseError> {
+
+    // Creating a Private Key and Signer //
+    let private_key_as_hex = &input_data.private_key;
+    let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
+        .expect("Error generating a new Private Key");
+
+    // let batch_list_bytes //
+    let batch_list_bytes = match do_batches(input_data, &private_key, Action::UpdateAgent){
+        Ok(agent) => agent,
+        Err(err) => {
+            return Err(RestApiResponseError::UserError(format!(
+                "Cannot deserialize organization: {:?}",
+                err,
+            )))
+        }
+    };
+
+    // Submitting Batches to the Validator //
+    let res = reqwest::Client::new()
+        .post("http://rest-api:8008/batches")
+        .header("Content-Type", "application/octet-stream")
+        .body(batch_list_bytes)
+        .send()
+        .await?
+        .text()
+        .await?;
+
+    println!("============ update_agent ============");
+    //println!("!dgc-network! private_key = {:?}", private_key.as_hex());
+    //println!("!dgc-network! public_key = {:?}", public_key.as_hex());
+    println!("!dgc-network! res = {:?}", res);
+
+    Ok(HttpResponse::Ok().body(res))
+    
+    //Ok(HttpResponse::Ok().body("Hello world! update_agent"))
+}
+
 fn do_batches(
     input_data: web::Json<AgentData>,
     private_key: &dyn PrivateKey,
+    action_plan: Action,
 ) -> Result<Vec<u8>, RestApiResponseError> {
 
     let context = create_context("secp256k1")
@@ -250,7 +292,8 @@ fn do_batches(
         metadata.push(key_value.clone());
     }
 
-    let action = CreateAgentActionBuilder::new()
+    if action_plan == Action::CreateAgent {
+        let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
         .with_public_key(public_key.as_hex())
         .with_active(true)
@@ -259,12 +302,29 @@ fn do_batches(
         .build()
         .unwrap();
 
-    let payload = PikePayloadBuilder::new()
+        let payload = PikePayloadBuilder::new()
         .with_action(Action::CreateAgent)
         .with_create_agent(action)
         .build()
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
 
+    } else {
+        let action = UpdateAgentActionBuilder::new()
+        .with_org_id(org_id.to_string())
+        .with_public_key(public_key.as_hex())
+        .with_active(true)
+        .with_roles(roles)
+        .with_metadata(metadata)
+        .build()
+        .unwrap();
+
+        let payload = PikePayloadBuilder::new()
+        .with_action(Action::UpdateAgent)
+        .with_update_agent(action)
+        .build()
+        .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
+
+    }
     // Building the Transaction and Batch//
     let batch_list = BatchBuilder::new(
         PIKE_FAMILY_NAME, 
@@ -285,43 +345,3 @@ fn do_batches(
     return Ok(batch_list_bytes);
 }
 
-pub async fn update_agent(
-    //req: HttpRequest,
-    input_data: web::Json<AgentData>,
-) -> Result<HttpResponse, RestApiResponseError> {
-
-    // Creating a Private Key and Signer //
-    let private_key_as_hex = &input_data.private_key;
-    let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
-        .expect("Error generating a new Private Key");
-
-    // let batch_list_bytes //
-    let batch_list_bytes = match do_batches(input_data, &private_key){
-        Ok(agent) => agent,
-        Err(err) => {
-            return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize organization: {:?}",
-                err,
-            )))
-        }
-    };
-
-    // Submitting Batches to the Validator //
-    let res = reqwest::Client::new()
-        .post("http://rest-api:8008/batches")
-        .header("Content-Type", "application/octet-stream")
-        .body(batch_list_bytes)
-        .send()
-        .await?
-        .text()
-        .await?;
-
-    println!("============ update_agent ============");
-    //println!("!dgc-network! private_key = {:?}", private_key.as_hex());
-    //println!("!dgc-network! public_key = {:?}", public_key.as_hex());
-    println!("!dgc-network! res = {:?}", res);
-
-    Ok(HttpResponse::Ok().body(res))
-    
-    //Ok(HttpResponse::Ok().body("Hello world! update_agent"))
-}
