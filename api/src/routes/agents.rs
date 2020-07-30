@@ -198,7 +198,7 @@ pub async fn create_agent(
 
     println!("============ create_agent ============");
     println!("!dgc-network! private_key = {:?}", private_key.as_hex());
-    println!("!dgc-network! public_key = {:?}", public_key.as_hex());
+    //println!("!dgc-network! public_key = {:?}", public_key.as_hex());
     println!("!dgc-network! res = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
@@ -292,6 +292,8 @@ fn do_batches(
         metadata.push(key_value.clone());
     }
 
+    let payload = PikePayloadBuilder::new();
+
     if action_plan == Action::CreateAgent {
         let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
@@ -302,7 +304,8 @@ fn do_batches(
         .build()
         .unwrap();
 
-        let payload = PikePayloadBuilder::new()
+        //let payload = PikePayloadBuilder::new()
+        payload
         .with_action(Action::CreateAgent)
         .with_create_agent(action)
         .build()
@@ -318,7 +321,8 @@ fn do_batches(
         .build()
         .unwrap();
 
-        let payload = PikePayloadBuilder::new()
+        //let payload = PikePayloadBuilder::new()
+        payload
         .with_action(Action::UpdateAgent)
         .with_update_agent(action)
         .build()
