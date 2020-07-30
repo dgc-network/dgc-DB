@@ -15,6 +15,7 @@ use crate::error::RestApiResponseError;
 use crate::{List, Res};
 
 use dgc_config::protos::*;
+use dgc_config::protos::IntoProto;
 use dgc_config::addressing::*;
 use dgc_config::protocol::pike::state::*;
 use dgc_config::protocol::pike::payload::*;
@@ -103,11 +104,11 @@ pub async fn create_agent(
         .expect("Error creating the right context");
     let private_key = context.new_random_private_key()
         .expect("Error generating a new Private Key");
-    let ptr = Box::into_raw(private_key);
+    let ptr = dyn Box::into_raw(private_key);
 
     // batch_list_bytes //
     //let batch_list_bytes = match do_batches(input_data, &private_key, Action::CreateAgent){
-    let batch_list_bytes = match do_batches(input_data, &dyn ptr, Action::CreateAgent){
+    let batch_list_bytes = match do_batches(input_data, &ptr, Action::CreateAgent){
         Ok(agent) => agent,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
