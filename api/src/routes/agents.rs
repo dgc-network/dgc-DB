@@ -103,6 +103,7 @@ pub async fn create_agent(
         .expect("Error creating the right context");
     let private_key = context.new_random_private_key()
         .expect("Error generating a new Private Key");
+    let ptr = Box::into_raw(private_key);
     //let public_key = context.get_public_key(private_key.as_ref())
     //    .expect("Error generating a new Public Key");
 /*
@@ -176,7 +177,8 @@ pub async fn create_agent(
         .expect("Error converting batch list to bytes");
 */
     // let batch_list_bytes //
-    let batch_list_bytes = match do_batches(input_data, &private_key, Action::CreateAgent){
+    //let batch_list_bytes = match do_batches(input_data, &private_key, Action::CreateAgent){
+    let batch_list_bytes = match do_batches(input_data, &ptr, Action::CreateAgent){
         Ok(agent) => agent,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
