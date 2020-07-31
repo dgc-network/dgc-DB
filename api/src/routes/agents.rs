@@ -49,7 +49,6 @@ pub async fn list_agents(
             }
         };
         println!("serialized: {:?}", agent);
-        //println!("!dgc-network! org = {:?}", org);
     }
 
     println!("============ list_agent ============");
@@ -82,7 +81,6 @@ pub async fn fetch_agent(
         }
     };
     println!("serialized: {:?}", agent);
-    //println!("!dgc-network! org = {:?}", org);
 
     println!("============ fetch_agent ============");
     println!("!dgc-network! link = {:?}", res.link);
@@ -94,7 +92,6 @@ pub async fn fetch_agent(
 }
 
 pub async fn create_agent(
-    //req: HttpRequest,
     input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 /*
@@ -136,7 +133,6 @@ pub async fn create_agent(
 }
 
 pub async fn update_agent(
-    //req: HttpRequest,
     input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 /*
@@ -182,11 +178,9 @@ fn do_batches(
 ) -> Result<Vec<u8>, RestApiResponseError> {
 
     // Creating a Private Key and Signer //
-    let context = create_context("secp256k1")
-        .expect("Error creating the right context");
     let private_key_as_hex = &input_data.private_key;
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
-        .expect("Error generating a new Private Key");
+        .expect("Error generating a Private Key");
 
     // Creating the Payload //
     let org_id = &input_data.org_id;
@@ -224,14 +218,15 @@ fn do_batches(
         metadata.push(key_value.clone());
     }
 
-    //let payload = PikePayloadBuilder::new();
+    let context = create_context("secp256k1")
+        .expect("Error creating the right context");
 
     if action_plan == Action::CreateAgent {
 
         let private_key_new = context.new_random_private_key()
         .expect("Error generating a new Private Key");
         let private_key_as_hex = private_key_new.as_hex();
-        let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
+        let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex);
         let public_key = context.get_public_key(&private_key)
         .expect("Error generating a new Public Key");
 
@@ -245,7 +240,6 @@ fn do_batches(
         .unwrap();
 
         let payload = PikePayloadBuilder::new()
-        //payload
         .with_action(Action::CreateAgent)
         .with_create_agent(action)
         .build()
@@ -285,7 +279,6 @@ fn do_batches(
         .unwrap();
 
         let payload = PikePayloadBuilder::new()
-        //payload
         .with_action(Action::UpdateAgent)
         .with_update_agent(action)
         .build()
