@@ -101,7 +101,7 @@ pub async fn create_agent(
     // Creating a Private Key and Signer //
     let context = create_context("secp256k1")
         .expect("Error creating the right context");
-    let private_key = context.new_random_private_key()
+    let private_key = dyn context.new_random_private_key()
         .expect("Error generating a new Private Key");
     let ptr = Box::into_raw(private_key);
 
