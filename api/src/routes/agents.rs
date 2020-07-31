@@ -233,7 +233,7 @@ fn do_batches(
             }    
         };
 */        
-        let private_key_new = context.new_random_private_key()
+        let private_key_new: dyn sawtooth_sdk::signing::PrivateKey = context.new_random_private_key()
             .expect("Error generating a new Private Key");
         //let private_key_as_hex = private_key_new.as_hex();
         //let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex);
