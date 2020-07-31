@@ -103,7 +103,7 @@ pub async fn create_agent(
         .expect("Error creating the right context");
     let private_key = context.new_random_private_key()
         .expect("Error generating a new Private Key");
-    let dyn ptr = Box::into_raw(private_key);
+    let ptr = Box::into_raw(private_key);
 
     // batch_list_bytes //
     //let batch_list_bytes = match do_batches(input_data, &private_key, Action::CreateAgent){
