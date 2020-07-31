@@ -223,7 +223,15 @@ fn do_batches(
 
     if action_plan == Action::CreateAgent {
 
-        let private_key_new = context.new_random_private_key();
+        let private_key_new = match context.new_random_private_key(){
+            Ok(key) => key,
+            Err(err) => {
+                return Err(RestApiResponseError::UserError(format!(
+                    "Cannot deserialize organization: {:?}",
+                    err,
+                )))
+            }    
+        };
         //.expect("Error generating a new Private Key");
         //let private_key_as_hex = private_key_new.as_hex();
         //let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex);
