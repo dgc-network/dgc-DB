@@ -1055,7 +1055,7 @@ impl PikePayloadBuilder {
     }
 }
 
-impl IntoProto<protos::pike_payload::PikePayload> for PikePayloadBuilder {}
+//impl IntoProto<protos::pike_payload::PikePayload> for PikePayloadBuilder {}
 
 
 #[cfg(test)]

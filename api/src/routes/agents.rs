@@ -97,7 +97,7 @@ pub async fn create_agent(
     //req: HttpRequest,
     input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
-
+/*
     // Creating a Private Key and Signer //
     let context = create_context("secp256k1")
         .expect("Error creating the right context");
@@ -106,10 +106,10 @@ pub async fn create_agent(
     let private_key_as_hex = private_key_new.as_hex();
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
     //let ptr = Box::into_raw(private_key);
-
-    // batch_list_bytes //
-    let batch_list_bytes = match do_batches(input_data, &private_key, Action::CreateAgent){
-    //let batch_list_bytes = match do_batches(input_data, &ptr, Action::CreateAgent){
+*/
+    // Create batch_list_bytes //
+    //let batch_list_bytes = match do_batches(input_data, &private_key, Action::CreateAgent){
+    let batch_list_bytes = match do_batches(input_data, Action::CreateAgent){
         Ok(agent) => agent,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
@@ -139,14 +139,15 @@ pub async fn update_agent(
     //req: HttpRequest,
     input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
-
+/*
     // Creating a Private Key and Signer //
     let private_key_as_hex = &input_data.private_key;
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
         .expect("Error generating a new Private Key");
-
-    // let batch_list_bytes //
-    let batch_list_bytes = match do_batches(input_data, &private_key, Action::UpdateAgent){
+*/
+    // create batch_list //
+    //let batch_list_bytes = match do_batches(input_data, &private_key, Action::UpdateAgent){
+    let batch_list_bytes = match do_batches(input_data, Action::UpdateAgent){
         Ok(agent) => agent,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
@@ -176,14 +177,17 @@ pub async fn update_agent(
 
 fn do_batches(
     input_data: web::Json<AgentData>,
-    private_key: &dyn PrivateKey,
+    //private_key: &dyn PrivateKey,
     action_plan: Action,
 ) -> Result<Vec<u8>, RestApiResponseError> {
 
+    // Creating a Private Key and Signer //
+    let private_key_as_hex = &input_data.private_key;
+    let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
+        .expect("Error generating a new Private Key");
+
     let context = create_context("secp256k1")
         .expect("Error creating the right context");
-    let public_key = context.get_public_key(private_key)
-        .expect("Error generating a new Public Key");
 
     // Creating the Payload //
     let org_id = &input_data.org_id;
@@ -221,9 +225,15 @@ fn do_batches(
         metadata.push(key_value.clone());
     }
 
-    let payload = PikePayloadBuilder::new();
+    //let payload = PikePayloadBuilder::new();
 
     if action_plan == Action::CreateAgent {
+
+        let private_key_new = context.new_random_private_key()
+        .expect("Error generating a new Private Key");
+        let public_key = context.get_public_key(private_key_new)
+        .expect("Error generating a new Public Key");
+
         let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
         .with_public_key(public_key.as_hex())
@@ -233,14 +243,37 @@ fn do_batches(
         .build()
         .unwrap();
 
-        //let payload = PikePayloadBuilder::new()
-        payload
+        let payload = PikePayloadBuilder::new()
+        //payload
         .with_action(Action::CreateAgent)
         .with_create_agent(action)
         .build()
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
 
+        // Building the Transaction and Batch//
+        let batch_list = BatchBuilder::new(
+            PIKE_FAMILY_NAME, 
+            PIKE_FAMILY_VERSION, 
+            &private_key.as_hex(),
+        )
+        .add_transaction(
+            &payload.into_proto()?,
+            &[PIKE_NAMESPACE.to_string()],
+            &[PIKE_NAMESPACE.to_string()],
+        )?
+        .create_batch_list();
+
+        let batch_list_bytes = batch_list
+            .write_to_bytes()
+            .expect("Error converting batch list to bytes");
+
+        return Ok(batch_list_bytes);
+
     } else {
+        
+        let public_key = context.get_public_key(private_key)
+        .expect("Error generating a new Public Key");
+
         let action = UpdateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
         .with_public_key(public_key.as_hex())
@@ -250,14 +283,33 @@ fn do_batches(
         .build()
         .unwrap();
 
-        //let payload = PikePayloadBuilder::new()
-        payload
+        let payload = PikePayloadBuilder::new()
+        //payload
         .with_action(Action::UpdateAgent)
         .with_update_agent(action)
         .build()
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
 
+        // Building the Transaction and Batch//
+        let batch_list = BatchBuilder::new(
+            PIKE_FAMILY_NAME, 
+            PIKE_FAMILY_VERSION, 
+            &private_key.as_hex(),
+        )
+        .add_transaction(
+            &payload.into_proto()?,
+            &[PIKE_NAMESPACE.to_string()],
+            &[PIKE_NAMESPACE.to_string()],
+        )?
+        .create_batch_list();
+
+        let batch_list_bytes = batch_list
+            .write_to_bytes()
+            .expect("Error converting batch list to bytes");
+
+        return Ok(batch_list_bytes);
     }
+/*    
     // Building the Transaction and Batch//
     let batch_list = BatchBuilder::new(
         PIKE_FAMILY_NAME, 
@@ -276,5 +328,6 @@ fn do_batches(
         .expect("Error converting batch list to bytes");
 
     return Ok(batch_list_bytes);
+*/    
 }
 
