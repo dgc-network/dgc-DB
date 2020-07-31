@@ -1055,6 +1055,9 @@ impl PikePayloadBuilder {
     }
 }
 
+impl IntoProto<protos::pike_payload::PikePayload> for PikePayloadBuilder {}
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
