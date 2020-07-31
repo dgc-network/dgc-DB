@@ -128,7 +128,7 @@ pub async fn create_agent(
         .text().await?;
 
     println!("============ create_agent ============");
-    println!("!dgc-network! private_key = {:?}", private_key.as_hex());
+    //println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     //println!("!dgc-network! public_key = {:?}", public_key.as_hex());
     println!("!dgc-network! res = {:?}", res);
 
@@ -231,7 +231,7 @@ fn do_batches(
 
         let private_key_new = context.new_random_private_key()
         .expect("Error generating a new Private Key");
-        let public_key = context.get_public_key(private_key_new)
+        let public_key = context.get_public_key(&private_key_new)
         .expect("Error generating a new Public Key");
 
         let action = CreateAgentActionBuilder::new()
@@ -270,8 +270,8 @@ fn do_batches(
         return Ok(batch_list_bytes);
 
     } else {
-        
-        let public_key = context.get_public_key(private_key)
+
+        let public_key = context.get_public_key(&private_key)
         .expect("Error generating a new Public Key");
 
         let action = UpdateAgentActionBuilder::new()
