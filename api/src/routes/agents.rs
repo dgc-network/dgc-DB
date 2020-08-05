@@ -285,18 +285,8 @@ pub async fn update_agent(
 pub async fn create_agent(
     input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
-/*
-    // Creating a Private Key and Signer //
-    let context = create_context("secp256k1")
-        .expect("Error creating the right context");
-    let private_key_new = context.new_random_private_key()
-        .expect("Error generating a new Private Key");
-    let private_key_as_hex = private_key_new.as_hex();
-    let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
-    //let ptr = Box::into_raw(private_key);
-*/
+
     // Create batch_list_bytes //
-    //let batch_list_bytes = match do_batches(input_data, &private_key, Action::CreateAgent){
     let batch_list_bytes = match do_batches(input_data, Action::CreateAgent){
         Ok(agent) => agent,
         Err(err) => {
@@ -326,14 +316,8 @@ pub async fn create_agent(
 pub async fn update_agent(
     input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
-/*
-    // Creating a Private Key and Signer //
-    let private_key_as_hex = &input_data.private_key;
-    let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
-        .expect("Error generating a new Private Key");
-*/
+
     // create batch_list //
-    //let batch_list_bytes = match do_batches(input_data, &private_key, Action::UpdateAgent){
     let batch_list_bytes = match do_batches(input_data, Action::UpdateAgent){
         Ok(agent) => agent,
         Err(err) => {
@@ -353,15 +337,12 @@ pub async fn update_agent(
         .text().await?;
 
     println!("============ update_agent ============");
-    //println!("!dgc-network! private_key = {:?}", private_key.as_hex());
-    //println!("!dgc-network! public_key = {:?}", public_key.as_hex());
     println!("!dgc-network! res = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
     
     //Ok(HttpResponse::Ok().body("Hello world! update_agent"))
 }
-
 
 fn do_batches(
     input_data: web::Json<AgentData>,
@@ -427,7 +408,7 @@ fn do_batches(
 */        
         let private_key_new = context.new_random_private_key()
         .expect("Error generating a new Private Key");
-        let private_key_unbox = *private_key_new;
+        let private_key_unbox = unbox(private_key_new);
         //let private_key_as_hex = private_key_new.as_hex();
         //let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex);
         let public_key = context.get_public_key(&private_key_unbox)
@@ -506,25 +487,8 @@ fn do_batches(
 
         return Ok(batch_list_bytes);
     }
-/*    
-    // Building the Transaction and Batch//
-    let batch_list = BatchBuilder::new(
-        PIKE_FAMILY_NAME, 
-        PIKE_FAMILY_VERSION, 
-        &private_key.as_hex(),
-    )
-    .add_transaction(
-        &payload.into_proto()?,
-        &[PIKE_NAMESPACE.to_string()],
-        &[PIKE_NAMESPACE.to_string()],
-    )?
-    .create_batch_list();
-
-    let batch_list_bytes = batch_list
-        .write_to_bytes()
-        .expect("Error converting batch list to bytes");
-
-    return Ok(batch_list_bytes);
-*/    
 }
 
+fn unbox<T>(value: Box<T>) -> T {
+    *value
+}
