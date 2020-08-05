@@ -92,15 +92,15 @@ pub async fn fetch_agent(
 }
 
 pub async fn create_agent(
-    input_data: web::Json<OrgData>,
+    input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Creating a Private Key and Signer //
+    let context = create_context("secp256k1")
+    .expect("Error creating the right context");
     let private_key = context.new_random_private_key()
     .expect("Error generating a new Private Key");
     let public_key = context.get_public_key(&private_key)
-    .expect("Error generating a new Public Key");
-    let public_key = context.get_public_key(&private_key_unbox)
     .expect("Error generating a new Public Key");
 
     // Creating the Payload //
@@ -187,14 +187,16 @@ pub async fn create_agent(
 }
 
 pub async fn update_agent(
-    input_data: web::Json<OrgData>,
+    input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Creating a Private Key and Signer //
     let private_key_as_hex = &input_data.private_key;
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
     .expect("Error generating a new Private Key");
-    let public_key = context.get_public_key(&private_key_unbox)
+    let context = create_context("secp256k1")
+    .expect("Error creating the right context");
+    let public_key = context.get_public_key(&private_key)
     .expect("Error generating a new Public Key");
 
     // Creating the Payload //
@@ -360,6 +362,7 @@ pub async fn update_agent(
     //Ok(HttpResponse::Ok().body("Hello world! update_agent"))
 }
 */
+/*
 fn do_batches(
     input_data: web::Json<AgentData>,
     //private_key: &dyn PrivateKey,
@@ -524,4 +527,4 @@ fn do_batches(
     return Ok(batch_list_bytes);
 */    
 }
-
+*/
