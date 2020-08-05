@@ -92,6 +92,195 @@ pub async fn fetch_agent(
 }
 
 pub async fn create_agent(
+    input_data: web::Json<OrgData>,
+) -> Result<HttpResponse, RestApiResponseError> {
+
+    // Creating a Private Key and Signer //
+    let private_key = context.new_random_private_key()
+    .expect("Error generating a new Private Key");
+    let public_key = context.get_public_key(&private_key)
+    .expect("Error generating a new Public Key");
+    let public_key = context.get_public_key(&private_key_unbox)
+    .expect("Error generating a new Public Key");
+
+    // Creating the Payload //
+    let org_id = &input_data.org_id;
+    let roles_as_string = &input_data.roles;
+    let metadata_as_string = &input_data.metadata;
+
+    let mut roles = Vec::<String>::new();
+    for role in roles_as_string.chars() {
+        let entry: String = role.to_string().split(",").collect();
+        roles.push(entry.clone());
+    }
+
+    let mut metadata = Vec::<KeyValueEntry>::new();
+    for meta in metadata_as_string.chars() {
+        let meta_as_string = meta.to_string();
+        let key_val: Vec<&str> = meta_as_string.split(",").collect();
+        if key_val.len() != 2 {
+            "Metadata is formated incorrectly".to_string();            
+        }
+        let key = match key_val.get(0) {
+            Some(key) => key.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let value = match key_val.get(1) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+
+        let key_value = KeyValueEntryBuilder::new()
+            .with_key(key.to_string())
+            .with_value(value.to_string())
+            .build()
+            .unwrap();
+
+        metadata.push(key_value.clone());
+    }
+
+    let action = CreateAgentActionBuilder::new()
+    .with_org_id(org_id.to_string())
+    .with_public_key(public_key.as_hex())
+    .with_active(true)
+    .with_roles(roles)
+    .with_metadata(metadata)
+    .build()
+    .unwrap();
+
+    let payload = PikePayloadBuilder::new()
+    .with_action(Action::CreateAgent)
+    .with_create_agent(action)
+    .build()
+    .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
+
+    // Building the Transaction //
+    // Building the Batch //
+    let batch_list = BatchBuilder::new(
+        PIKE_FAMILY_NAME, 
+        PIKE_FAMILY_VERSION, 
+        &private_key.as_hex()
+    )
+    .add_transaction(
+        &payload.into_proto()?,
+        &[PIKE_NAMESPACE.to_string()],
+        &[PIKE_NAMESPACE.to_string()],
+    )?
+    .create_batch_list();
+
+    let batch_list_bytes = batch_list
+        .write_to_bytes()
+        .expect("Error converting batch list to bytes");
+
+    // Submitting Batches to the Validator //
+    let res = reqwest::Client::new()
+        .post("http://rest-api:8008/batches")
+        .header("Content-Type", "application/octet-stream")
+        .body(batch_list_bytes)
+        .send().await?
+        .text().await?;
+
+    println!("============ create_agent ============");
+    println!("!dgc-network! res = {:?}", res);
+
+    Ok(HttpResponse::Ok().body(res))
+}
+
+pub async fn update_agent(
+    input_data: web::Json<OrgData>,
+) -> Result<HttpResponse, RestApiResponseError> {
+
+    // Creating a Private Key and Signer //
+    let private_key_as_hex = &input_data.private_key;
+    let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
+    .expect("Error generating a new Private Key");
+    let public_key = context.get_public_key(&private_key_unbox)
+    .expect("Error generating a new Public Key");
+
+    // Creating the Payload //
+    let org_id = &input_data.org_id;
+    let roles_as_string = &input_data.roles;
+    let metadata_as_string = &input_data.metadata;
+
+    let mut roles = Vec::<String>::new();
+    for role in roles_as_string.chars() {
+        let entry: String = role.to_string().split(",").collect();
+        roles.push(entry.clone());
+    }
+
+    let mut metadata = Vec::<KeyValueEntry>::new();
+    for meta in metadata_as_string.chars() {
+        let meta_as_string = meta.to_string();
+        let key_val: Vec<&str> = meta_as_string.split(",").collect();
+        if key_val.len() != 2 {
+            "Metadata is formated incorrectly".to_string();            
+        }
+        let key = match key_val.get(0) {
+            Some(key) => key.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let value = match key_val.get(1) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+
+        let key_value = KeyValueEntryBuilder::new()
+            .with_key(key.to_string())
+            .with_value(value.to_string())
+            .build()
+            .unwrap();
+
+        metadata.push(key_value.clone());
+    }
+
+    let action = UpdateAgentActionBuilder::new()
+    .with_org_id(org_id.to_string())
+    .with_public_key(public_key.as_hex())
+    .with_active(true)
+    .with_roles(roles)
+    .with_metadata(metadata)
+    .build()
+    .unwrap();
+
+    let payload = PikePayloadBuilder::new()
+    .with_action(Action::UpdateAgent)
+    .with_update_agent(action)
+    .build()
+    .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
+
+    // Building the Transaction //
+    // Building the Batch //
+    let batch_list = BatchBuilder::new(
+        PIKE_FAMILY_NAME, 
+        PIKE_FAMILY_VERSION, 
+        &private_key.as_hex()
+    )
+    .add_transaction(
+        &payload.into_proto()?,
+        &[PIKE_NAMESPACE.to_string()],
+        &[PIKE_NAMESPACE.to_string()],
+    )?
+    .create_batch_list();
+
+    let batch_list_bytes = batch_list
+        .write_to_bytes()
+        .expect("Error converting batch list to bytes");
+
+    // Submitting Batches to the Validator //
+    let res = reqwest::Client::new()
+        .post("http://rest-api:8008/batches")
+        .header("Content-Type", "application/octet-stream")
+        .body(batch_list_bytes)
+        .send().await?
+        .text().await?;
+
+    println!("============ update_agent ============");
+    println!("!dgc-network! res = {:?}", res);
+
+    Ok(HttpResponse::Ok().body(res))
+}
+/*
+pub async fn create_agent(
     input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 /*
@@ -170,7 +359,7 @@ pub async fn update_agent(
     
     //Ok(HttpResponse::Ok().body("Hello world! update_agent"))
 }
-
+*/
 fn do_batches(
     input_data: web::Json<AgentData>,
     //private_key: &dyn PrivateKey,
