@@ -90,7 +90,7 @@ pub async fn fetch_agent(
     //Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
 
 }
-
+/*
 pub async fn create_agent(
     input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -281,7 +281,7 @@ pub async fn update_agent(
 
     Ok(HttpResponse::Ok().body(res))
 }
-/*
+*/
 pub async fn create_agent(
     input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -361,8 +361,8 @@ pub async fn update_agent(
     
     //Ok(HttpResponse::Ok().body("Hello world! update_agent"))
 }
-*/
-/*
+
+
 fn do_batches(
     input_data: web::Json<AgentData>,
     //private_key: &dyn PrivateKey,
@@ -527,4 +527,4 @@ fn do_batches(
     return Ok(batch_list_bytes);
 */    
 }
-*/
+
