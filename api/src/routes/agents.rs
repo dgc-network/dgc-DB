@@ -395,24 +395,18 @@ fn do_batches(
         .expect("Error creating the right context");
 
     if action_plan == Action::CreateAgent {
-/*
-        let private_key_new = match context.new_random_private_key(){
-            Ok(key) => key,
-            Err(err) => {
-                return Err(RestApiResponseError::UserError(format!(
-                    "Cannot deserialize organization: {:?}",
-                    err,
-                )))
-            }    
-        };
-*/        
+
         let private_key_new = context.new_random_private_key()
         .expect("Error generating a new Private Key");
+        let crypto_factory = CryptoFactory::new(context.as_ref());
+        let signer = crypto_factory.new_signer(private_key.as_ref());
+        let public_key = signer.get_public_key()
+        .expect("Error retrieving Public Key");
         //let private_key_unbox = unbox(private_key_new);
-        let private_key_as_hex = private_key_new.as_hex();
-        let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex);
-        let public_key = context.get_public_key(&private_key)
-        .expect("Error generating a new Public Key");
+        //let private_key_as_hex = private_key_new.as_hex();
+        //let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex);
+        //let public_key = context.get_public_key(&private_key)
+        //.expect("Error generating a new Public Key");
 
         let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
