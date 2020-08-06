@@ -47,16 +47,16 @@ pub async fn list_agents(
                 ))))
             }
         };
-        println!("!dgc-network! serialized: {:?}", agent);
+        println!("!dgc-network! serialized: {:?}", agent.org_id);
     }
 
     println!("============ list_agent_link ============");
     println!("!dgc-network! link = {:?}", list.link);
-    //Ok(HttpResponse::Ok().body(list.link))
+    Ok(HttpResponse::Ok().body(list.link))
     
-    Ok(HttpResponse::Ok().json(AgentData {
-        org_id: obj.org_id.to_string(),
-    }))
+    //Ok(HttpResponse::Ok().json(pike_state::Agent {
+    //    org_id: agent.org_id.to_string(),
+    //}))
     
     //Ok(HttpResponse::Ok().body("Hello world! list_agent"))
 
