@@ -408,10 +408,10 @@ fn do_batches(
 */        
         let private_key_new = context.new_random_private_key()
         .expect("Error generating a new Private Key");
-        let private_key_unbox = unbox(private_key_new);
-        //let private_key_as_hex = private_key_new.as_hex();
-        //let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex);
-        let public_key = context.get_public_key(&private_key_unbox)
+        //let private_key_unbox = unbox(private_key_new);
+        let private_key_as_hex = private_key_new.as_hex();
+        let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex);
+        let public_key = context.get_public_key(&private_key);
         .expect("Error generating a new Public Key");
 
         let action = CreateAgentActionBuilder::new()
