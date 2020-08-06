@@ -64,9 +64,10 @@ impl ProductTransactionHandler {
         ProductTransactionHandler {
             //family_name: "grid_product".to_string(),
             //family_versions: vec!["1.0".to_string()],
+            //namespaces: vec![get_product_prefix()],
             family_name: PRODUCT_FAMILY_NAME.to_string(),
             family_versions: vec![PRODUCT_FAMILY_VERSION.to_string()],
-            namespaces: vec![get_product_prefix()],
+            namespaces: vec![hash(&PRODUCT_FAMILY_NAME, 6)],
         }
     }
 

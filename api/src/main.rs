@@ -10,6 +10,7 @@ use serde::Deserialize;
 
 use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};
 use crate::routes::organizations::{create_org, update_org, list_orgs, fetch_org};
+use crate::routes::products::*;
 
 #[derive(Deserialize)]
 pub struct List {
@@ -68,7 +69,16 @@ async fn main() -> std::io::Result<()> {
 
             .service(web::resource("/organization/{org_id}")
                 .route(web::get().to(fetch_org)))
-        
+
+            .service(web::resource("/product")
+                .name("product")
+                .route(web::post().to(create_product))
+                .route(web::put().to(update_product))
+                .route(web::get().to(list_products)))
+
+            .service(web::resource("/organization/{id}")
+                .route(web::get().to(fetch_product)))
+
 /*
             .service(
                 web::scope("/product")
