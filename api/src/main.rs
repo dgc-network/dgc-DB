@@ -25,7 +25,7 @@ pub struct Sub {
 }
 
 #[derive(Deserialize)]
-pub struct Res {
+pub struct Fetch {
     data: String,
     head: String,
     link: String,

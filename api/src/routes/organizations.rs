@@ -12,7 +12,7 @@ use base64;
 
 use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
-use crate::{List, Res};
+use crate::{List, Fetch};
 
 use dgc_config::protos::*;
 use dgc_config::addressing::*;
@@ -69,7 +69,7 @@ pub async fn fetch_org(
     println!("============ fetch_org_1 ============");
     let address = make_org_address(&org_id);
     let url = format!("http://rest-api:8008/state/{}", address);
-    let res = reqwest::get(&url).await?.json::<Res>().await?;
+    let res = reqwest::get(&url).await?.json::<Fetch>().await?;
     let msg = base64::decode(&res.data).unwrap();
     println!("============ fetch_org_2 ============");
     println!("!dgc-network! data = {:?}", res.data);

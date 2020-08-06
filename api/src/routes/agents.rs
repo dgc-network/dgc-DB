@@ -13,7 +13,7 @@ use reqwest;
 
 use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
-use crate::{List, Res};
+use crate::{List, Fetch};
 
 use dgc_config::protos::*;
 use dgc_config::addressing::*;
@@ -34,12 +34,10 @@ pub async fn list_agents(
 
     let url = format!("http://rest-api:8008/state?address={}{}", PIKE_NAMESPACE, PIKE_AGENT_NAMESPACE);
     let list = reqwest::get(&url).await?.json::<List>().await?;
-    for sub in list.data.iter() {
+    println!("============ list_agent_data ============");
+    //for sub in list.data.iter() {
+    for sub in list.data {
         let msg = base64::decode(&sub.data).unwrap();
-        println!("============ list_agent_1 ============");
-        println!("!dgc-network! data = {:?}", sub.data);
-        println!("!dgc-network! bytes = {:?}", msg);
-
         let agent: pike_state::Agent = match protobuf::parse_from_bytes(&msg){
             Ok(agent) => agent,
             Err(err) => {
@@ -49,12 +47,14 @@ pub async fn list_agents(
                 ))))
             }
         };
-        println!("serialized: {:?}", agent);
+        println!("!dgc-network! serialized: {:?}", agent);
     }
 
-    println!("============ list_agent ============");
+    println!("============ list_agent_link ============");
     println!("!dgc-network! link = {:?}", list.link);
-    Ok(HttpResponse::Ok().body(list.link))
+    //Ok(HttpResponse::Ok().body(list.link))
+    
+    Ok(HttpResponse::Ok().json(list))
     
     //Ok(HttpResponse::Ok().body("Hello world! list_agent"))
 
@@ -64,14 +64,12 @@ pub async fn fetch_agent(
     public_key: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    println!("!dgc-network! public_key = {:?}", public_key);
+    //println!("!dgc-network! public_key = {:?}", public_key);
     let address = make_agent_address(&public_key);
     let url = format!("http://rest-api:8008/state/{}", address);
-    let res = reqwest::get(&url).await?.json::<Res>().await?;
+    let res = reqwest::get(&url).await?.json::<Fetch>().await?;
+    println!("============ fetch_agent_data ============");
     let msg = base64::decode(&res.data).unwrap();
-    println!("!dgc-network! data = {:?}", res.data);
-    println!("!dgc-network! bytes = {:?}", msg);
-
     let agent: pike_state::Agent = match protobuf::parse_from_bytes(&msg){
         Ok(agent) => agent,
         Err(err) => {
@@ -81,9 +79,9 @@ pub async fn fetch_agent(
             ))))
         }
     };
-    println!("serialized: {:?}", agent);
+    println!("!dgc-network! serialized: {:?}", agent);
 
-    println!("============ fetch_agent ============");
+    println!("============ fetch_agent_link ============");
     println!("!dgc-network! link = {:?}", res.link);
     Ok(HttpResponse::Ok().body(res.link))
     //Ok(HttpResponse::Ok().body(res))
@@ -115,12 +113,14 @@ pub async fn create_agent(
         .send().await?
         .text().await?;
 
-    println!("============ create_agent ============");
+    println!("============ create_agent_link ============");
     //println!("!dgc-network! private_key = {:?}", private_key.as_hex());
     //println!("!dgc-network! public_key = {:?}", public_key.as_hex());
-    println!("!dgc-network! res = {:?}", res);
+    println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
+
+    //Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
 
 pub async fn update_agent(
@@ -146,8 +146,8 @@ pub async fn update_agent(
         .send().await?
         .text().await?;
 
-    println!("============ update_agent ============");
-    println!("!dgc-network! res = {:?}", res);
+    println!("============ update_agent_link ============");
+    println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
     
