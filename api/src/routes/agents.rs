@@ -52,9 +52,9 @@ pub async fn list_agents(
 
     println!("============ list_agent_link ============");
     println!("!dgc-network! link = {:?}", list.link);
-    //Ok(HttpResponse::Ok().body(list.link))
+    Ok(HttpResponse::Ok().body(list.link))
     
-    Ok(HttpResponse::Ok().json(list))
+    //Ok(HttpResponse::Ok().json(list))
     
     //Ok(HttpResponse::Ok().body("Hello world! list_agent"))
 
