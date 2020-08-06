@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::*;
+use sawtooth_sdk::signing::CryptoFactory;
 use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
@@ -396,7 +397,7 @@ fn do_batches(
 
     if action_plan == Action::CreateAgent {
 
-        let private_key_new = context.new_random_private_key()
+        let private_key = context.new_random_private_key()
         .expect("Error generating a new Private Key");
         let crypto_factory = CryptoFactory::new(context.as_ref());
         let signer = crypto_factory.new_signer(private_key.as_ref());
