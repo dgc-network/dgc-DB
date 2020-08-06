@@ -48,6 +48,7 @@ pub async fn list_agents(
             }
         };
         println!("!dgc-network! serialized: {:?}", agent.org_id);
+        println!("!dgc-network! serialized: {:?}", agent.public_key);
     }
 
     println!("============ list_agent_link ============");
