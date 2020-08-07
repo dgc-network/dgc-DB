@@ -9,6 +9,7 @@ use sawtooth_sdk::processor::handler::ApplyError;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
+use std::time::SystemTime;
 
 use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
@@ -225,7 +226,7 @@ fn do_batches(
 
         let payload = ProductPayloadBuilder::new()
         .with_action(Action::ProductCreate(action.clone()))
-        .with_timestamp(0)
+        .with_timestamp(SystemTime::now())
         .build()
         .unwrap();
 
@@ -261,7 +262,7 @@ fn do_batches(
 
         let payload = ProductPayloadBuilder::new()
         .with_action(Action::ProductUpdate(action.clone()))
-        .with_timestamp(0)
+        .with_timestamp(SystemTime::now())
         .build()
         .unwrap();
 
