@@ -230,12 +230,16 @@ impl TransactionHandler for PikeTransactionHandler {
         info!("Pike Payload {:?}", payload.get_action(),);
 
         match payload.action {
-            Action::CREATE_AGENT => create_agent(payload.get_create_agent(), signer, &mut state),
-            Action::UPDATE_AGENT => update_agent(payload.get_update_agent(), signer, &mut state),
-            Action::CREATE_ORGANIZATION => {
+            PikePayload_Action::CREATE_AGENT => {
+                create_agent(payload.get_create_agent(), signer, &mut state)
+            }
+            PikePayload_Action::UPDATE_AGENT => {
+                update_agent(payload.get_update_agent(), signer, &mut state)
+            }
+            PikePayload_Action::CREATE_ORGANIZATION => {
                 create_org(payload.get_create_organization(), signer, &mut state)
             }
-            Action::UPDATE_ORGANIZATION => {
+            PikePayload_Action::UPDATE_ORGANIZATION => {
                 update_org(payload.get_update_organization(), signer, &mut state)
             }
             _ => Err(ApplyError::InvalidTransaction("Invalid action".into())),
