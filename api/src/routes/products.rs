@@ -101,7 +101,7 @@ pub async fn create_product(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Create batch_list_bytes //
-    let batch_list_bytes = match do_batches(input_data, "Create"){
+    let batch_list_bytes = match do_batches(input_data, "CREATE"){
         Ok(product) => product,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
@@ -132,7 +132,7 @@ pub async fn update_product(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // create batch_list //
-    let batch_list_bytes = match do_batches(input_data, "Update"){
+    let batch_list_bytes = match do_batches(input_data, "UPDATE"){
         Ok(product) => product,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
@@ -160,7 +160,8 @@ pub async fn update_product(
 
 fn do_batches(
     input_data: web::Json<ProductData>,
-    action_plan: Action,
+    //action_plan: Action,
+    action_plan: &str,
 ) -> Result<Vec<u8>, RestApiResponseError> {
 
     // Retrieving a Private Key from the input_data //
@@ -212,20 +213,13 @@ fn do_batches(
     }
 */
 
-    if action_plan == "Create" {
+    if action_plan == "CREATE" {
 
         // Building the Action and Payload//
         let action = ProductCreateActionBuilder::new()
-        //.with_org_id(org_id.to_string())
-        //.with_public_key(public_key.as_hex())
-        //.with_active(true)
-        //.with_roles(roles)
-        //.with_metadata(metadata)
-        //.build()
-        //.unwrap();
-        .with_product_id("688955434684".into()) // GTIN-12
+        .with_product_id(product_id.to_string())
         .with_product_type(ProductType::GS1)
-        .with_owner("Target".into())
+        .with_owner(owner.to_string())
         .with_properties(make_properties())
         .build()
         .unwrap();
@@ -250,7 +244,6 @@ fn do_batches(
             &payload.into_proto()?,
             &[hash(&PRODUCT_FAMILY_NAME, 6)],
             &[hash(&PRODUCT_FAMILY_NAME, 6)],
-            //&[PIKE_NAMESPACE.to_string()],
         )?
         .create_batch_list();
 
@@ -260,21 +253,13 @@ fn do_batches(
 
         return Ok(batch_list_bytes);
 
-    //} else if (action_plan == "Update") {
+    //} else if (action_plan == "UPDATE") {
     } else {
 
         // Building the Action and Payload//
         let action = ProductUpdateActionBuilder::new()
-        //.with_org_id(org_id.to_string())
-        //.with_public_key(public_key.as_hex())
-        //.with_active(true)
-        //.with_roles(roles)
-        //.with_metadata(metadata)
-        //.build()
-        //.unwrap();
-        .with_product_id("688955434684".into()) // GTIN-12
+        .with_product_id(product_id.to_string())
         .with_product_type(ProductType::GS1)
-        //.with_owner("Target".into())
         .with_properties(make_properties())
         .build()
         .unwrap();
