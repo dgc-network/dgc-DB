@@ -38,3 +38,4 @@ users = "0.9"
 reqwest = { version = "0.10", features = ["blocking", "json"] }
 log = "0.4"
 uuid = "0.6"
+chrono = "0.4"
