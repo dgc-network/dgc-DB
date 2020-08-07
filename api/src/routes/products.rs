@@ -19,20 +19,17 @@ use dgc_config::protos::*;
 use dgc_config::addressing::*;
 use dgc_config::protocol::product::state::*;
 use dgc_config::protocol::product::payload::*;
-//use dgc_config::protos::schema_state::PropertyValue;
-use dgc_config::protocol::schema::state::PropertyValue;
-//use dgc_config::protos::pike_state::KeyValueEntry;
+use dgc_config::protocol::schema::state::*;
 
 #[derive(Deserialize)]
 pub struct ProductData {
     private_key: String,
     product_id: String,
-    product_type: ProductType,
+    //product_type: ProductType,
+    product_type: String,
     owner: String,
-    properties: Vec<PropertyValue>,
-    //org_id: String,
-    //roles: String,
-    //metadata: String,
+    //properties: Vec<PropertyValue>,
+    properties: String,
 }
 
 pub async fn list_products(
@@ -104,7 +101,7 @@ pub async fn create_product(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Create batch_list_bytes //
-    let batch_list_bytes = match do_batches(input_data, Action::ProductCreate){
+    let batch_list_bytes = match do_batches(input_data, Action::ProductCreate(ProductCreateAction)){
         Ok(product) => product,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
@@ -135,7 +132,7 @@ pub async fn update_product(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // create batch_list //
-    let batch_list_bytes = match do_batches(input_data, Action::ProductUpdate){
+    let batch_list_bytes = match do_batches(input_data, Action::ProductUpdate(ProductUpdateAction)){
         Ok(product) => product,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
@@ -215,7 +212,7 @@ fn do_batches(
     }
 */
 
-    if action_plan == Action::ProductCreate {
+    if action_plan == Action::ProductCreate(ProductCreateAction) {
 
         // Building the Action and Payload//
         let action = ProductCreateActionBuilder::new()
@@ -263,7 +260,7 @@ fn do_batches(
 
         return Ok(batch_list_bytes);
 
-    } else if (action_plan == Action::ProductUpdate) {
+    } else if (action_plan == Action::ProductUpdate(ProductUpdateAction)) {
 
         // Building the Action and Payload//
         let action = ProductUpdateActionBuilder::new()
