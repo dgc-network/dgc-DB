@@ -187,7 +187,8 @@ fn do_batches(
         roles.push(entry.clone());
     }
 */
-    let mut properties = Vec::<KeyValueEntry>::new();
+/*
+    let mut metadata = Vec::<KeyValueEntry>::new();
     for meta in metadata_as_string.chars() {
         let meta_as_string = meta.to_string();
         let key_val: Vec<&str> = meta_as_string.split(",").collect();
@@ -211,7 +212,7 @@ fn do_batches(
 
         metadata.push(key_value.clone());
     }
-
+*/
 
     if action_plan == Action::ProductCreate {
 
