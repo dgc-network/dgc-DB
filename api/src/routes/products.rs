@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::*;
-use sawtooth_sdk::signing::CryptoFactory;
+//use sawtooth_sdk::signing::CryptoFactory;
 use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
@@ -19,6 +19,8 @@ use dgc_config::protos::*;
 use dgc_config::addressing::*;
 use dgc_config::protocol::product::state::*;
 use dgc_config::protocol::product::payload::*;
+use dgc_config::protos::schema_state::PropertyValue;
+use dgc_config::protos::pike_state::KeyValueEntry;
 
 #[derive(Deserialize)]
 pub struct ProductData {
@@ -159,7 +161,7 @@ pub async fn update_product(
 }
 
 fn do_batches(
-    input_data: web::Json<AgentData>,
+    input_data: web::Json<ProductData>,
     action_plan: Action,
 ) -> Result<Vec<u8>, RestApiResponseError> {
 
@@ -222,7 +224,7 @@ fn do_batches(
         .build()
         .unwrap();
 
-        let payload = PikePayloadBuilder::new()
+        let payload = ProductPayloadBuilder::new()
         .with_action(Action::CreateProduct)
         .with_create_product(action)
         .build()
@@ -236,7 +238,8 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[PRODUCT_NAMESPACE.to_string()],
+            &[hash(&PRODUCT_FAMILY_NAME, 6)],
+            &[hash(&PRODUCT_FAMILY_NAME, 6)],
             //&[PIKE_NAMESPACE.to_string()],
         )?
         .create_batch_list();
@@ -259,7 +262,7 @@ fn do_batches(
         .build()
         .unwrap();
 
-        let payload = PikePayloadBuilder::new()
+        let payload = ProductPayloadBuilder::new()
         .with_action(Action::UpdateProduct)
         .with_update_product(action)
         .build()
@@ -273,7 +276,9 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[PRODUCT_NAMESPACE.to_string()],
+            &[hash(&PRODUCT_FAMILY_NAME, 6)],
+            &[hash(&PRODUCT_FAMILY_NAME, 6)],
+            //&[PRODUCT_NAMESPACE.to_string()],
             //&[PIKE_NAMESPACE.to_string()],
         )?
         .create_batch_list();
