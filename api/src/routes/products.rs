@@ -19,8 +19,9 @@ use dgc_config::protos::*;
 use dgc_config::addressing::*;
 use dgc_config::protocol::product::state::*;
 use dgc_config::protocol::product::payload::*;
-use dgc_config::protos::schema_state::PropertyValue;
-use dgc_config::protos::pike_state::KeyValueEntry;
+//use dgc_config::protos::schema_state::PropertyValue;
+use dgc_config::protocol::schema::state::PropertyValue;
+//use dgc_config::protos::pike_state::KeyValueEntry;
 
 #[derive(Deserialize)]
 pub struct ProductData {
@@ -103,7 +104,7 @@ pub async fn create_product(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Create batch_list_bytes //
-    let batch_list_bytes = match do_batches(input_data, Action::CreateProduct){
+    let batch_list_bytes = match do_batches(input_data, Action::ProductCreate){
         Ok(product) => product,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
@@ -134,7 +135,7 @@ pub async fn update_product(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // create batch_list //
-    let batch_list_bytes = match do_batches(input_data, Action::UpdateProduct){
+    let batch_list_bytes = match do_batches(input_data, Action::ProductUpdate){
         Ok(product) => product,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
@@ -262,7 +263,7 @@ fn do_batches(
 
         return Ok(batch_list_bytes);
 
-    } else if action_plan == Action::ProductUpdate {
+    } else if (action_plan == Action::ProductUpdate) {
 
         // Building the Action and Payload//
         let action = ProductUpdateActionBuilder::new()
