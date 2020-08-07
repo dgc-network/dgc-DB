@@ -1,8 +1,8 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
-use crypto::digest::Digest;
-use crypto::sha2::Sha512;
+//use crypto::digest::Digest;
+//use crypto::sha2::Sha512;
 use protobuf;
 
 cfg_if! {
@@ -20,28 +20,21 @@ cfg_if! {
     }
 }
 
-use dgc_config::addressing::{resource_to_byte, Resource};
-use dgc_config::protos::pike_payload::{
-    CreateAgentAction, CreateOrganizationAction, PikePayload, PikePayload_Action as Action,
-    UpdateAgentAction, UpdateOrganizationAction,
-};
-use dgc_config::protos::pike_state::{Agent, AgentList, Organization, OrganizationList};
+use dgc_config::addressing::*;
+use dgc_config::protos::pike_payload::*;
+use dgc_config::protos::pike_state::*;
+//use dgc_config::protos::pike_payload::{
+//    CreateAgentAction, CreateOrganizationAction, PikePayload, PikePayload_Action as Action,
+//    UpdateAgentAction, UpdateOrganizationAction,
+//};
+//use dgc_config::protos::pike_state::{Agent, AgentList, Organization, OrganizationList};
 
 pub struct PikeTransactionHandler {
     family_name: String,
     family_versions: Vec<String>,
     namespaces: Vec<String>,
 }
-/*
-const NAMESPACE: &str = "cad11d";
 
-fn compute_address(name: &str, resource: Resource) -> String {
-    let mut sha = Sha512::new();
-    sha.input(name.as_bytes());
-
-    String::from(NAMESPACE) + &resource_to_byte(resource) + &sha.result_str()[..62].to_string()
-}
-*/
 pub struct PikeState<'a> {
     context: &'a mut dyn TransactionContext,
 }
@@ -52,7 +45,6 @@ impl<'a> PikeState<'a> {
     }
 
     pub fn get_agent(&mut self, public_key: &str) -> Result<Option<Agent>, ApplyError> {
-        //let address = compute_address(public_key, Resource::AGENT);
         let address = make_agent_address(public_key);
         let d = self.context.get_state_entry(&address)?;
         match d {
@@ -79,7 +71,6 @@ impl<'a> PikeState<'a> {
     }
 
     pub fn set_agent(&mut self, public_key: &str, new_agent: Agent) -> Result<(), ApplyError> {
-        //let address = compute_address(public_key, Resource::AGENT);
         let address = make_agent_address(public_key);
         let d = self.context.get_state_entry(&address)?;
         let mut agent_list = match d {
@@ -118,13 +109,12 @@ impl<'a> PikeState<'a> {
             }
         };
         self.context
-            .set_state_entry(address, serialized)
+            .set_state_entry(address.to_string(), serialized)
             .map_err(|err| ApplyError::InternalError(format!("{}", err)))?;
         Ok(())
     }
 
     pub fn get_organization(&mut self, id: &str) -> Result<Option<Organization>, ApplyError> {
-        //let address = compute_address(id, Resource::ORG);
         let address = make_org_address(id);
         let d = self.context.get_state_entry(&address)?;
         match d {
@@ -155,7 +145,6 @@ impl<'a> PikeState<'a> {
         id: &str,
         new_organization: Organization,
     ) -> Result<(), ApplyError> {
-        //let address = compute_address(id, Resource::ORG);
         let address = make_org_address(id);
         let d = self.context.get_state_entry(&address)?;
         let mut organization_list = match d {
@@ -197,7 +186,7 @@ impl<'a> PikeState<'a> {
         };
 
         self.context
-            .set_state_entry(address, serialized)
+            .set_state_entry(address.to_string(), serialized)
             .map_err(|err| ApplyError::InternalError(format!("{}", err)))?;
         Ok(())
     }
