@@ -27,9 +27,6 @@ use dgc_config::protos::FromBytes;
 use crate::payload::validate_payload;
 use crate::state::GridSchemaState;
 
-//pub const GRID_NAMESPACE: &str = "621dee";
-//pub const PIKE_NAMESPACE: &str = "cad11d";
-
 #[cfg(target_arch = "wasm32")]
 // Sabre apply must return a bool
 fn apply(
@@ -62,9 +59,6 @@ impl GridSchemaTransactionHandler {
     #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
         GridSchemaTransactionHandler {
-            //family_name: "grid_schema".to_string(),
-            //family_versions: vec!["1.0".to_string()],
-            //namespaces: vec![GRID_NAMESPACE.to_string()],
             family_name: SCHEMA_FAMILY_NAME.to_string(),
             family_versions: vec![SCHEMA_FAMILY_VERSION.to_string()],
             namespaces: vec![hash(&SCHEMA_FAMILY_NAME, 6)],

@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::*;
-//use sawtooth_sdk::signing::CryptoFactory;
 use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
@@ -225,10 +224,6 @@ fn do_batches(
         .unwrap();
 
         let payload = ProductPayloadBuilder::new()
-        //.with_action(Action::ProductCreate)
-        //.with_create_product(action)
-        //.build()
-        //.map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
         .with_action(Action::ProductCreate(action.clone()))
         .with_timestamp(0)
         .build()
@@ -265,10 +260,6 @@ fn do_batches(
         .unwrap();
 
         let payload = ProductPayloadBuilder::new()
-        //.with_action(Action::UpdateProduct)
-        //.with_update_product(action)
-        //.build()
-        //.map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
         .with_action(Action::ProductUpdate(action.clone()))
         .with_timestamp(0)
         .build()
@@ -284,8 +275,6 @@ fn do_batches(
             &payload.into_proto()?,
             &[hash(&PRODUCT_FAMILY_NAME, 6)],
             &[hash(&PRODUCT_FAMILY_NAME, 6)],
-            //&[PRODUCT_NAMESPACE.to_string()],
-            //&[PIKE_NAMESPACE.to_string()],
         )?
         .create_batch_list();
 

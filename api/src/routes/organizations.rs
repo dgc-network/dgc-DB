@@ -32,7 +32,7 @@ pub struct OrgData {
 pub async fn list_orgs(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let url = format!("http://rest-api:8008/state?address={}{}", PIKE_NAMESPACE, PIKE_ORG_NAMESPACE);
+    let url = format!("http://rest-api:8008/state?address={}{}", hash(&PIKE_FAMILY_NAME, 6), PIKE_ORG_NAMESPACE);
     let list = reqwest::get(&url).await?.json::<List>().await?;
     for sub in list.data.iter() {
         let msg = base64::decode(&sub.data).unwrap();
@@ -157,8 +157,7 @@ pub async fn create_org(
         .build()
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
 
-    // Building the Transaction //
-    // Building the Batch //
+    // Building the Transaction and Batch //
     let batch_list = BatchBuilder::new(
         PIKE_FAMILY_NAME, 
         PIKE_FAMILY_VERSION, 
@@ -168,8 +167,6 @@ pub async fn create_org(
         &payload.into_proto()?,
         &[hash(&PIKE_FAMILY_NAME, 6)],
         &[hash(&PIKE_FAMILY_NAME, 6)],
-        //&[PIKE_NAMESPACE.to_string()],
-        //&[PIKE_NAMESPACE.to_string()],
     )?
     .create_batch_list();
 
@@ -182,10 +179,8 @@ pub async fn create_org(
         .post("http://rest-api:8008/batches")
         .header("Content-Type", "application/octet-stream")
         .body(batch_list_bytes)
-        .send()
-        .await?
-        .text()
-        .await?;
+        .send().await?
+        .text().await?;
 
     println!("============ create_organization ============");
     println!("!dgc-network! res = {:?}", res);
@@ -247,8 +242,7 @@ pub async fn update_org(
         .build()
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
 
-    // Building the Transaction //
-    // Building the Batch //
+    // Building the Transaction and Batch //
     let batch_list = BatchBuilder::new(
         PIKE_FAMILY_NAME, 
         PIKE_FAMILY_VERSION, 
@@ -258,8 +252,6 @@ pub async fn update_org(
         &payload.into_proto()?,
         &[hash(&PIKE_FAMILY_NAME, 6)],
         &[hash(&PIKE_FAMILY_NAME, 6)],
-        //&[PIKE_NAMESPACE.to_string()],
-        //&[PIKE_NAMESPACE.to_string()],
     )?
     .create_batch_list();
 
@@ -272,10 +264,8 @@ pub async fn update_org(
         .post("http://rest-api:8008/batches")
         .header("Content-Type", "application/octet-stream")
         .body(batch_list_bytes)
-        .send()
-        .await?
-        .text()
-        .await?;
+        .send().await?
+        .text().await?;
 
     println!("============ update_organization ============");
     println!("!dgc-network! res = {:?}", res);

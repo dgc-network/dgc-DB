@@ -207,10 +207,6 @@ impl PikeTransactionHandler {
     #[allow(clippy::new_without_default)]
     pub fn new() -> PikeTransactionHandler {
         PikeTransactionHandler {
-            //family_name: "pike".to_string(),
-            //family_versions: vec!["0.1".to_string()],
-            //namespaces: vec![NAMESPACE.to_string()],
-            //namespaces: vec![PIKE_NAMESPACE.to_string()],
             family_name: PIKE_FAMILY_NAME.to_string(),
             family_versions: vec![PIKE_FAMILY_VERSION.to_string()],
             namespaces: vec![hash(&PIKE_FAMILY_NAME, 6)],
