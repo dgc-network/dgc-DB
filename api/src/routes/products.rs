@@ -227,7 +227,7 @@ fn do_batches(
 
         let payload = ProductPayloadBuilder::new()
         .with_action(Action::ProductCreate(action.clone()))
-        .with_timestamp(chrono::offset::Utc::now().timestamp())
+        .with_timestamp(chrono::offset::Utc::now().timestamp().try_into().unwrap())
         .build()
         .unwrap();
 
@@ -263,7 +263,7 @@ fn do_batches(
 
         let payload = ProductPayloadBuilder::new()
         .with_action(Action::ProductUpdate(action.clone()))
-        .with_timestamp(chrono::offset::Utc::now().timestamp())
+        .with_timestamp(chrono::offset::Utc::now().timestamp().try_into().unwrap())
         .build()
         .unwrap();
 
