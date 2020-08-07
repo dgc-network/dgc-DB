@@ -104,7 +104,7 @@ pub fn make_agent_address(public_key: &str) -> String {
     //let mut sha = Sha512::new();
     //sha.input(public_key.as_bytes());
     //String::from(PIKE_NAMESPACE) + PIKE_AGENT_NAMESPACE + &sha.result_str()[..62].to_string()
-    &hash(&PIKE_FAMILY_NAME, 6) + PIKE_AGENT_NAMESPACE + &hash(public_key, 62)
+    hash(&PIKE_FAMILY_NAME, 6) + PIKE_AGENT_NAMESPACE + &hash(public_key, 62)
 }
 
 /// Computes the address a Pike Organization is stored at based on its identifier
@@ -112,7 +112,7 @@ pub fn make_org_address(identifier: &str) -> String {
     //let mut sha = Sha512::new();
     //sha.input(identifier.as_bytes());
     //String::from(PIKE_NAMESPACE) + PIKE_ORG_NAMESPACE + &sha.result_str()[..62]
-    &hash(&PIKE_FAMILY_NAME, 6) + PIKE_ORG_NAMESPACE + &hash(identifier, 62)
+    hash(&PIKE_FAMILY_NAME, 6) + PIKE_ORG_NAMESPACE + &hash(identifier, 62)
 }
 
 /// Computes the address a Grid Product is stored at based on its id
@@ -122,7 +122,7 @@ pub fn make_product_address(product_id: &str) -> String {
     //let grid_product_gs1_prefix_len = grid_product_gs1_prefix.chars().count();
     //let hash_len = GRID_ADDRESS_LEN - grid_product_gs1_prefix_len;
     //grid_product_gs1_prefix + &hash(product_id, hash_len)
-    &hash(&PRODUCT_FAMILY_NAME, 6) + PRODUCT_GS1_NAMESPACE + &hash(product_id, 62)
+    hash(&PRODUCT_FAMILY_NAME, 6) + PRODUCT_GS1_NAMESPACE + &hash(product_id, 62)
 }
 
 /// Computes the address a Grid Schema is stored at based on its name
@@ -130,17 +130,17 @@ pub fn make_schema_address(name: &str) -> String {
     //let mut sha = Sha512::new();
     //sha.input(name.as_bytes());
     //String::from(GRID_NAMESPACE) + GRID_SCHEMA_NAMESPACE + &sha.result_str()[..62].to_string()
-    &hash(&SCHEMA_FAMILY_NAME, 6) + GRID_SCHEMA_NAMESPACE + &hash(name, 62)
+    hash(&SCHEMA_FAMILY_NAME, 6) + GRID_SCHEMA_NAMESPACE + &hash(name, 62)
 }
 
 pub fn make_record_address(record_id: &str) -> String {
     //get_track_and_trace_prefix() + RECORD + &hash(record_id, 62)
-    &hash(&TNT_FAMILY_NAME, 6) + RECORD + &hash(record_id, 62)
+    hash(&TNT_FAMILY_NAME, 6) + RECORD + &hash(record_id, 62)
 }
 
 pub fn make_property_address_range(record_id: &str) -> String {
     //get_track_and_trace_prefix() + PROPERTY + &hash(record_id, 36)
-    &hash(&TNT_FAMILY_NAME, 6) + PROPERTY + &hash(record_id, 36)
+    hash(&TNT_FAMILY_NAME, 6) + PROPERTY + &hash(record_id, 36)
 }
 
 pub fn num_to_page_number(page: u32) -> String {
@@ -153,5 +153,5 @@ pub fn make_property_address(record_id: &str, property_name: &str, page: u32) ->
 
 pub fn make_proposal_address(record_id: &str, agent_id: &str) -> String {
     //get_track_and_trace_prefix() + PROPOSAL + &hash(record_id, 36) + &hash(agent_id, 26)
-    &hash(&TNT_FAMILY_NAME, 6) + PROPOSAL + &hash(record_id, 36) + &hash(agent_id, 26)
+    hash(&TNT_FAMILY_NAME, 6) + PROPOSAL + &hash(record_id, 36) + &hash(agent_id, 26)
 }
