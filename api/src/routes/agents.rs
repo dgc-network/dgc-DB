@@ -245,8 +245,10 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[PIKE_NAMESPACE.to_string()],
-            &[PIKE_NAMESPACE.to_string()],
+            &[hash(&PIKE_FAMILY_NAME, 6)],
+            &[hash(&PIKE_FAMILY_NAME, 6)],
+            //&[PIKE_NAMESPACE.to_string()],
+            //&[PIKE_NAMESPACE.to_string()],
         )?
         .create_batch_list();
 
@@ -282,8 +284,10 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[PIKE_NAMESPACE.to_string()],
-            &[PIKE_NAMESPACE.to_string()],
+            &[hash(&PIKE_FAMILY_NAME, 6)],
+            &[hash(&PIKE_FAMILY_NAME, 6)],
+            //&[PIKE_NAMESPACE.to_string()],
+            //&[PIKE_NAMESPACE.to_string()],
         )?
         .create_batch_list();
 
