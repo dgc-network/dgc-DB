@@ -176,17 +176,18 @@ fn do_batches(
 
 
     // Creating the Payload //
-    let org_id = &input_data.org_id;
-    let roles_as_string = &input_data.roles;
-    let metadata_as_string = &input_data.metadata;
-
+    let product_id = &input_data.product_id;
+    let owner = &input_data.owner;
+    //let roles_as_string = &input_data.roles;
+    let properties_as_string = &input_data.properties;
+/*
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
         let entry: String = role.to_string().split(",").collect();
         roles.push(entry.clone());
     }
-
-    let mut metadata = Vec::<KeyValueEntry>::new();
+*/
+    let mut properties = Vec::<KeyValueEntry>::new();
     for meta in metadata_as_string.chars() {
         let meta_as_string = meta.to_string();
         let key_val: Vec<&str> = meta_as_string.split(",").collect();
@@ -212,23 +213,33 @@ fn do_batches(
     }
 
 
-    if action_plan == Action::CreateProduct {
+    if action_plan == Action::ProductCreate {
 
         // Building the Action and Payload//
-        let action = CreateProductActionBuilder::new()
-        .with_org_id(org_id.to_string())
-        .with_public_key(public_key.as_hex())
-        .with_active(true)
-        .with_roles(roles)
-        .with_metadata(metadata)
+        let action = ProductCreateActionBuilder::new()
+        //.with_org_id(org_id.to_string())
+        //.with_public_key(public_key.as_hex())
+        //.with_active(true)
+        //.with_roles(roles)
+        //.with_metadata(metadata)
+        //.build()
+        //.unwrap();
+        .with_product_id("688955434684".into()) // GTIN-12
+        .with_product_type(ProductType::GS1)
+        .with_owner("Target".into())
+        .with_properties(make_properties())
         .build()
         .unwrap();
 
         let payload = ProductPayloadBuilder::new()
-        .with_action(Action::CreateProduct)
-        .with_create_product(action)
+        //.with_action(Action::ProductCreate)
+        //.with_create_product(action)
+        //.build()
+        //.map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
+        .with_action(Action::ProductCreate(action.clone()))
+        .with_timestamp(0)
         .build()
-        .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
+        .unwrap();
 
         // Building the Transaction and Batch//
         let batch_list = BatchBuilder::new(
@@ -250,23 +261,33 @@ fn do_batches(
 
         return Ok(batch_list_bytes);
 
-    } else {
+    } else if action_plan == Action::ProductUpdate {
 
         // Building the Action and Payload//
-        let action = UpdateProductActionBuilder::new()
-        .with_org_id(org_id.to_string())
-        .with_public_key(public_key.as_hex())
-        .with_active(true)
-        .with_roles(roles)
-        .with_metadata(metadata)
+        let action = ProductUpdateActionBuilder::new()
+        //.with_org_id(org_id.to_string())
+        //.with_public_key(public_key.as_hex())
+        //.with_active(true)
+        //.with_roles(roles)
+        //.with_metadata(metadata)
+        //.build()
+        //.unwrap();
+        .with_product_id("688955434684".into()) // GTIN-12
+        .with_product_type(ProductType::GS1)
+        .with_owner("Target".into())
+        .with_properties(make_properties())
         .build()
         .unwrap();
 
         let payload = ProductPayloadBuilder::new()
-        .with_action(Action::UpdateProduct)
-        .with_update_product(action)
+        //.with_action(Action::UpdateProduct)
+        //.with_update_product(action)
+        //.build()
+        //.map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
+        .with_action(Action::ProductUpdate(action.clone()))
+        .with_timestamp(0)
         .build()
-        .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
+        .unwrap();
 
         // Building the Transaction and Batch//
         let batch_list = BatchBuilder::new(
@@ -289,4 +310,24 @@ fn do_batches(
 
         return Ok(batch_list_bytes);
     }
+}
+
+fn make_properties() -> Vec<PropertyValue> {
+    let property_value_description = PropertyValueBuilder::new()
+        .with_name("description".into())
+        .with_data_type(DataType::String)
+        .with_string_value("This is a product description".into())
+        .build()
+        .unwrap();
+    let property_value_price = PropertyValueBuilder::new()
+        .with_name("price".into())
+        .with_data_type(DataType::Number)
+        .with_number_value(3)
+        .build()
+        .unwrap();
+
+    vec![
+        property_value_description.clone(),
+        property_value_price.clone(),
+    ]
 }
