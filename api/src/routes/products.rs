@@ -101,7 +101,7 @@ pub async fn create_product(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Create batch_list_bytes //
-    let batch_list_bytes = match do_batches(input_data, Action::ProductCreate(ProductCreateAction)){
+    let batch_list_bytes = match do_batches(input_data, "Create"){
         Ok(product) => product,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
@@ -132,7 +132,7 @@ pub async fn update_product(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // create batch_list //
-    let batch_list_bytes = match do_batches(input_data, Action::ProductUpdate(ProductUpdateAction)){
+    let batch_list_bytes = match do_batches(input_data, "Update"){
         Ok(product) => product,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
@@ -212,7 +212,7 @@ fn do_batches(
     }
 */
 
-    if action_plan == Action::ProductCreate(ProductCreateAction) {
+    if action_plan == "Create" {
 
         // Building the Action and Payload//
         let action = ProductCreateActionBuilder::new()
@@ -260,7 +260,8 @@ fn do_batches(
 
         return Ok(batch_list_bytes);
 
-    } else if (action_plan == Action::ProductUpdate(ProductUpdateAction)) {
+    //} else if (action_plan == "Update") {
+    } else {
 
         // Building the Action and Payload//
         let action = ProductUpdateActionBuilder::new()
@@ -273,7 +274,7 @@ fn do_batches(
         //.unwrap();
         .with_product_id("688955434684".into()) // GTIN-12
         .with_product_type(ProductType::GS1)
-        .with_owner("Target".into())
+        //.with_owner("Target".into())
         .with_properties(make_properties())
         .build()
         .unwrap();
