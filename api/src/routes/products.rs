@@ -11,6 +11,7 @@ use protobuf::Message;
 use reqwest;
 //use std::time::SystemTime;
 use chrono;
+use std::convert::TryInto;
 
 use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
