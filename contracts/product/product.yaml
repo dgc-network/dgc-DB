@@ -16,10 +16,10 @@ name: grid_product
 version: '1.0'
 wasm: /tmp/grid-product-tp.wasm
 inputs:
-  - 'd3919801'
+#  - 'd3919801'
   - '621dee01'
   - '621dee02'
   - 'cad11d'
 outputs:
-  - 'd3919801'
+#  - 'd3919801'
   - '621dee02'
