@@ -110,13 +110,15 @@ services:
         sabre ns --create cad11d --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
         sabre ns --create 621dee01 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
         sabre ns --create 621dee02 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
+        sabre ns --create d3919801 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
+        sabre ns --create d3919802 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
         sabre perm cad11d grid_product --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
         sabre perm 621dee01 grid_product --key /grid-shared/my_key --read --url http://sawtooth-rest-api:8008 --wait 30
         sabre perm 621dee02 grid_product --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
+        sabre perm d3919801 grid_product --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
+        sabre perm d3919802 grid_product --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
         echo '---------========= grid_product contract is loaded =========---------'
       "
-#      sabre ns --create d3919801 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
-#      sabre perm d3919801 grid_product --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
 
   validator:
     image: hyperledger/sawtooth-validator:1.1
