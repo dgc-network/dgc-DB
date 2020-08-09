@@ -27,12 +27,12 @@ services:
       GRID_SERVICE_ID: "my-grid-circuit::grid-scabbard-a"
     entrypoint: dgc -vv -b dgc-api:8088 -C tcp://validator:4004
 
-  tnt-contract-builder:
-    image: tnt-contract-builder
-    container_name: tnt-contract-builder
+  pike-contract-builder:
+    image: pike-contract-builder
+    container_name: pike-contract-builder
     build:
       context: .
-      dockerfile: contracts/track_and_trace/Dockerfile
+      dockerfile: contracts/pike/Dockerfile
       args:
         - REPO_VERSION=${REPO_VERSION}
     volumes:
@@ -40,15 +40,15 @@ services:
     entrypoint: |
       bash -c "
         while true; do curl -s http://sawtooth-rest-api:8008/state | grep -q head; if [ $$? -eq 0 ]; then break; fi; sleep 0.5; done;
-        sabre cr --create grid_track_and_trace --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
-        sabre upload --filename /tmp/track_and_trace.yaml --key /grid-shared/my_key --url http://sawtooth-rest-api:8008 --wait 30
-        sabre ns --create a43b46 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
-        sabre perm a43b46 grid_track_and_trace --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
-        sabre perm 621dee01 grid_track_and_trace --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
-        sabre perm cad11d grid_track_and_trace --key /grid-shared/my_key --read --url http://sawtooth-rest-api:8008 --wait 30
-        echo '---------========= track and trace contract is loaded =========---------'
+        sabre cr --create pike --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
+        sabre upload --filename /tmp/pike.yaml --key /grid-shared/my_key --url http://sawtooth-rest-api:8008 --wait 30
+        sabre ns --create ed02b300 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
+        sabre ns --create ed02b301 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
+        sabre perm ed02b300 pike --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
+        sabre perm ed02b301 pike --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
+        echo '---------========= pike contract is loaded =========---------'
       "
-
+    
   schema-contract-builder:
     image: schema-contract-builder
     container_name: schema-contract-builder
@@ -78,12 +78,12 @@ services:
         echo '---------========= grid schema contract is loaded =========---------'
       "
 
-  pike-contract-builder:
-    image: pike-contract-builder
-    container_name: pike-contract-builder
+  tnt-contract-builder:
+    image: tnt-contract-builder
+    container_name: tnt-contract-builder
     build:
       context: .
-      dockerfile: contracts/pike/Dockerfile
+      dockerfile: contracts/track_and_trace/Dockerfile
       args:
         - REPO_VERSION=${REPO_VERSION}
     volumes:
@@ -91,15 +91,15 @@ services:
     entrypoint: |
       bash -c "
         while true; do curl -s http://sawtooth-rest-api:8008/state | grep -q head; if [ $$? -eq 0 ]; then break; fi; sleep 0.5; done;
-        sabre cr --create pike --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
-        sabre upload --filename /tmp/pike.yaml --key /grid-shared/my_key --url http://sawtooth-rest-api:8008 --wait 30
-        sabre ns --create cad11d --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
-        sabre ns --create ed02b3 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
-        sabre perm cad11d pike --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
-        sabre perm ed02b3 pike --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
-        echo '---------========= pike contract is loaded =========---------'
+        sabre cr --create grid_track_and_trace --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
+        sabre upload --filename /tmp/track_and_trace.yaml --key /grid-shared/my_key --url http://sawtooth-rest-api:8008 --wait 30
+        sabre ns --create a43b46 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
+        sabre perm a43b46 grid_track_and_trace --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
+        sabre perm 621dee01 grid_track_and_trace --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
+        sabre perm cad11d grid_track_and_trace --key /grid-shared/my_key --read --url http://sawtooth-rest-api:8008 --wait 30
+        echo '---------========= track and trace contract is loaded =========---------'
       "
-    
+
   product-contract-builder:
     image: product-contract-builder
     container_name: product-contract-builder

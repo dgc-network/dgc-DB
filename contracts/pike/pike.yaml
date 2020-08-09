@@ -5,8 +5,8 @@ name: pike
 version: '0.1'
 wasm: /tmp/grid-pike-tp.wasm
 inputs:
-  - 'cad11d'
-  - 'ed02b3'
+  - 'ed02b300'
+  - 'ed02b301'
 outputs:
-  - 'cad11d'
-  - 'ed02b3'
+  - 'ed02b300'
+  - 'ed02b301'
