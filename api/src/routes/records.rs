@@ -21,7 +21,7 @@ use dgc_config::addressing::*;
 use dgc_config::protocol::track_and_trace::state::*;
 use dgc_config::protocol::track_and_trace::payload::*;
 //use dgc_config::protocol::schema::payload::*;
-//use dgc_config::protocol::schema::state::*;
+use dgc_config::protocol::schema::state::*;
 
 #[derive(Deserialize)]
 pub struct RecordData {
@@ -66,7 +66,7 @@ pub async fn list_records(
 }
 
 pub async fn fetch_record(
-    product_id: web::Path<String>,
+    record_id: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     //println!("!dgc-network! public_key = {:?}", public_key);
@@ -228,7 +228,7 @@ fn do_batches(
             .unwrap();
 
         let payload = TrackAndTracePayloadBuilder::new()
-        .with_action(Action::FinalRecord(action.clone()))
+        .with_action(Action::FinalizeRecord(action.clone()))
         .with_timestamp(chrono::offset::Utc::now().timestamp().try_into().unwrap())
         .build()
         .unwrap();
