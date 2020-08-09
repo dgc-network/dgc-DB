@@ -18,13 +18,13 @@ use crate::{List, Fetch};
 
 use dgc_config::protos::*;
 use dgc_config::addressing::*;
-//use dgc_config::protocol::product::state::*;
-//use dgc_config::protocol::product::payload::*;
-use dgc_config::protocol::schema::payload::*;
-use dgc_config::protocol::schema::state::*;
+use dgc_config::protocol::track_and_trace::state::*;
+use dgc_config::protocol::track_and_trace::payload::*;
+//use dgc_config::protocol::schema::payload::*;
+//use dgc_config::protocol::schema::state::*;
 
 #[derive(Deserialize)]
-pub struct SchemaData {
+pub struct RecordData {
     private_key: String,
     schema_name: String,
     description: String,
@@ -32,17 +32,17 @@ pub struct SchemaData {
     properties: String,
 }
 
-pub async fn list_schemas(
+pub async fn list_records(
     //req: HttpRequest,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let url = format!("http://rest-api:8008/state?address={}", &hash(&SCHEMA_FAMILY_NAME, 6));
+    let url = format!("http://rest-api:8008/state?address={}", &hash(&TNT_FAMILY_NAME, 6));
     let list = reqwest::get(&url).await?.json::<List>().await?;
-    println!("============ list_schema_data ============");
+    println!("============ list_record_data ============");
     for sub in list.data {
         let msg = base64::decode(&sub.data).unwrap();
-        let schema: schema_state::Schema = match protobuf::parse_from_bytes(&msg){
-            Ok(schema) => schema,
+        let record: track_and_trace_state::Record = match protobuf::parse_from_bytes(&msg){
+            Ok(record) => record,
             Err(err) => {
                 return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
                     "Cannot deserialize organization: {:?}",
@@ -50,11 +50,11 @@ pub async fn list_schemas(
                 ))))
             }
         };
-        println!("!dgc-network! serialized: {:?}", schema);
+        println!("!dgc-network! serialized: {:?}", record);
         //println!("!dgc-network! public_key: {:?}", agent.public_key);
     }
 
-    println!("============ list_schema_link ============");
+    println!("============ list_record_link ============");
     println!("!dgc-network! link = {:?}", list.link);
     Ok(HttpResponse::Ok().body(list.link))
     
@@ -66,18 +66,18 @@ pub async fn list_schemas(
 
 }
 
-pub async fn fetch_schema(
+pub async fn fetch_record(
     product_id: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     //println!("!dgc-network! public_key = {:?}", public_key);
-    let address = make_schema_address(&product_id);
+    let address = make_record_address(&record_id);
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
-    println!("============ fetch_schema_data ============");
+    println!("============ fetch_record_data ============");
     let msg = base64::decode(&res.data).unwrap();
-    let schema: schema_state::Schema = match protobuf::parse_from_bytes(&msg){
-        Ok(schema) => schema,
+    let record: track_and_trace_state::Record = match protobuf::parse_from_bytes(&msg){
+        Ok(record) => record,
         Err(err) => {
             return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
                 "Cannot deserialize organization: {:?}",
@@ -85,9 +85,9 @@ pub async fn fetch_schema(
             ))))
         }
     };
-    println!("!dgc-network! serialized: {:?}", schema);
+    println!("!dgc-network! serialized: {:?}", record);
 
-    println!("============ fetch_schema_link ============");
+    println!("============ fetch_record_link ============");
     println!("!dgc-network! link = {:?}", res.link);
     Ok(HttpResponse::Ok().body(res.link))
     //Ok(HttpResponse::Ok().body(res))
@@ -96,13 +96,13 @@ pub async fn fetch_schema(
 
 }
 
-pub async fn create_schema(
-    input_data: web::Json<SchemaData>,
+pub async fn create_record(
+    input_data: web::Json<RecordData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Create batch_list_bytes //
     let batch_list_bytes = match do_batches(input_data, "CREATE"){
-        Ok(schema) => schema,
+        Ok(record) => record,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
                 "Cannot deserialize organization: {:?}",
@@ -119,7 +119,7 @@ pub async fn create_schema(
         .send().await?
         .text().await?;
 
-    println!("============ create_schema_link ============");
+    println!("============ create_record_link ============");
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
@@ -127,13 +127,13 @@ pub async fn create_schema(
     //Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
 
-pub async fn update_schema(
-    input_data: web::Json<SchemaData>,
+pub async fn update_record(
+    input_data: web::Json<RecordData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // create batch_list //
     let batch_list_bytes = match do_batches(input_data, "UPDATE"){
-        Ok(schema) => schema,
+        Ok(record) => record,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
                 "Cannot deserialize organization: {:?}",
@@ -150,7 +150,7 @@ pub async fn update_schema(
         .send().await?
         .text().await?;
 
-    println!("============ update_schema_link ============");
+    println!("============ update_record_link ============");
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
@@ -159,7 +159,7 @@ pub async fn update_schema(
 }
 
 fn do_batches(
-    input_data: web::Json<SchemaData>,
+    input_data: web::Json<RecordData>,
     action_plan: &str,
 ) -> Result<Vec<u8>, RestApiResponseError> {
 
@@ -233,28 +233,29 @@ fn do_batches(
             .build()
             .unwrap();
 */
-        let action = SchemaCreateBuilder::new()
+        let action = RecordBuilder::new()
         .with_schema_name(schema_name.to_string())
         .with_description(description.to_string())
         .with_properties(vec![property_definition.clone()])
         .build()
         .unwrap();
 
-        let payload = SchemaPayloadBuilder::new()
-        .with_action(Action::SchemaCreate(action.clone()))
+        let payload = TrackAndTracePayloadBuilder::new()
+        .with_action(Action::CreateRecord(action.clone()))
+        .with_timestamp(chrono::offset::Utc::now().timestamp().try_into().unwrap())
         .build()
         .unwrap();
 
         // Building the Transaction and Batch//
         let batch_list = BatchBuilder::new(
-            SCHEMA_FAMILY_NAME, 
-            SCHEMA_FAMILY_VERSION, 
+            TNT_FAMILY_NAME, 
+            TNT_FAMILY_VERSION, 
             &private_key.as_hex(),
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[hash(&SCHEMA_FAMILY_NAME, 6)],
-            &[hash(&SCHEMA_FAMILY_NAME, 6)],
+            &[hash(&TNT_FAMILY_NAME, 6)],
+            &[hash(&TNT_FAMILY_NAME, 6)],
         )?
         .create_batch_list();
 
@@ -277,28 +278,30 @@ fn do_batches(
             .build()
             .unwrap();
 */
-        let action = SchemaUpdateBuilder::new()
+        //let action = RecordUpdateBuilder::new()
+        let action = RecordBuilder::new()
         .with_schema_name(schema_name.to_string())
         //.with_description(description.to_string())
         .with_properties(vec![property_definition.clone()])
         .build()
         .unwrap();
 
-        let payload = SchemaPayloadBuilder::new()
-        .with_action(Action::SchemaUpdate(action.clone()))
+        let payload = TrackAndTracePayloadBuilder::new()
+        .with_action(Action::FinalRecord(action.clone()))
+        .with_timestamp(chrono::offset::Utc::now().timestamp().try_into().unwrap())
         .build()
         .unwrap();
 
         // Building the Transaction and Batch//
         let batch_list = BatchBuilder::new(
-            SCHEMA_FAMILY_NAME, 
-            SCHEMA_FAMILY_VERSION, 
+            TNT_FAMILY_NAME, 
+            TNT_FAMILY_VERSION, 
             &private_key.as_hex(),
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[hash(&SCHEMA_FAMILY_NAME, 6)],
-            &[hash(&SCHEMA_FAMILY_NAME, 6)],
+            &[hash(&TNT_FAMILY_NAME, 6)],
+            &[hash(&TNT_FAMILY_NAME, 6)],
         )?
         .create_batch_list();
 

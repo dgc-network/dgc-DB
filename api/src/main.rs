@@ -5,16 +5,14 @@ mod routes;
 mod error;
 mod transaction;
 
-//use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
 use actix_web::*;
 use serde::Deserialize;
 
-//use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};
-//use crate::routes::organizations::{create_org, update_org, list_orgs, fetch_org};
 use crate::routes::agents::*;
 use crate::routes::organizations::*;
 use crate::routes::products::*;
 use crate::routes::schemas::*;
+use crate::routes::records::*;
 
 #[derive(Deserialize)]
 pub struct List {
@@ -37,7 +35,7 @@ pub struct Fetch {
 }
 
 async fn index() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
+    HttpResponse::Ok().body("Hello world! Welcome to dgc.network")
 }
 
 #[actix_rt::main]
@@ -91,6 +89,15 @@ async fn main() -> std::io::Result<()> {
 
             .service(web::resource("/schema/{schema_name}")
                 .route(web::get().to(fetch_schema)))
+
+            .service(web::resource("/record")
+                .name("record")
+                .route(web::post().to(create_record))
+                .route(web::put().to(update_record))
+                .route(web::get().to(list_records)))
+
+            .service(web::resource("/record/{record_id}")
+                .route(web::get().to(fetch_record)))
 
 /*
             .service(
