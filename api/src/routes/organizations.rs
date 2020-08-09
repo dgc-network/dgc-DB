@@ -32,7 +32,8 @@ pub struct OrgData {
 pub async fn list_orgs(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let url = format!("http://rest-api:8008/state?address={}{}", hash(&PIKE_FAMILY_NAME, 6), PIKE_ORG_NAMESPACE);
+    //let url = format!("http://rest-api:8008/state?address={}{}", hash(&PIKE_FAMILY_NAME, 6), PIKE_ORG_NAMESPACE);
+    let url = format!("http://rest-api:8008/state?address={}", get_org_prefix());
     let list = reqwest::get(&url).await?.json::<List>().await?;
     for sub in list.data.iter() {
         let msg = base64::decode(&sub.data).unwrap();
@@ -165,8 +166,10 @@ pub async fn create_org(
     )
     .add_transaction(
         &payload.into_proto()?,
-        &[hash(&PIKE_FAMILY_NAME, 6)],
-        &[hash(&PIKE_FAMILY_NAME, 6)],
+        //&[hash(&PIKE_FAMILY_NAME, 6)],
+        //&[hash(&PIKE_FAMILY_NAME, 6)],
+        &[get_org_prefix()],
+        &[get_org_prefix()],
     )?
     .create_batch_list();
 
@@ -250,8 +253,10 @@ pub async fn update_org(
     )
     .add_transaction(
         &payload.into_proto()?,
-        &[hash(&PIKE_FAMILY_NAME, 6)],
-        &[hash(&PIKE_FAMILY_NAME, 6)],
+        //&[hash(&PIKE_FAMILY_NAME, 6)],
+        //&[hash(&PIKE_FAMILY_NAME, 6)],
+        &[get_org_prefix()],
+        &[get_org_prefix()],
     )?
     .create_batch_list();
 

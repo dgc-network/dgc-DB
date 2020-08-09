@@ -32,7 +32,8 @@ pub async fn list_agents(
     //req: HttpRequest,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let url = format!("http://rest-api:8008/state?address={}{}", hash(&PIKE_FAMILY_NAME, 6), PIKE_AGENT_NAMESPACE);
+    //let url = format!("http://rest-api:8008/state?address={}{}", hash(&PIKE_FAMILY_NAME, 6), PIKE_AGENT_NAMESPACE);
+    let url = format!("http://rest-api:8008/state?address={}", get_agent_prefix());
     let list = reqwest::get(&url).await?.json::<List>().await?;
     println!("============ list_agent_data ============");
     //for sub in list.data.iter() {
@@ -245,8 +246,10 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[hash(&PIKE_FAMILY_NAME, 6)],
-            &[hash(&PIKE_FAMILY_NAME, 6)],
+            //&[hash(&PIKE_FAMILY_NAME, 6)],
+            //&[hash(&PIKE_FAMILY_NAME, 6)],
+            &[get_agent_prefix()],
+            &[get_agent_prefix()],
         )?
         .create_batch_list();
 
@@ -282,8 +285,10 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[hash(&PIKE_FAMILY_NAME, 6)],
-            &[hash(&PIKE_FAMILY_NAME, 6)],
+            //&[hash(&PIKE_FAMILY_NAME, 6)],
+            //&[hash(&PIKE_FAMILY_NAME, 6)],
+            &[get_agent_prefix()],
+            &[get_agent_prefix()],
         )?
         .create_batch_list();
 

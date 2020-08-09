@@ -42,28 +42,61 @@ pub fn hash(to_hash: &str, num: usize) -> String {
     hash.to_string()
 }
 
+pub fn get_pike_prefix() -> String {
+    hash(&PIKE_FAMILY_NAME, 6)
+}
+
+pub fn get_agent_prefix() -> String {
+    get_pike_prefix() + PIKE_AGENT_NAMESPACE
+}
+
 pub fn make_agent_address(public_key: &str) -> String {
-    hash(&PIKE_FAMILY_NAME, 6) + PIKE_AGENT_NAMESPACE + &hash(public_key, 62)
+    //hash(&PIKE_FAMILY_NAME, 6) + PIKE_AGENT_NAMESPACE + &hash(public_key, 62)
+    get_agent_prefix() + &hash(public_key, 62)
+}
+
+pub fn get_org_prefix() -> String {
+    get_pike_prefix() + PIKE_ORG_NAMESPACE
 }
 
 pub fn make_org_address(identifier: &str) -> String {
-    hash(&PIKE_FAMILY_NAME, 6) + PIKE_ORG_NAMESPACE + &hash(identifier, 62)
+    //hash(&PIKE_FAMILY_NAME, 6) + PIKE_ORG_NAMESPACE + &hash(identifier, 62)
+    get_org_prefix() + &hash(identifier, 62)
+}
+
+pub fn get_product_prefix() -> String {
+    hash(&PRODUCT_FAMILY_NAME, 6) + PRODUCT_GS1_NAMESPACE
 }
 
 pub fn make_product_address(product_id: &str) -> String {
-    hash(&PRODUCT_FAMILY_NAME, 6) + PRODUCT_GS1_NAMESPACE + &hash(product_id, 62)
+    //hash(&PRODUCT_FAMILY_NAME, 6) + PRODUCT_GS1_NAMESPACE + &hash(product_id, 62)
+    get_product_prefix() + &hash(product_id, 62)
+}
+
+pub fn get_schema_prefix() -> String {
+    hash(&SCHEMA_FAMILY_NAME, 6) + GRID_SCHEMA_NAMESPACE
 }
 
 pub fn make_schema_address(name: &str) -> String {
-    hash(&SCHEMA_FAMILY_NAME, 6) + GRID_SCHEMA_NAMESPACE + &hash(name, 62)
+    //hash(&SCHEMA_FAMILY_NAME, 6) + GRID_SCHEMA_NAMESPACE + &hash(name, 62)
+    get_schema_prefix() + &hash(name, 62)
+}
+
+pub fn get_track_and_trace_prefix() -> String {
+    hash(&TNT_FAMILY_NAME, 6)
+}
+
+pub fn get_record_prefix() -> String {
+    get_track_and_trace_prefix() + RECORD
 }
 
 pub fn make_record_address(record_id: &str) -> String {
-    hash(&TNT_FAMILY_NAME, 6) + RECORD + &hash(record_id, 62)
+    //hash(&TNT_FAMILY_NAME, 6) + RECORD + &hash(record_id, 62)
+    get_record_prefix() + &hash(record_id, 62)
 }
 
 pub fn make_property_address_range(record_id: &str) -> String {
-    hash(&TNT_FAMILY_NAME, 6) + PROPERTY + &hash(record_id, 36)
+    get_track_and_trace_prefix() + PROPERTY + &hash(record_id, 36)
 }
 
 pub fn num_to_page_number(page: u32) -> String {
@@ -74,6 +107,11 @@ pub fn make_property_address(record_id: &str, property_name: &str, page: u32) ->
     make_property_address_range(record_id) + &hash(property_name, 22) + &num_to_page_number(page)
 }
 
+pub fn get_proposal_prefix() -> String {
+    get_track_and_trace_prefix() + PROPOSAL
+}
+
 pub fn make_proposal_address(record_id: &str, agent_id: &str) -> String {
-    hash(&TNT_FAMILY_NAME, 6) + PROPOSAL + &hash(record_id, 36) + &hash(agent_id, 26)
+    //hash(&TNT_FAMILY_NAME, 6) + PROPOSAL + &hash(record_id, 36) + &hash(agent_id, 26)
+    get_proposal_prefix() + &hash(record_id, 36) + &hash(agent_id, 26)
 }

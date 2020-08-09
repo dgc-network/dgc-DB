@@ -9,8 +9,8 @@ use sawtooth_sdk::processor::handler::ApplyError;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
-//use chrono;
-//use std::convert::TryInto;
+use chrono;
+use std::convert::TryInto;
 
 use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
@@ -26,9 +26,8 @@ use dgc_config::protocol::track_and_trace::payload::*;
 #[derive(Deserialize)]
 pub struct RecordData {
     private_key: String,
-    schema_name: String,
-    description: String,
-    //properties: Vec<PropertyValue>,
+    record_id: String,
+    schema: String,
     properties: String,
 }
 
@@ -36,7 +35,7 @@ pub async fn list_records(
     //req: HttpRequest,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let url = format!("http://rest-api:8008/state?address={}", &hash(&TNT_FAMILY_NAME, 6));
+    let url = format!("http://rest-api:8008/state?address={}", get_record_prefix());
     let list = reqwest::get(&url).await?.json::<List>().await?;
     println!("============ list_record_data ============");
     for sub in list.data {
@@ -174,69 +173,23 @@ fn do_batches(
 
 
     // Creating the Payload //
-    let schema_name = &input_data.schema_name;
-    let description = &input_data.description;
-    //let roles_as_string = &input_data.roles;
-    //let properties_as_string = &input_data.properties;
-
-    let builder = PropertyDefinitionBuilder::new();
-    let property_definition = builder
-        .with_name("TEST".to_string())
-        .with_data_type(DataType::String)
-        .with_description("Optional".to_string())
-        .build()
-        .unwrap();
-
-/*
-    let mut roles = Vec::<String>::new();
-    for role in roles_as_string.chars() {
-        let entry: String = role.to_string().split(",").collect();
-        roles.push(entry.clone());
-    }
-*/
-/*
-    let mut metadata = Vec::<KeyValueEntry>::new();
-    for meta in metadata_as_string.chars() {
-        let meta_as_string = meta.to_string();
-        let key_val: Vec<&str> = meta_as_string.split(",").collect();
-        if key_val.len() != 2 {
-            "Metadata is formated incorrectly".to_string();            
-        }
-        let key = match key_val.get(0) {
-            Some(key) => key.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
-        };
-        let value = match key_val.get(1) {
-            Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
-        };
-
-        let key_value = KeyValueEntryBuilder::new()
-            .with_key(key.to_string())
-            .with_value(value.to_string())
-            .build()
-            .unwrap();
-
-        metadata.push(key_value.clone());
-    }
-*/
+    let record_id = &input_data.record_id;
+    let schema = &input_data.schema;
 
     if action_plan == "CREATE" {
 
         // Building the Action and Payload//
-/*        
-        let builder = PropertyDefinitionBuilder::new();
-        let property_definition = builder
-            .with_name("TEST".to_string())
-            .with_data_type(DataType::String)
-            .with_description("Optional".to_string())
-            .build()
-            .unwrap();
-*/
-        let action = RecordBuilder::new()
-        .with_schema_name(schema_name.to_string())
-        .with_description(description.to_string())
-        .with_properties(vec![property_definition.clone()])
+        let property_value = PropertyValueBuilder::new()
+        .with_name("egg".into())
+        .with_data_type(DataType::Number)
+        .with_number_value(42)
+        .build()
+        .unwrap();
+
+        let action = CreateRecordActionBuilder::new()
+        .with_record_id(record_id.into())
+        .with_schema(schema.into())
+        .with_properties(vec![property_value.clone()])
         .build()
         .unwrap();
 
@@ -254,8 +207,8 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[hash(&TNT_FAMILY_NAME, 6)],
-            &[hash(&TNT_FAMILY_NAME, 6)],
+            &[get_record_prefix()],
+            &[get_record_prefix()],
         )?
         .create_batch_list();
 
@@ -265,26 +218,14 @@ fn do_batches(
 
         return Ok(batch_list_bytes);
 
-    //} else if (action_plan == "UPDATE") {
+    //} else if (action_plan == "FinalizeRecord") {
     } else {
 
         // Building the Action and Payload//
-/*        
-        let builder = PropertyDefinitionBuilder::new();
-        let property_definition = builder
-            .with_name("TEST".to_string())
-            .with_data_type(DataType::String)
-            .with_description("Optional".to_string())
+        let action = FinalizeRecordActionBuilder::new()
+            .with_record_id(record_id.into())
             .build()
             .unwrap();
-*/
-        //let action = RecordUpdateBuilder::new()
-        let action = RecordBuilder::new()
-        .with_schema_name(schema_name.to_string())
-        //.with_description(description.to_string())
-        .with_properties(vec![property_definition.clone()])
-        .build()
-        .unwrap();
 
         let payload = TrackAndTracePayloadBuilder::new()
         .with_action(Action::FinalRecord(action.clone()))
@@ -300,8 +241,8 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[hash(&TNT_FAMILY_NAME, 6)],
-            &[hash(&TNT_FAMILY_NAME, 6)],
+            &[get_record_prefix()],
+            &[get_record_prefix()],
         )?
         .create_batch_list();
 
@@ -312,25 +253,5 @@ fn do_batches(
         return Ok(batch_list_bytes);
         
     }
-/*
-            // Building the Transaction and Batch//
-            let batch_list = BatchBuilder::new(
-                SCHEMA_FAMILY_NAME, 
-                SCHEMA_FAMILY_VERSION, 
-                &private_key.as_hex(),
-            )
-            .add_transaction(
-                &payload.into_proto()?,
-                &[hash(&SCHEMA_FAMILY_NAME, 6)],
-                &[hash(&SCHEMA_FAMILY_NAME, 6)],
-            )?
-            .create_batch_list();
-    
-            let batch_list_bytes = batch_list
-                .write_to_bytes()
-                .expect("Error converting batch list to bytes");
-    
-            return Ok(batch_list_bytes);
-*/    
 }
 

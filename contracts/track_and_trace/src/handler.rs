@@ -58,9 +58,8 @@ impl TrackAndTraceTransactionHandler {
             family_name: TNT_FAMILY_NAME.to_string(),
             family_versions: vec![TNT_FAMILY_VERSION.to_string()],
             namespaces: vec![
-                hash(&TNT_FAMILY_NAME, 6),
-                hash(&PIKE_FAMILY_NAME, 6),
-                GRID_NAMESPACE.to_string(),
+                get_track_and_trace_prefix(),
+                get_pike_prefix(),
             ],
         }
     }
