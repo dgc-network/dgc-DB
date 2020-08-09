@@ -5,12 +5,16 @@ mod routes;
 mod error;
 mod transaction;
 
-use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
+//use actix_web::{web, App, HttpResponse, HttpServer, Responder, };
+use actix_web::*;
 use serde::Deserialize;
 
-use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};
-use crate::routes::organizations::{create_org, update_org, list_orgs, fetch_org};
+//use crate::routes::agents::{create_agent, update_agent, list_agents, fetch_agent};
+//use crate::routes::organizations::{create_org, update_org, list_orgs, fetch_org};
+use crate::routes::agents::*;
+use crate::routes::organizations::*;
 use crate::routes::products::*;
+use crate::routes::schemas::*;
 
 #[derive(Deserialize)]
 pub struct List {
@@ -76,7 +80,16 @@ async fn main() -> std::io::Result<()> {
                 .route(web::put().to(update_product))
                 .route(web::get().to(list_products)))
 
-            .service(web::resource("/organization/{id}")
+            .service(web::resource("/product/{product_id}")
+                .route(web::get().to(fetch_product)))
+
+            .service(web::resource("/schema")
+                .name("schema")
+                .route(web::post().to(create_schema))
+                .route(web::put().to(update_schema))
+                .route(web::get().to(list_schemas)))
+
+            .service(web::resource("/schema/{schema_name}")
                 .route(web::get().to(fetch_product)))
 
 /*
