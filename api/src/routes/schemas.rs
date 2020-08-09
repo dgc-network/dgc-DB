@@ -24,7 +24,7 @@ use dgc_config::protocol::schema::payload::*;
 use dgc_config::protocol::schema::state::*;
 
 #[derive(Deserialize)]
-pub struct SchematData {
+pub struct SchemaData {
     private_key: String,
     schema_name: String,
     description: String,
