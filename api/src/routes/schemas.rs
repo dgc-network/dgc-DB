@@ -96,8 +96,8 @@ pub async fn fetch_schema(
 
 }
 
-pub async fn create_product(
-    input_data: web::Json<ProductData>,
+pub async fn create_schema(
+    input_data: web::Json<SchemaData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Create batch_list_bytes //
@@ -128,7 +128,7 @@ pub async fn create_product(
 }
 
 pub async fn update_schema(
-    input_data: web::Json<ProductData>,
+    input_data: web::Json<SchemaData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // create batch_list //
@@ -159,7 +159,7 @@ pub async fn update_schema(
 }
 
 fn do_batches(
-    input_data: web::Json<ProductData>,
+    input_data: web::Json<SchemaData>,
     action_plan: &str,
 ) -> Result<Vec<u8>, RestApiResponseError> {
 
@@ -244,7 +244,7 @@ fn do_batches(
         .with_action(Action::SchemaCreate(action.clone()))
         .build()
         .unwrap();
-/*
+
         // Building the Transaction and Batch//
         let batch_list = BatchBuilder::new(
             SCHEMA_FAMILY_NAME, 
@@ -263,7 +263,7 @@ fn do_batches(
             .expect("Error converting batch list to bytes");
 
         return Ok(batch_list_bytes);
-*/
+
     //} else if (action_plan == "UPDATE") {
     } else {
 
@@ -279,7 +279,7 @@ fn do_batches(
 */
         let action = SchemaUpdateBuilder::new()
         .with_schema_name(schema_name.to_string())
-        .with_description(description.to_string())
+        //.with_description(description.to_string())
         .with_properties(vec![property_definition.clone()])
         .build()
         .unwrap();
@@ -288,7 +288,7 @@ fn do_batches(
         .with_action(Action::SchemaUpdate(action.clone()))
         .build()
         .unwrap();
-/*
+
         // Building the Transaction and Batch//
         let batch_list = BatchBuilder::new(
             SCHEMA_FAMILY_NAME, 
@@ -307,9 +307,9 @@ fn do_batches(
             .expect("Error converting batch list to bytes");
 
         return Ok(batch_list_bytes);
-*/        
+        
     }
-
+/*
             // Building the Transaction and Batch//
             let batch_list = BatchBuilder::new(
                 SCHEMA_FAMILY_NAME, 
@@ -328,6 +328,6 @@ fn do_batches(
                 .expect("Error converting batch list to bytes");
     
             return Ok(batch_list_bytes);
-    
+*/    
 }
 

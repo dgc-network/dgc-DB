@@ -90,7 +90,7 @@ async fn main() -> std::io::Result<()> {
                 .route(web::get().to(list_schemas)))
 
             .service(web::resource("/schema/{schema_name}")
-                .route(web::get().to(fetch_product)))
+                .route(web::get().to(fetch_schema)))
 
 /*
             .service(
