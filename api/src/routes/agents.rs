@@ -28,57 +28,6 @@ pub struct AgentData {
     metadata: String,
 }
 
-pub async fn list_agents(
-) -> Result<HttpResponse, RestApiResponseError> {
-
-    let url = format!("http://rest-api:8008/state?address={}", &get_agent_prefix());
-    let list = reqwest::get(&url).await?.json::<List>().await?;
-    println!("============ list_agent_data ============");
-    for sub in list.data {
-        let msg = base64::decode(&sub.data).unwrap();
-        let agent: pike_state::Agent = match protobuf::parse_from_bytes(&msg){
-            Ok(agent) => agent,
-            Err(err) => {
-                return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
-                    "Cannot deserialize organization: {:?}",
-                    err,
-                ))))
-            }
-        };
-        println!("!dgc-network! serialized: {:?}", agent.org_id);
-        println!("!dgc-network! public_key: {:?}", agent.public_key);
-    }
-
-    println!("============ list_agent_link ============");
-    println!("!dgc-network! link = {:?}", list.link);
-    Ok(HttpResponse::Ok().body(list.link))
-}
-
-pub async fn fetch_agent(
-    public_key: web::Path<String>,
-) -> Result<HttpResponse, RestApiResponseError> {
-
-    let address = make_agent_address(&public_key);
-    let url = format!("http://rest-api:8008/state/{}", address);
-    let res = reqwest::get(&url).await?.json::<Fetch>().await?;
-    println!("============ fetch_agent_data ============");
-    let msg = base64::decode(&res.data).unwrap();
-    let agent: pike_state::Agent = match protobuf::parse_from_bytes(&msg){
-        Ok(agent) => agent,
-        Err(err) => {
-            return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
-                "Cannot deserialize organization: {:?}",
-                err,
-            ))))
-        }
-    };
-    println!("!dgc-network! serialized: {:?}", agent);
-
-    println!("============ fetch_agent_link ============");
-    println!("!dgc-network! link = {:?}", res.link);
-    Ok(HttpResponse::Ok().body(res.link))
-}
-
 pub async fn create_agent(
     input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -137,6 +86,57 @@ pub async fn update_agent(
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
+}
+
+pub async fn list_agents(
+) -> Result<HttpResponse, RestApiResponseError> {
+
+    let url = format!("http://rest-api:8008/state?address={}", &get_agent_prefix());
+    let list = reqwest::get(&url).await?.json::<List>().await?;
+    println!("============ list_agent_data ============");
+    for sub in list.data {
+        let msg = base64::decode(&sub.data).unwrap();
+        let agent: pike_state::Agent = match protobuf::parse_from_bytes(&msg){
+            Ok(agent) => agent,
+            Err(err) => {
+                return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
+                    "Cannot deserialize organization: {:?}",
+                    err,
+                ))))
+            }
+        };
+        println!("!dgc-network! serialized: {:?}", agent.org_id);
+        println!("!dgc-network! public_key: {:?}", agent.public_key);
+    }
+
+    println!("============ list_agent_link ============");
+    println!("!dgc-network! link = {:?}", list.link);
+    Ok(HttpResponse::Ok().body(list.link))
+}
+
+pub async fn fetch_agent(
+    public_key: web::Path<String>,
+) -> Result<HttpResponse, RestApiResponseError> {
+
+    let address = make_agent_address(&public_key);
+    let url = format!("http://rest-api:8008/state/{}", address);
+    let res = reqwest::get(&url).await?.json::<Fetch>().await?;
+    println!("============ fetch_agent_data ============");
+    let msg = base64::decode(&res.data).unwrap();
+    let agent: pike_state::Agent = match protobuf::parse_from_bytes(&msg){
+        Ok(agent) => agent,
+        Err(err) => {
+            return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
+                "Cannot deserialize organization: {:?}",
+                err,
+            ))))
+        }
+    };
+    println!("!dgc-network! serialized: {:?}", agent);
+
+    println!("============ fetch_agent_link ============");
+    println!("!dgc-network! link = {:?}", res.link);
+    Ok(HttpResponse::Ok().body(res.link))
 }
 
 fn do_batches(
@@ -201,7 +201,10 @@ fn do_batches(
         let signer = crypto_factory.new_signer(private_key.as_ref());
         let public_key = signer.get_public_key()
         .expect("Error retrieving Public Key");
-
+        println!("============ create_agent_link ============");
+        println!("!dgc-network! private_key = {:?}", private_key.as_hex());
+        println!("!dgc-network! public_key = {:?}", public_key.as_hex());
+    
         // Building the Action and Payload//
         let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
