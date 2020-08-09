@@ -6,10 +6,10 @@ version: '1.0'
 wasm: /tmp/grid-schema-tp.wasm
 inputs:
   - 'f350b8'
-  - '621dee01'
-  - 'cad11d'
+  - 'ed02b3'
+#  - '621dee01'
+#  - 'cad11d'
 outputs:
   - 'f350b8'
-  - '621dee01'
-  - 'cad11d'
+#  - '621dee01'
   
