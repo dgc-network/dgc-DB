@@ -18,7 +18,7 @@ use crate::{List, Fetch};
 
 use dgc_config::protos::*;
 use dgc_config::addressing::*;
-use dgc_config::protocol::track_and_trace::state::*;
+//use dgc_config::protocol::track_and_trace::state::*;
 use dgc_config::protocol::track_and_trace::payload::*;
 //use dgc_config::protocol::schema::payload::*;
 use dgc_config::protocol::schema::state::*;
@@ -32,7 +32,6 @@ pub struct RecordData {
 }
 
 pub async fn list_records(
-    //req: HttpRequest,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     let url = format!("http://rest-api:8008/state?address={}", get_record_prefix());
@@ -50,26 +49,17 @@ pub async fn list_records(
             }
         };
         println!("!dgc-network! serialized: {:?}", record);
-        //println!("!dgc-network! public_key: {:?}", agent.public_key);
     }
 
     println!("============ list_record_link ============");
     println!("!dgc-network! link = {:?}", list.link);
     Ok(HttpResponse::Ok().body(list.link))
-    
-    //Ok(HttpResponse::Ok().json(pike_state::Agent {
-    //    org_id: agent.org_id.to_string(),
-    //}))
-    
-    //Ok(HttpResponse::Ok().body("Hello world! list_agent"))
-
 }
 
 pub async fn fetch_record(
     record_id: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    //println!("!dgc-network! public_key = {:?}", public_key);
     let address = make_record_address(&record_id);
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
@@ -89,10 +79,6 @@ pub async fn fetch_record(
     println!("============ fetch_record_link ============");
     println!("!dgc-network! link = {:?}", res.link);
     Ok(HttpResponse::Ok().body(res.link))
-    //Ok(HttpResponse::Ok().body(res))
-
-    //Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
-
 }
 
 pub async fn create_record(
@@ -104,7 +90,7 @@ pub async fn create_record(
         Ok(record) => record,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize organization: {:?}",
+                "Cannot deserialize record: {:?}",
                 err,
             )))
         }
@@ -122,8 +108,6 @@ pub async fn create_record(
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
-
-    //Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
 
 pub async fn update_record(
@@ -131,11 +115,11 @@ pub async fn update_record(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // create batch_list //
-    let batch_list_bytes = match do_batches(input_data, "UPDATE"){
+    let batch_list_bytes = match do_batches(input_data, "FINALIZE"){
         Ok(record) => record,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize organization: {:?}",
+                "Cannot deserialize record: {:?}",
                 err,
             )))
         }
@@ -153,8 +137,6 @@ pub async fn update_record(
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
-    
-    //Ok(HttpResponse::Ok().body("Hello world! update_agent"))
 }
 
 fn do_batches(
@@ -166,10 +148,10 @@ fn do_batches(
     let private_key_as_hex = &input_data.private_key;
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
     .expect("Error generating a Private Key");
-    let context = create_context("secp256k1")
-    .expect("Error creating the right context");
-    let public_key = context.get_public_key(&private_key)
-    .expect("Error retrieving a Public Key");
+    //let context = create_context("secp256k1")
+    //.expect("Error creating the right context");
+    //let public_key = context.get_public_key(&private_key)
+    //.expect("Error retrieving a Public Key");
 
 
     // Creating the Payload //

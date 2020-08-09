@@ -29,14 +29,11 @@ pub struct AgentData {
 }
 
 pub async fn list_agents(
-    //req: HttpRequest,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    //let url = format!("http://rest-api:8008/state?address={}{}", hash(&PIKE_FAMILY_NAME, 6), PIKE_AGENT_NAMESPACE);
-    let url = format!("http://rest-api:8008/state?address={}", get_agent_prefix());
+    let url = format!("http://rest-api:8008/state?address={}", &get_agent_prefix());
     let list = reqwest::get(&url).await?.json::<List>().await?;
     println!("============ list_agent_data ============");
-    //for sub in list.data.iter() {
     for sub in list.data {
         let msg = base64::decode(&sub.data).unwrap();
         let agent: pike_state::Agent = match protobuf::parse_from_bytes(&msg){
@@ -55,20 +52,12 @@ pub async fn list_agents(
     println!("============ list_agent_link ============");
     println!("!dgc-network! link = {:?}", list.link);
     Ok(HttpResponse::Ok().body(list.link))
-    
-    //Ok(HttpResponse::Ok().json(pike_state::Agent {
-    //    org_id: agent.org_id.to_string(),
-    //}))
-    
-    //Ok(HttpResponse::Ok().body("Hello world! list_agent"))
-
 }
 
 pub async fn fetch_agent(
     public_key: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    //println!("!dgc-network! public_key = {:?}", public_key);
     let address = make_agent_address(&public_key);
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
@@ -88,10 +77,6 @@ pub async fn fetch_agent(
     println!("============ fetch_agent_link ============");
     println!("!dgc-network! link = {:?}", res.link);
     Ok(HttpResponse::Ok().body(res.link))
-    //Ok(HttpResponse::Ok().body(res))
-
-    //Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
-
 }
 
 pub async fn create_agent(
@@ -103,7 +88,7 @@ pub async fn create_agent(
         Ok(agent) => agent,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize organization: {:?}",
+                "Cannot deserialize agent: {:?}",
                 err,
             )))
         }
@@ -123,8 +108,6 @@ pub async fn create_agent(
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
-
-    //Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
 
 pub async fn update_agent(
@@ -136,7 +119,7 @@ pub async fn update_agent(
         Ok(agent) => agent,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize organization: {:?}",
+                "Cannot deserialize agent: {:?}",
                 err,
             )))
         }
@@ -154,8 +137,6 @@ pub async fn update_agent(
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
-    
-    //Ok(HttpResponse::Ok().body("Hello world! update_agent"))
 }
 
 fn do_batches(
@@ -209,7 +190,6 @@ fn do_batches(
         metadata.push(key_value.clone());
     }
 
-
     if action_plan == Action::CreateAgent {
 
         // Creating a Private Key and Signer //
@@ -246,8 +226,6 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            //&[hash(&PIKE_FAMILY_NAME, 6)],
-            //&[hash(&PIKE_FAMILY_NAME, 6)],
             &[get_agent_prefix()],
             &[get_agent_prefix()],
         )?
@@ -285,8 +263,6 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            //&[hash(&PIKE_FAMILY_NAME, 6)],
-            //&[hash(&PIKE_FAMILY_NAME, 6)],
             &[get_agent_prefix()],
             &[get_agent_prefix()],
         )?

@@ -58,6 +58,9 @@ async fn main() -> std::io::Result<()> {
                 .name("agent")
                 .route(web::post().to(create_agent))
                 .route(web::put().to(update_agent))
+
+            .service(web::resource("/agents")
+                .name("agents")
                 .route(web::get().to(list_agents)))
 
             .service(web::resource("/agent/{public_key}")
@@ -67,6 +70,9 @@ async fn main() -> std::io::Result<()> {
                 .name("organization")
                 .route(web::post().to(create_org))
                 .route(web::put().to(update_org))
+
+            .service(web::resource("/organizations")
+                .name("organizations")
                 .route(web::get().to(list_orgs)))
 
             .service(web::resource("/organization/{org_id}")
@@ -76,6 +82,9 @@ async fn main() -> std::io::Result<()> {
                 .name("product")
                 .route(web::post().to(create_product))
                 .route(web::put().to(update_product))
+
+            .service(web::resource("/products")
+                .name("products")
                 .route(web::get().to(list_products)))
 
             .service(web::resource("/product/{product_id}")
@@ -85,6 +94,9 @@ async fn main() -> std::io::Result<()> {
                 .name("schema")
                 .route(web::post().to(create_schema))
                 .route(web::put().to(update_schema))
+
+            .service(web::resource("/schemas")
+                .name("schemas")
                 .route(web::get().to(list_schemas)))
 
             .service(web::resource("/schema/{schema_name}")
@@ -94,6 +106,9 @@ async fn main() -> std::io::Result<()> {
                 .name("record")
                 .route(web::post().to(create_record))
                 .route(web::put().to(update_record))
+
+            .service(web::resource("/records")
+                .name("records")
                 .route(web::get().to(list_records)))
 
             .service(web::resource("/record/{record_id}")

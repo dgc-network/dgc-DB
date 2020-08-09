@@ -9,8 +9,6 @@ use sawtooth_sdk::processor::handler::ApplyError;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
-//use chrono;
-//use std::convert::TryInto;
 
 use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
@@ -18,8 +16,6 @@ use crate::{List, Fetch};
 
 use dgc_config::protos::*;
 use dgc_config::addressing::*;
-//use dgc_config::protocol::product::state::*;
-//use dgc_config::protocol::product::payload::*;
 use dgc_config::protocol::schema::payload::*;
 use dgc_config::protocol::schema::state::*;
 
@@ -33,10 +29,9 @@ pub struct SchemaData {
 }
 
 pub async fn list_schemas(
-    //req: HttpRequest,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let url = format!("http://rest-api:8008/state?address={}", &hash(&SCHEMA_FAMILY_NAME, 6));
+    let url = format!("http://rest-api:8008/state?address={}", &get_schema_prefix());
     let list = reqwest::get(&url).await?.json::<List>().await?;
     println!("============ list_schema_data ============");
     for sub in list.data {
@@ -51,26 +46,17 @@ pub async fn list_schemas(
             }
         };
         println!("!dgc-network! serialized: {:?}", schema);
-        //println!("!dgc-network! public_key: {:?}", agent.public_key);
     }
 
     println!("============ list_schema_link ============");
     println!("!dgc-network! link = {:?}", list.link);
     Ok(HttpResponse::Ok().body(list.link))
-    
-    //Ok(HttpResponse::Ok().json(pike_state::Agent {
-    //    org_id: agent.org_id.to_string(),
-    //}))
-    
-    //Ok(HttpResponse::Ok().body("Hello world! list_agent"))
-
 }
 
 pub async fn fetch_schema(
     product_id: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    //println!("!dgc-network! public_key = {:?}", public_key);
     let address = make_schema_address(&product_id);
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
@@ -90,10 +76,6 @@ pub async fn fetch_schema(
     println!("============ fetch_schema_link ============");
     println!("!dgc-network! link = {:?}", res.link);
     Ok(HttpResponse::Ok().body(res.link))
-    //Ok(HttpResponse::Ok().body(res))
-
-    //Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
-
 }
 
 pub async fn create_schema(
@@ -123,8 +105,6 @@ pub async fn create_schema(
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
-
-    //Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
 
 pub async fn update_schema(
@@ -154,8 +134,6 @@ pub async fn update_schema(
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
-    
-    //Ok(HttpResponse::Ok().body("Hello world! update_agent"))
 }
 
 fn do_batches(
@@ -167,16 +145,10 @@ fn do_batches(
     let private_key_as_hex = &input_data.private_key;
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
     .expect("Error generating a Private Key");
-    let context = create_context("secp256k1")
-    .expect("Error creating the right context");
-    let public_key = context.get_public_key(&private_key)
-    .expect("Error retrieving a Public Key");
-
 
     // Creating the Payload //
     let schema_name = &input_data.schema_name;
     let description = &input_data.description;
-    //let roles_as_string = &input_data.roles;
     //let properties_as_string = &input_data.properties;
 
     let builder = PropertyDefinitionBuilder::new();
@@ -224,15 +196,6 @@ fn do_batches(
     if action_plan == "CREATE" {
 
         // Building the Action and Payload//
-/*        
-        let builder = PropertyDefinitionBuilder::new();
-        let property_definition = builder
-            .with_name("TEST".to_string())
-            .with_data_type(DataType::String)
-            .with_description("Optional".to_string())
-            .build()
-            .unwrap();
-*/
         let action = SchemaCreateBuilder::new()
         .with_schema_name(schema_name.to_string())
         .with_description(description.to_string())
@@ -253,8 +216,8 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[hash(&SCHEMA_FAMILY_NAME, 6)],
-            &[hash(&SCHEMA_FAMILY_NAME, 6)],
+            &[get_schema_prefix()],
+            &[get_schema_prefix()],
         )?
         .create_batch_list();
 
@@ -268,15 +231,6 @@ fn do_batches(
     } else {
 
         // Building the Action and Payload//
-/*        
-        let builder = PropertyDefinitionBuilder::new();
-        let property_definition = builder
-            .with_name("TEST".to_string())
-            .with_data_type(DataType::String)
-            .with_description("Optional".to_string())
-            .build()
-            .unwrap();
-*/
         let action = SchemaUpdateBuilder::new()
         .with_schema_name(schema_name.to_string())
         //.with_description(description.to_string())
@@ -297,8 +251,8 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[hash(&SCHEMA_FAMILY_NAME, 6)],
-            &[hash(&SCHEMA_FAMILY_NAME, 6)],
+            &[get_schema_prefix()],
+            &[get_schema_prefix()],
         )?
         .create_batch_list();
 
@@ -309,25 +263,5 @@ fn do_batches(
         return Ok(batch_list_bytes);
         
     }
-/*
-            // Building the Transaction and Batch//
-            let batch_list = BatchBuilder::new(
-                SCHEMA_FAMILY_NAME, 
-                SCHEMA_FAMILY_VERSION, 
-                &private_key.as_hex(),
-            )
-            .add_transaction(
-                &payload.into_proto()?,
-                &[hash(&SCHEMA_FAMILY_NAME, 6)],
-                &[hash(&SCHEMA_FAMILY_NAME, 6)],
-            )?
-            .create_batch_list();
-    
-            let batch_list_bytes = batch_list
-                .write_to_bytes()
-                .expect("Error converting batch list to bytes");
-    
-            return Ok(batch_list_bytes);
-*/    
 }
 

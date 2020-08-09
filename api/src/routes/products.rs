@@ -9,7 +9,6 @@ use sawtooth_sdk::processor::handler::ApplyError;
 use serde::Deserialize;
 use protobuf::Message;
 use reqwest;
-//use std::time::SystemTime;
 use chrono;
 use std::convert::TryInto;
 
@@ -27,7 +26,6 @@ use dgc_config::protocol::schema::state::*;
 pub struct ProductData {
     private_key: String,
     product_id: String,
-    //product_type: ProductType,
     product_type: String,
     owner: String,
     //properties: Vec<PropertyValue>,
@@ -35,10 +33,9 @@ pub struct ProductData {
 }
 
 pub async fn list_products(
-    //req: HttpRequest,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let url = format!("http://rest-api:8008/state?address={}{}", &hash(&PRODUCT_FAMILY_NAME, 6), PRODUCT_GS1_NAMESPACE);
+    let url = format!("http://rest-api:8008/state?address={}", &get_product_prefix());
     let list = reqwest::get(&url).await?.json::<List>().await?;
     println!("============ list_product_data ============");
     for sub in list.data {
@@ -53,26 +50,17 @@ pub async fn list_products(
             }
         };
         println!("!dgc-network! serialized: {:?}", product);
-        //println!("!dgc-network! public_key: {:?}", agent.public_key);
     }
 
     println!("============ list_product_link ============");
     println!("!dgc-network! link = {:?}", list.link);
     Ok(HttpResponse::Ok().body(list.link))
-    
-    //Ok(HttpResponse::Ok().json(pike_state::Agent {
-    //    org_id: agent.org_id.to_string(),
-    //}))
-    
-    //Ok(HttpResponse::Ok().body("Hello world! list_agent"))
-
 }
 
 pub async fn fetch_product(
     product_id: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    //println!("!dgc-network! public_key = {:?}", public_key);
     let address = make_product_address(&product_id);
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
@@ -92,10 +80,6 @@ pub async fn fetch_product(
     println!("============ fetch_product_link ============");
     println!("!dgc-network! link = {:?}", res.link);
     Ok(HttpResponse::Ok().body(res.link))
-    //Ok(HttpResponse::Ok().body(res))
-
-    //Ok(HttpResponse::Ok().body("Hello world! fetch_agent"))
-
 }
 
 pub async fn create_product(
@@ -125,8 +109,6 @@ pub async fn create_product(
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
-
-    //Ok(HttpResponse::Ok().body("Hello world! create_agent"))
 }
 
 pub async fn update_product(
@@ -156,13 +138,10 @@ pub async fn update_product(
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
-    
-    //Ok(HttpResponse::Ok().body("Hello world! update_agent"))
 }
 
 fn do_batches(
     input_data: web::Json<ProductData>,
-    //action_plan: Action,
     action_plan: &str,
 ) -> Result<Vec<u8>, RestApiResponseError> {
 
@@ -170,16 +149,10 @@ fn do_batches(
     let private_key_as_hex = &input_data.private_key;
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
     .expect("Error generating a Private Key");
-    let context = create_context("secp256k1")
-    .expect("Error creating the right context");
-    let public_key = context.get_public_key(&private_key)
-    .expect("Error retrieving a Public Key");
-
 
     // Creating the Payload //
     let product_id = &input_data.product_id;
     let owner = &input_data.owner;
-    //let roles_as_string = &input_data.roles;
     let properties_as_string = &input_data.properties;
 /*
     let mut roles = Vec::<String>::new();
@@ -240,8 +213,8 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[hash(&PRODUCT_FAMILY_NAME, 6)],
-            &[hash(&PRODUCT_FAMILY_NAME, 6)],
+            &[get_product_prefix()],
+            &[get_product_prefix()],
         )?
         .create_batch_list();
 
@@ -276,8 +249,8 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[hash(&PRODUCT_FAMILY_NAME, 6)],
-            &[hash(&PRODUCT_FAMILY_NAME, 6)],
+            &[get_product_prefix()],
+            &[get_product_prefix()],
         )?
         .create_batch_list();
 

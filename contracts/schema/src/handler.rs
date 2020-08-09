@@ -61,7 +61,7 @@ impl GridSchemaTransactionHandler {
         GridSchemaTransactionHandler {
             family_name: SCHEMA_FAMILY_NAME.to_string(),
             family_versions: vec![SCHEMA_FAMILY_VERSION.to_string()],
-            namespaces: vec![hash(&SCHEMA_FAMILY_NAME, 6)],
+            namespaces: vec![get_schema_prefix()],
         }
     }
 }
