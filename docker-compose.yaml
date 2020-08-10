@@ -42,10 +42,8 @@ services:
         while true; do curl -s http://sawtooth-rest-api:8008/state | grep -q head; if [ $$? -eq 0 ]; then break; fi; sleep 0.5; done;
         sabre cr --create pike --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
         sabre upload --filename /tmp/pike.yaml --key /grid-shared/my_key --url http://sawtooth-rest-api:8008 --wait 30
-        sabre ns --create ed02b300 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
-        sabre ns --create ed02b301 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
-        sabre perm ed02b300 pike --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
-        sabre perm ed02b301 pike --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
+        sabre ns --create ed02b3 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
+        sabre perm ed02b3 pike --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
         echo '---------========= pike contract is loaded =========---------'
       "
     
