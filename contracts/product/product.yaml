@@ -5,14 +5,8 @@ name: grid_product
 version: '1.0'
 wasm: /tmp/grid-product-tp.wasm
 inputs:
-  - '621dee01'
-  - '621dee02'
-  - 'cad11d'
   - 'd39198'
-  - 'd3919801'
-  - 'd3919802'
+  - 'ed02b3'
 outputs:
   - 'd39198'
-  - 'd3919801'
-  - '621dee02'
-  - 'd3919802'
+  - 'ed02b3'

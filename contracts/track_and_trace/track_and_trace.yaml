@@ -5,10 +5,8 @@ name: grid_track_and_trace
 version: '1.0'
 wasm: /tmp/grid-track-and-trace-tp.wasm
 inputs:
-  - 'ed02b300'
   - 'a43b46'
-  - '621dee01'
-  - 'cad11d'
+  - 'ed02b3'
 outputs:
-  - 'ed02b3004ae3b36eb49e9dda2c3d5579b2bd4e20f39882dc044eb12043199582fa489d'
   - 'a43b46'
+  - 'ed02b3'
