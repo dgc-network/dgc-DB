@@ -63,9 +63,8 @@ services:
         sabre cr --create grid_schema --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
         sabre upload --filename /tmp/schema.yaml --key /grid-shared/my_key --url http://sawtooth-rest-api:8008 --wait 30
         sabre ns --create f350b8 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
-        sabre ns --create ed02b3 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
         sabre perm f350b8 grid_schema --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
-        sabre perm ed02b3 grid_schema --key /grid-shared/my_key --read --url http://sawtooth-rest-api:8008 --wait 30
+        sabre perm ed02b3 pike --key /grid-shared/my_key --read --url http://sawtooth-rest-api:8008 --wait 30
         echo '---------========= grid schema contract is loaded =========---------'
       "
 
@@ -85,9 +84,8 @@ services:
         sabre cr --create grid_track_and_trace --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
         sabre upload --filename /tmp/track_and_trace.yaml --key /grid-shared/my_key --url http://sawtooth-rest-api:8008 --wait 30
         sabre ns --create a43b46 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
-        sabre ns --create ed02b3 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
         sabre perm a43b46 grid_track_and_trace --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
-        sabre perm ed02b3 grid_schema --key /grid-shared/my_key --read --url http://sawtooth-rest-api:8008 --wait 30
+        sabre perm ed02b3 pike --key /grid-shared/my_key --read --url http://sawtooth-rest-api:8008 --wait 30
         echo '---------========= track and trace contract is loaded =========---------'
       "
 
@@ -107,9 +105,8 @@ services:
         sabre cr --create grid_product --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
         sabre upload --filename /tmp/product.yaml --key /grid-shared/my_key --url http://sawtooth-rest-api:8008 --wait 30
         sabre ns --create d39198 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
-        sabre ns --create ed02b3 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
         sabre perm d39198 grid_product --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
-        sabre perm ed02b3 grid_schema --key /grid-shared/my_key --read --url http://sawtooth-rest-api:8008 --wait 30
+        sabre perm ed02b3 pike --key /grid-shared/my_key --read --url http://sawtooth-rest-api:8008 --wait 30
         echo '---------========= grid_product contract is loaded =========---------'
       "
 
