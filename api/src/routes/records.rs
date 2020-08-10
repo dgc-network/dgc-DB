@@ -189,8 +189,8 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[get_record_prefix()],
-            &[get_record_prefix()],
+            &[get_record_prefix(), get_pike_prefix()],
+            &[get_record_prefix(), get_pike_prefix()],
         )?
         .create_batch_list();
 
@@ -223,8 +223,8 @@ fn do_batches(
         )
         .add_transaction(
             &payload.into_proto()?,
-            &[get_record_prefix()],
-            &[get_record_prefix()],
+            &[get_record_prefix(), get_pike_prefix()],
+            &[get_record_prefix(), get_pike_prefix()],
         )?
         .create_batch_list();
 
