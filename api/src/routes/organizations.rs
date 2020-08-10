@@ -159,8 +159,8 @@ pub async fn create_org(
     )
     .add_transaction(
         &payload.into_proto()?,
-        &[get_org_prefix()],
-        &[get_org_prefix()],
+        &[get_pike_prefix()],
+        &[get_pike_prefix()],
     )?
     .create_batch_list();
 
@@ -244,8 +244,8 @@ pub async fn update_org(
     )
     .add_transaction(
         &payload.into_proto()?,
-        &[get_org_prefix()],
-        &[get_org_prefix()],
+        &[get_pike_prefix()],
+        &[get_pike_prefix()],
     )?
     .create_batch_list();
 
