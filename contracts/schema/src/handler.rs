@@ -124,7 +124,7 @@ fn schema_create(
         )));
     }
 
-    check_permission(perm_checker, signer, "can_create_schema")?;
+    //check_permission(perm_checker, signer, "can_create_schema")?;
 
     let agent = match state.get_agent(signer)? {
         Some(agent) => agent,
@@ -259,8 +259,6 @@ mod tests {
     use sawtooth_sdk::processor::handler::ApplyError;
     use sawtooth_sdk::processor::handler::{ContextError, TransactionContext};
 
-    //use crate::state::{compute_agent_address, compute_schema_address};
-
     #[derive(Default)]
     /// A MockTransactionContext that can be used to test GridSchemaState
     struct MockTransactionContext {
@@ -328,7 +326,6 @@ mod tests {
             let builder = AgentListBuilder::new();
             let agent_list = builder.with_agents(vec![agent.clone()]).build().unwrap();
             let agent_bytes = agent_list.into_bytes().unwrap();
-            //let agent_address = compute_agent_address("agent_public_key");
             let agent_address = make_agent_address("agent_public_key");
             self.set_state_entry(agent_address, agent_bytes).unwrap();
         }
@@ -349,7 +346,6 @@ mod tests {
             let builder = AgentListBuilder::new();
             let agent_list = builder.with_agents(vec![agent.clone()]).build().unwrap();
             let agent_bytes = agent_list.into_bytes().unwrap();
-            //let agent_address = compute_agent_address("agent_public_key");
             let agent_address = make_agent_address("agent_public_key");
             self.set_state_entry(agent_address, agent_bytes).unwrap();
         }
