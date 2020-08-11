@@ -40,17 +40,23 @@ services:
     entrypoint: |
       bash -c "
         while true; do curl -s http://sawtooth-rest-api:8008/state | grep -q head; if [ $$? -eq 0 ]; then break; fi; sleep 0.5; done;
-        sabre cr --create pike --key 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --owner 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --url http://sawtooth-rest-api:8008 --wait 30
-        sabre upload --filename /tmp/pike.yaml --key 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --url http://sawtooth-rest-api:8008 --wait 30
-        sabre ns --create ed02b3 --key 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --owner 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --url http://sawtooth-rest-api:8008 --wait 30
-        sabre perm ed02b3 pike --key 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --read --write --url http://sawtooth-rest-api:8008 --wait 30
+        sabre cr --create pike --owner 028d753f40c25fba1b94128f5bc7be362632ad533fc4e035efd542529654850f01 --url http://sawtooth-rest-api:8008 --wait 30
+        sabre upload --filename /tmp/pike.yaml --url http://sawtooth-rest-api:8008 --wait 30
+        sabre ns --create ed02b3 --owner 028d753f40c25fba1b94128f5bc7be362632ad533fc4e035efd542529654850f01 --url http://sawtooth-rest-api:8008 --wait 30
+        sabre perm ed02b3 pike --read --write --url http://sawtooth-rest-api:8008 --wait 30
         echo '---------========= pike contract is loaded =========---------'
       "
 #        sabre cr --create pike --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
 #        sabre upload --filename /tmp/pike.yaml --key /grid-shared/my_key --url http://sawtooth-rest-api:8008 --wait 30
 #        sabre ns --create ed02b3 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
 #        sabre perm ed02b3 pike --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
-    
+
+#        sabre cr --create pike --owner 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --url http://sawtooth-rest-api:8008 --wait 30
+#        sabre upload --filename /tmp/pike.yaml --url http://sawtooth-rest-api:8008 --wait 30
+#        sabre ns --create ed02b3 --owner 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --url http://sawtooth-rest-api:8008 --wait 30
+#        sabre perm ed02b3 pike --read --write --url http://sawtooth-rest-api:8008 --wait 30
+
+
   schema-contract-builder:
     image: schema-contract-builder
     container_name: schema-contract-builder
@@ -64,12 +70,12 @@ services:
     entrypoint: |
       bash -c "
         while true; do curl -s http://sawtooth-rest-api:8008/state | grep -q head; if [ $$? -eq 0 ]; then break; fi; sleep 0.5; done;
-        sabre cr --create grid_schema --key 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --owner 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --url http://sawtooth-rest-api:8008 --wait 30
-        sabre upload --filename /tmp/schema.yaml --key 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --url http://sawtooth-rest-api:8008 --wait 30
-        sabre ns --create f350b8 --key 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --owner 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --url http://sawtooth-rest-api:8008 --wait 30
-        sabre ns --create ed02b3 --key 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --owner 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --url http://sawtooth-rest-api:8008 --wait 30
-        sabre perm f350b8 grid_schema --key 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --read --write --url http://sawtooth-rest-api:8008 --wait 30
-        sabre perm ed02b3 grid_schema --key 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --read --write --url http://sawtooth-rest-api:8008 --wait 30
+        sabre cr --create grid_schema --owner 028d753f40c25fba1b94128f5bc7be362632ad533fc4e035efd542529654850f01 --url http://sawtooth-rest-api:8008 --wait 30
+        sabre upload --filename /tmp/schema.yaml --url http://sawtooth-rest-api:8008 --wait 30
+        sabre ns --create f350b8 --owner 028d753f40c25fba1b94128f5bc7be362632ad533fc4e035efd542529654850f01 --url http://sawtooth-rest-api:8008 --wait 30
+        sabre ns --create ed02b3 --owner 028d753f40c25fba1b94128f5bc7be362632ad533fc4e035efd542529654850f01 --url http://sawtooth-rest-api:8008 --wait 30
+        sabre perm f350b8 grid_schema --read --write --url http://sawtooth-rest-api:8008 --wait 30
+        sabre perm ed02b3 grid_schema --read --write --url http://sawtooth-rest-api:8008 --wait 30
         echo '---------========= grid schema contract is loaded =========---------'
       "
 #      sabre cr --create grid_schema --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
@@ -78,6 +84,14 @@ services:
 #      sabre ns --create ed02b3 --key /grid-shared/my_key --owner $$(cat /grid-shared/my_key.pub) --url http://sawtooth-rest-api:8008 --wait 30
 #      sabre perm f350b8 grid_schema --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
 #      sabre perm ed02b3 grid_schema --key /grid-shared/my_key --read --write --url http://sawtooth-rest-api:8008 --wait 30
+
+#        sabre cr --create grid_schema --owner 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --url http://sawtooth-rest-api:8008 --wait 30
+#        sabre upload --filename /tmp/schema.yaml --url http://sawtooth-rest-api:8008 --wait 30
+#        sabre ns --create f350b8 --owner 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --url http://sawtooth-rest-api:8008 --wait 30
+#        sabre ns --create ed02b3 --owner 036334849ae6e103c742458a79279e5c87a0dc26b95d19f725ee0c1e5cd7cd278b --url http://sawtooth-rest-api:8008 --wait 30
+#        sabre perm f350b8 grid_schema --read --write --url http://sawtooth-rest-api:8008 --wait 30
+#        sabre perm ed02b3 grid_schema --read --write --url http://sawtooth-rest-api:8008 --wait 30
+
 
   tnt-contract-builder:
     image: tnt-contract-builder
