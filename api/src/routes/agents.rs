@@ -191,7 +191,7 @@ fn do_batches(
     }
 
     if action_plan == Action::CreateAgent {
-
+/*
         // Creating a Private Key and Signer //
         let context = create_context("secp256k1")
         .expect("Error creating the right context");
@@ -204,7 +204,7 @@ fn do_batches(
         println!("============ create_agent_link ============");
         println!("!dgc-network! private_key = {:?}", private_key.as_hex());
         println!("!dgc-network! public_key = {:?}", public_key.as_hex());
-    
+*/    
         // Building the Action and Payload//
         let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
