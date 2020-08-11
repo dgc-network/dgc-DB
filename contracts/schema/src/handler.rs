@@ -124,7 +124,7 @@ fn schema_create(
         )));
     }
 
-    //check_permission(perm_checker, signer, "can_create_schema")?;
+    check_permission(perm_checker, signer, "can_create_schema")?;
 
     let agent = match state.get_agent(signer)? {
         Some(agent) => agent,
