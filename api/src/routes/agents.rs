@@ -106,6 +106,8 @@ pub async fn list_agents(
             }
         };
         println!("!dgc-network! agent_list: {:?}", agent_list);
+        println!("!dgc-network! public_key: {:?}", agent_list.agents.public_key);
+        //println!("!dgc-network! public_key: {:?}", agent_list.public_key);
         println!("!dgc-network! agents: {:?}", agent_list.get_agents());
         //println!("!dgc-network! serialized: {:?}", agent.org_id);
         //println!("!dgc-network! public_key: {:?}", agent.public_key);
