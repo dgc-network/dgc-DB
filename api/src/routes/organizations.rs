@@ -81,7 +81,7 @@ pub async fn fetch_org(
         }
     };
     let mut response_data = "".to_owned();
-    for org in orgs.get_organizations() {
+    for org in orgs.get_orgs() {
         println!("!dgc-network! response_data: ");
         println!("    org_id: {:?},", org.org_id);
         println!("    name: {:?},", org.name);
