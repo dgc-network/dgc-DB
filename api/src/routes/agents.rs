@@ -135,7 +135,6 @@ pub async fn fetch_agent(
     let address = make_agent_address(&public_key);
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
-    //println!("============ fetch_agent_data ============");
     let msg = base64::decode(&res.data).unwrap();
     let agents: pike_state::AgentList = match protobuf::parse_from_bytes(&msg){
         Ok(agents) => agents,
@@ -146,24 +145,22 @@ pub async fn fetch_agent(
             ))))
         }
     };
+    let agent_data = "";
     for agent in agents.get_agents() {
-        //if agent.public_key == public_key {
-            println!("agent_data: ");
-            println!("    org_id: {:?},", agent.org_id);
-            println!("    public_key: {:?},", agent.public_key);
-            println!("    roles: {:?},", agent.roles);
-            println!("    metadata: {:?}", agent.metadata);
-            //println!("}");
-            //    return Ok(Some(agent.clone()));
-        //}
-        println!("!dgc-network! serialized: {:?}", agent);
-        //Ok(HttpResponse::Ok().body(res.link))
-        //Ok(HttpResponse::Ok().body(agent))
+        println!("agent_data: ");
+        println!("    org_id: {:?},", agent.org_id);
+        println!("    public_key: {:?},", agent.public_key);
+        println!("    roles: {:?},", agent.roles);
+        println!("    metadata: {:?}", agent.metadata);
+        
+        agent_data = agent_data + format!("org_id: {:?}, public_key: {:?}, roles: {:?}, metadata: {:?}", agent.org_id, agent.public_key, agent.roles, agent.metadata);
     }
 
     //println!("============ fetch_agent_link ============");
-    println!("!dgc-network! link = {:?}", res.link);
-    Ok(HttpResponse::Ok().body(res.link))
+    //println!("!dgc-network! link = {:?}", res.link);
+    //Ok(HttpResponse::Ok().body(res.link))
+    println!("!dgc-network! link = {:?}", agent_data);
+    Ok(HttpResponse::Ok().body(agent_data))
 /*
     Ok(HttpResponse::Ok().json(AgentData {
         org_id: &agent.org_id,
