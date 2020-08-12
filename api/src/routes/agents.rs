@@ -24,7 +24,7 @@ use dgc_config::protocol::pike::payload::*;
 pub struct AgentData {
     private_key: String,
     org_id: String,
-    roles: String,
+    roles: [String],
     metadata: String,
 }
 
@@ -183,13 +183,13 @@ fn do_batches(
     let org_id = &input_data.org_id;
     let roles_as_string = &input_data.roles;
     let metadata_as_string = &input_data.metadata;
-
+/*
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
         let entry: String = role.to_string().split(",").collect();
         roles.push(entry.clone());
     }
-
+*/
     let mut metadata = Vec::<KeyValueEntry>::new();
     for meta in metadata_as_string.chars() {
         let meta_as_string = meta.to_string();
