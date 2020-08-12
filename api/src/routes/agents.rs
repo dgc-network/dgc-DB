@@ -157,17 +157,19 @@ pub async fn fetch_agent(
             //println!("}");
             //    return Ok(Some(agent.clone()));
         //}
-        Ok(HttpResponse::Ok().json(AgentData {
-            org_id: &agent.org_id,
-            private_key: &agent.public_key,
-            roles: &agent.roles,
-            metadata: &agent.metadata,
-        }))
     }
 
     //println!("============ fetch_agent_link ============");
     //println!("!dgc-network! link = {:?}", res.link);
-    //Ok(HttpResponse::Ok().body(res.link))
+    Ok(HttpResponse::Ok().body(res.link))
+/*
+    Ok(HttpResponse::Ok().json(AgentData {
+        org_id: &agent.org_id,
+        private_key: &agent.public_key,
+        roles: &agent.roles,
+        metadata: &agent.metadata,
+    }))
+*/
 }
 
 fn do_batches(
