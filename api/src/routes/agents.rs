@@ -93,7 +93,7 @@ pub async fn list_agents(
 
     let url = format!("http://rest-api:8008/state?address={}", &get_agent_prefix());
     let list = reqwest::get(&url).await?.json::<List>().await?;
-    let mut agent_data = "[".to_owned();
+    let mut response_data = "[".to_owned();
     for sub in list.data {
         let msg = base64::decode(&sub.data).unwrap();
         let agents: pike_state::AgentList = match protobuf::parse_from_bytes(&msg){
@@ -107,17 +107,17 @@ pub async fn list_agents(
         };
 
         for agent in agents.get_agents() {
-            println!("!dgc-network! agent_data: ");
-            println!("    org_id: {:?},", agent.org_id);
+            println!("!dgc-network! response_data: ");
             println!("    public_key: {:?},", agent.public_key);
+            println!("    org_id: {:?},", agent.org_id);
             println!("    roles: {:?},", agent.roles);
             println!("    metadata: {:?}", agent.metadata);
             
-            agent_data = agent_data + &format!("{{\n  public_key: {:?}, \n  org_id: {:?}, \n  roles: {:?}, \n  metadata: {:?} \n}},", agent.public_key, agent.org_id, agent.roles, agent.metadata);
+            response_data = response_data + &format!("\n  {{\n    public_key: {:?}, \n    org_id: {:?}, \n    roles: {:?}, \n    metadata: {:?} \n  }},\n", agent.public_key, agent.org_id, agent.roles, agent.metadata);
         }
     }
-    agent_data = agent_data + &format!("]");
-    Ok(HttpResponse::Ok().body(agent_data))
+    response_data = response_data + &format!("]");
+    Ok(HttpResponse::Ok().body(response_data))
 }
 
 pub async fn fetch_agent(
@@ -137,17 +137,17 @@ pub async fn fetch_agent(
             ))))
         }
     };
-    let mut agent_data = "".to_owned();
+    let mut response_data = "".to_owned();
     for agent in agents.get_agents() {
-        println!("!dgc-network! agent_data: ");
-        println!("    org_id: {:?},", agent.org_id);
+        println!("!dgc-network! response_data: ");
         println!("    public_key: {:?},", agent.public_key);
+        println!("    org_id: {:?},", agent.org_id);
         println!("    roles: {:?},", agent.roles);
         println!("    metadata: {:?}", agent.metadata);
         
-        agent_data = agent_data + &format!("{{\n  public_key: {:?}, \n  org_id: {:?}, \n  roles: {:?}, \n  metadata: {:?} \n}}", agent.public_key, agent.org_id, agent.roles, agent.metadata);
+        response_data = response_data + &format!("{{\n  public_key: {:?}, \n  org_id: {:?}, \n  roles: {:?}, \n  metadata: {:?} \n}}", agent.public_key, agent.org_id, agent.roles, agent.metadata);
     }
-    Ok(HttpResponse::Ok().body(agent_data))
+    Ok(HttpResponse::Ok().body(response_data))
 }
 
 fn do_batches(

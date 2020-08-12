@@ -34,28 +34,31 @@ pub async fn list_orgs(
 
     let url = format!("http://rest-api:8008/state?address={}", &get_org_prefix());
     let list = reqwest::get(&url).await?.json::<List>().await?;
-    for sub in list.data.iter() {
+    let mut response_data = "[".to_owned();
+    for sub in list.data {
         let msg = base64::decode(&sub.data).unwrap();
-        println!("============ list_org_1 ============");
-        println!("!dgc-network! data = {:?}", sub.data);
-        println!("!dgc-network! bytes = {:?}", msg);
-
-        let org: pike_state::Organization = match protobuf::parse_from_bytes(&msg){
-            Ok(org) => org,
+        let orgs: pike_state::OrganizationList = match protobuf::parse_from_bytes(&msg){
+            Ok(orgs) => orgs,
             Err(err) => {
                 return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
-                    "Cannot deserialize organization: {:?}",
+                    "Cannot deserialize data: {:?}",
                     err,
                 ))))
             }
         };
-        println!("serialized: {:?}", org);
-        //println!("!dgc-network! org = {:?}", org);
-    }
 
-    println!("============ list_org ============");
-    println!("!dgc-network! link = {:?}", list.link);
-    Ok(HttpResponse::Ok().body(list.link))
+        for org in orgs.get_organizations() {
+            println!("!dgc-network! response_data: ");
+            println!("    org_id: {:?},", org.org_id);
+            println!("    name: {:?},", org.name);
+            println!("    address: {:?},", org.address);
+            println!("    metadata: {:?}", org.metadata);
+            
+            response_data = response_data + &format!("\n  {{\n    org_id: {:?}, \n    name: {:?}, \n    address: {:?}, \n    metadata: {:?} \n  }},\n", org.org_id, org.name, org.address, org.metadata);
+        }
+    }
+    response_data = response_data + &format!("]");
+    Ok(HttpResponse::Ok().body(response_data))
 }
 
 pub async fn fetch_org(
@@ -68,33 +71,26 @@ pub async fn fetch_org(
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
     let msg = base64::decode(&res.data).unwrap();
-    println!("============ fetch_org_2 ============");
-    println!("!dgc-network! data = {:?}", res.data);
-    println!("!dgc-network! bytes = {:?}", msg);
-
-    let org: pike_state::Organization = match protobuf::parse_from_bytes(&msg){
-        Ok(org) => org,
+    let agents: pike_state::OrganizationList = match protobuf::parse_from_bytes(&msg){
+        Ok(orgs) => orgs,
         Err(err) => {
             return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
-                "Cannot deserialize organization: {:?}",
+                "Cannot deserialize agent: {:?}",
                 err,
             ))))
         }
     };
-    println!("serialized: {:?}", org);
-    //println!("!dgc-network! org = {:?}", org);
-
-    println!("============ fetch_org ============");
-    println!("!dgc-network! link = {:?}", res.link);
-    //Ok(HttpResponse::Ok().body(res.link))
-    //Ok(HttpResponse::Ok().body(org.org_id))
-    Ok(HttpResponse::Ok().json(OrgData {
-        private_key: "private_key".to_string(),
-        org_id: org.org_id.to_string(),
-        name: org.name.to_string(),
-        address: org.address.to_string(),
-        metadata: "metadata".to_string(),
-    }))
+    let mut response_data = "".to_owned();
+    for org in orgs.get_organizations() {
+        println!("!dgc-network! response_data: ");
+        println!("    org_id: {:?},", org.org_id);
+        println!("    name: {:?},", org.name);
+        println!("    address: {:?},", org.address);
+        println!("    metadata: {:?}", org.metadata);
+        
+        response_data = response_data + &format!("{{\n  org_id: {:?}, \n  name: {:?}, \n  address: {:?}, \n  metadata: {:?} \n}}", org.org_id, org.name, org.address, org.metadata);
+    }
+    Ok(HttpResponse::Ok().body(response_data))
 }
 
 pub async fn create_org(
