@@ -145,7 +145,7 @@ pub async fn fetch_agent(
             ))))
         }
     };
-    let agent_data = "".to_owned();
+    let mut agent_data = "".to_owned();
     for agent in agents.get_agents() {
         println!("agent_data: ");
         println!("    org_id: {:?},", agent.org_id);
