@@ -24,7 +24,7 @@ use dgc_config::protocol::pike::payload::*;
 pub struct AgentData {
     private_key: String,
     org_id: String,
-    roles: [String],
+    roles: &[String],
     metadata: String,
 }
 
@@ -181,7 +181,8 @@ fn do_batches(
 
     // Creating the Payload //
     let org_id = &input_data.org_id;
-    let roles_as_string = &input_data.roles;
+    //let roles_as_string = &input_data.roles;
+    let roles = &input_data.roles;
     let metadata_as_string = &input_data.metadata;
 /*
     let mut roles = Vec::<String>::new();
@@ -235,13 +236,13 @@ fn do_batches(
         .with_org_id(org_id.to_string())
         .with_public_key(public_key.as_hex())
         .with_active(true)
-        //.with_roles(roles)
-        .with_roles(vec![
-            "admin".to_string(),
-            "can_create_product".to_string(),
-            "can_update_product".to_string(),
-            "can_delete_product".to_string(),
-        ])
+        .with_roles(roles)
+        //.with_roles(vec![
+        //    "admin".to_string(),
+        //    "can_create_product".to_string(),
+        //    "can_update_product".to_string(),
+        //    "can_delete_product".to_string(),
+        //])
         .with_metadata(metadata)
         .build()
         .unwrap();
