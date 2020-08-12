@@ -71,7 +71,7 @@ pub async fn fetch_org(
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
     let msg = base64::decode(&res.data).unwrap();
-    let agents: pike_state::OrganizationList = match protobuf::parse_from_bytes(&msg){
+    let orgs: pike_state::OrganizationList = match protobuf::parse_from_bytes(&msg){
         Ok(orgs) => orgs,
         Err(err) => {
             return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
@@ -81,7 +81,7 @@ pub async fn fetch_org(
         }
     };
     let mut response_data = "".to_owned();
-    for org in orgs.get_orgs() {
+    for org in orgs.get_organizations() {
         println!("!dgc-network! response_data: ");
         println!("    org_id: {:?},", org.org_id);
         println!("    name: {:?},", org.name);
