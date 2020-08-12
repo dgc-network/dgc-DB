@@ -96,7 +96,7 @@ pub async fn list_agents(
     println!("============ list_agent_data ============");
     for sub in list.data {
         let msg = base64::decode(&sub.data).unwrap();
-        let agent_list: pike_state::AgentList = match protobuf::parse_from_bytes(&msg){
+        let agents: pike_state::AgentList = match protobuf::parse_from_bytes(&msg){
             Ok(agents) => agents,
             Err(err) => {
                 return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
@@ -105,18 +105,16 @@ pub async fn list_agents(
                 ))))
             }
         };
-        println!("!dgc-network! agent_list: {:?}", agent_list);
-        //println!("!dgc-network! public_key: {:?}", agent_list.agents.public_key);
-        //println!("!dgc-network! public_key: {:?}", agent_list.public_key);
-        println!("!dgc-network! agents: {:?}", agent_list.get_agents());
 
-        for agent in agent_list.get_agents() {
+        for agent in agents.get_agents() {
             //if agent.public_key == public_key {
             //    return Ok(Some(agent.clone()));
             //}
+            println!("!dgc-network! org_id: {:?}", agent.org_id);
             println!("!dgc-network! public_key: {:?}", agent.public_key);
+            println!("!dgc-network! roles: {:?}", agent.roles);
+            println!("============ agent_data ============");
         }
-        //println!("!dgc-network! serialized: {:?}", agent.org_id);
     }
 
     println!("============ list_agent_link ============");
@@ -133,8 +131,8 @@ pub async fn fetch_agent(
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
     println!("============ fetch_agent_data ============");
     let msg = base64::decode(&res.data).unwrap();
-    let agent: pike_state::Agent = match protobuf::parse_from_bytes(&msg){
-        Ok(agent) => agent,
+    let agents: pike_state::AgentList = match protobuf::parse_from_bytes(&msg){
+        Ok(agents) => agents,
         Err(err) => {
             return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
                 "Cannot deserialize agent: {:?}",
@@ -142,7 +140,16 @@ pub async fn fetch_agent(
             ))))
         }
     };
-    println!("!dgc-network! serialized: {:?}", agent);
+    //println!("!dgc-network! serialized: {:?}", agent);
+    for agent in agents.get_agents() {
+        //if agent.public_key == public_key {
+        //    return Ok(Some(agent.clone()));
+        //}
+        println!("!dgc-network! org_id: {:?}", agent.org_id);
+        println!("!dgc-network! public_key: {:?}", agent.public_key);
+        println!("!dgc-network! roles: {:?}", agent.roles);
+        println!("============ agent_data ============");
+    }
 
     println!("============ fetch_agent_link ============");
     println!("!dgc-network! link = {:?}", res.link);
