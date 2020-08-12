@@ -22,14 +22,10 @@ use dgc_config::protocol::pike::payload::*;
 
 #[derive(Deserialize)]
 pub struct AgentData {
-    //private_key: String,
-    //org_id: String,
-    //roles: String,
-    //metadata: String,
-    private_key: &str,
-    org_id: &str,
-    roles: &str,
-    metadata: &str,
+    private_key: String,
+    org_id: String,
+    roles: String,
+    metadata: String,
 }
 
 pub async fn create_agent(
@@ -161,9 +157,9 @@ pub async fn fetch_agent(
             //println!("}");
             //    return Ok(Some(agent.clone()));
         //}
-        Ok(HttpResponse::Ok().json(Agent {
+        Ok(HttpResponse::Ok().json(AgentData {
             org_id: &agent.org_id,
-            public_key: &agent.public_key,
+            private_key: &agent.public_key,
             roles: &agent.roles,
             metadata: &agent.metadata,
         }))
@@ -190,12 +186,9 @@ fn do_batches(
 
 
     // Creating the Payload //
-    //let org_id = &input_data.org_id;
-    //let roles_as_string = &input_data.roles;
-    //let metadata_as_string = &input_data.metadata;
-    let org_id = input_data.org_id;
-    let roles_as_string = input_data.roles;
-    let metadata_as_string = input_data.metadata;
+    let org_id = &input_data.org_id;
+    let roles_as_string = &input_data.roles;
+    let metadata_as_string = &input_data.metadata;
 
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
