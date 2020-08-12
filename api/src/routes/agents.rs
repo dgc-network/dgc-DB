@@ -148,7 +148,7 @@ pub async fn fetch_agent(
     };
     //println!("!dgc-network! serialized: {:?}", agent);
     for agent in agents.get_agents() {
-        if agent.public_key == public_key {
+        //if agent.public_key == public_key {
             println!("agent_data: ");
             println!("    org_id: {:?},", agent.org_id);
             println!("    public_key: {:?},", agent.public_key);
@@ -156,7 +156,7 @@ pub async fn fetch_agent(
             println!("    metadata: {:?}", agent.metadata);
             //println!("}");
             //    return Ok(Some(agent.clone()));
-        }
+        //}
     }
 
     println!("============ fetch_agent_link ============");
