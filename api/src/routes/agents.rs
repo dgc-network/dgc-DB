@@ -212,6 +212,7 @@ fn do_batches(
         .with_active(true)
         //.with_roles(roles)
         .with_roles(vec![
+            "admin".to_string(),
             "can_create_product".to_string(),
             "can_update_product".to_string(),
             "can_delete_product".to_string(),
@@ -254,6 +255,7 @@ fn do_batches(
         .with_active(true)
         //.with_roles(roles)
         .with_roles(vec![
+            "admin".to_string(),
             "can_create_product".to_string(),
             "can_update_product".to_string(),
             "can_delete_product".to_string(),
