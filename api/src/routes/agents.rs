@@ -256,6 +256,9 @@ fn do_batches(
         //.with_roles(roles)
         .with_roles(vec![
             "admin".to_string(),
+            "can_create_schema".to_string(),
+            "can_update_schema".to_string(),
+            "can_delete_schema".to_string(),
             "can_create_product".to_string(),
             "can_update_product".to_string(),
             "can_delete_product".to_string(),
