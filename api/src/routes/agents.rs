@@ -153,7 +153,7 @@ pub async fn fetch_agent(
         println!("    roles: {:?},", agent.roles);
         println!("    metadata: {:?}", agent.metadata);
         
-        agent_data = agent_data + format!("{{\n  \"org_id: {:?}, public_key: {:?}, roles: {:?}, metadata: {:?}\n}}", agent.org_id, agent.public_key, agent.roles.to_owned(), agent.metadata);
+        agent_data = agent_data.to_owned() + format!("{{\n  \"org_id: {:?}, public_key: {:?}, roles: {:?}, metadata: {:?}\n}}", agent.org_id, agent.public_key, agent.roles, agent.metadata);
         //"{\n  \"link\": \"http://rest-api:8008/batch_statuses?id=d0f527ce7d4c34d3e1f64cd91900eed2fe99602d794de723d69b61eb8c0c28986c7a3b01affd777baed03a17a61610983d6de32e6bccef7a984bdd7db1677d72\"\n}"
     }
 
