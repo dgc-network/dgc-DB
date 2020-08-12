@@ -94,10 +94,10 @@ pub async fn list_agents(
     let url = format!("http://rest-api:8008/state?address={}", &get_agent_prefix());
     let list = reqwest::get(&url).await?.json::<List>().await?;
     println!("============ list_agent_data ============");
-    println!("!dgc-network! data = {:?}", list.data);
+    //println!("!dgc-network! data = {:?}", list.data);
     for sub in list.data {
 
-        println!("!dgc-network! sub_data = {:?}", sub);
+        println!("!dgc-network! sub_data = {:?}", sub.data);
 
 /*
         let msg = base64::decode(&sub.data).unwrap();
@@ -149,12 +149,12 @@ pub async fn fetch_agent(
     //println!("!dgc-network! serialized: {:?}", agent);
     for agent in agents.get_agents() {
         if agent.public_key == public_key {
-            println!("agent_data: {");
+            println!("agent_data: ");
             println!("    org_id: {:?},", agent.org_id);
             println!("    public_key: {:?},", agent.public_key);
             println!("    roles: {:?},", agent.roles);
             println!("    metadata: {:?}", agent.metadata);
-            println!("}");
+            //println!("}");
             //    return Ok(Some(agent.clone()));
         }
     }
