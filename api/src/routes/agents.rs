@@ -22,10 +22,14 @@ use dgc_config::protocol::pike::payload::*;
 
 #[derive(Deserialize)]
 pub struct AgentData {
-    private_key: String,
-    org_id: String,
-    roles: &[String],
-    metadata: String,
+    //private_key: String,
+    //org_id: String,
+    //roles: String,
+    //metadata: String,
+    private_key: &str,
+    org_id: &str,
+    roles: &str,
+    metadata: &str,
 }
 
 pub async fn create_agent(
@@ -157,11 +161,17 @@ pub async fn fetch_agent(
             //println!("}");
             //    return Ok(Some(agent.clone()));
         //}
+        Ok(HttpResponse::Ok().json(Agent {
+            org_id: &agent.org_id,
+            public_key: &agent.public_key,
+            roles: &agent.roles,
+            metadata: &agent.metadata,
+        }))
     }
 
-    println!("============ fetch_agent_link ============");
-    println!("!dgc-network! link = {:?}", res.link);
-    Ok(HttpResponse::Ok().body(res.link))
+    //println!("============ fetch_agent_link ============");
+    //println!("!dgc-network! link = {:?}", res.link);
+    //Ok(HttpResponse::Ok().body(res.link))
 }
 
 fn do_batches(
@@ -180,17 +190,19 @@ fn do_batches(
 
 
     // Creating the Payload //
-    let org_id = &input_data.org_id;
+    //let org_id = &input_data.org_id;
     //let roles_as_string = &input_data.roles;
-    let roles = &input_data.roles;
-    let metadata_as_string = &input_data.metadata;
-/*
+    //let metadata_as_string = &input_data.metadata;
+    let org_id = input_data.org_id;
+    let roles_as_string = input_data.roles;
+    let metadata_as_string = input_data.metadata;
+
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
         let entry: String = role.to_string().split(",").collect();
         roles.push(entry.clone());
     }
-*/
+
     let mut metadata = Vec::<KeyValueEntry>::new();
     for meta in metadata_as_string.chars() {
         let meta_as_string = meta.to_string();
@@ -236,8 +248,7 @@ fn do_batches(
         .with_org_id(org_id.to_string())
         .with_public_key(public_key.as_hex())
         .with_active(true)
-        //.with_roles(roles)
-        .with_roles(roles.to_vec())
+        .with_roles(roles)
         //.with_roles(vec![
         //    "admin".to_string(),
         //    "can_create_product".to_string(),
