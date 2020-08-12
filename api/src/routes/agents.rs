@@ -236,7 +236,8 @@ fn do_batches(
         .with_org_id(org_id.to_string())
         .with_public_key(public_key.as_hex())
         .with_active(true)
-        .with_roles(roles)
+        //.with_roles(roles)
+        .with_roles(roles.to_vec())
         //.with_roles(vec![
         //    "admin".to_string(),
         //    "can_create_product".to_string(),
