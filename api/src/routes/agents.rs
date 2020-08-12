@@ -146,7 +146,6 @@ pub async fn fetch_agent(
             ))))
         }
     };
-    //println!("!dgc-network! serialized: {:?}", agent);
     for agent in agents.get_agents() {
         //if agent.public_key == public_key {
             println!("agent_data: ");
@@ -157,11 +156,14 @@ pub async fn fetch_agent(
             //println!("}");
             //    return Ok(Some(agent.clone()));
         //}
+        println!("!dgc-network! serialized: {:?}", agent);
+        Ok(HttpResponse::Ok().body(res.link))
+        //Ok(HttpResponse::Ok().body(agent))
     }
 
     //println!("============ fetch_agent_link ============");
     //println!("!dgc-network! link = {:?}", res.link);
-    Ok(HttpResponse::Ok().body(res.link))
+    //Ok(HttpResponse::Ok().body(res.link))
 /*
     Ok(HttpResponse::Ok().json(AgentData {
         org_id: &agent.org_id,
