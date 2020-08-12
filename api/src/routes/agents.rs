@@ -107,10 +107,16 @@ pub async fn list_agents(
         };
         println!("!dgc-network! agent_list: {:?}", agent_list);
         //println!("!dgc-network! public_key: {:?}", agent_list.agents.public_key);
-        println!("!dgc-network! public_key: {:?}", agent_list.public_key);
+        //println!("!dgc-network! public_key: {:?}", agent_list.public_key);
         println!("!dgc-network! agents: {:?}", agent_list.get_agents());
+
+        for agent in agent_list.get_agents() {
+            //if agent.public_key == public_key {
+            //    return Ok(Some(agent.clone()));
+            //}
+            println!("!dgc-network! public_key: {:?}", agent.public_key);
+        }
         //println!("!dgc-network! serialized: {:?}", agent.org_id);
-        //println!("!dgc-network! public_key: {:?}", agent.public_key);
     }
 
     println!("============ list_agent_link ============");
