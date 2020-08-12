@@ -96,8 +96,8 @@ pub async fn list_agents(
     println!("============ list_agent_data ============");
     for sub in list.data {
         let msg = base64::decode(&sub.data).unwrap();
-        let agent: pike_state::AgentList = match protobuf::parse_from_bytes(&msg){
-            Ok(agent) => agent,
+        let agent_list: pike_state::AgentList = match protobuf::parse_from_bytes(&msg){
+            Ok(agents) => agents,
             Err(err) => {
                 return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
                     "Cannot deserialize agent: {:?}",
@@ -105,7 +105,8 @@ pub async fn list_agents(
                 ))))
             }
         };
-        println!("!dgc-network! serialized: {:?}", agent);
+        println!("!dgc-network! agent_list: {:?}", agent_list);
+        println!("!dgc-network! agents: {:?}", agent_list.get_agents());
         //println!("!dgc-network! serialized: {:?}", agent.org_id);
         //println!("!dgc-network! public_key: {:?}", agent.public_key);
     }
