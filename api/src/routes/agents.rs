@@ -94,7 +94,12 @@ pub async fn list_agents(
     let url = format!("http://rest-api:8008/state?address={}", &get_agent_prefix());
     let list = reqwest::get(&url).await?.json::<List>().await?;
     println!("============ list_agent_data ============");
+    println!("!dgc-network! data = {:?}", list.data);
     for sub in list.data {
+
+        println!("!dgc-network! sub_data = {:?}", sub);
+
+/*
         let msg = base64::decode(&sub.data).unwrap();
         let agents: pike_state::AgentList = match protobuf::parse_from_bytes(&msg){
             Ok(agents) => agents,
@@ -115,6 +120,7 @@ pub async fn list_agents(
             println!("!dgc-network! roles: {:?}", agent.roles);
             println!("============ agent_data ============");
         }
+*/        
     }
 
     println!("============ list_agent_link ============");
@@ -129,7 +135,7 @@ pub async fn fetch_agent(
     let address = make_agent_address(&public_key);
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
-    println!("============ fetch_agent_data ============");
+    //println!("============ fetch_agent_data ============");
     let msg = base64::decode(&res.data).unwrap();
     let agents: pike_state::AgentList = match protobuf::parse_from_bytes(&msg){
         Ok(agents) => agents,
@@ -142,13 +148,15 @@ pub async fn fetch_agent(
     };
     //println!("!dgc-network! serialized: {:?}", agent);
     for agent in agents.get_agents() {
-        //if agent.public_key == public_key {
-        //    return Ok(Some(agent.clone()));
-        //}
-        println!("!dgc-network! org_id: {:?}", agent.org_id);
-        println!("!dgc-network! public_key: {:?}", agent.public_key);
-        println!("!dgc-network! roles: {:?}", agent.roles);
-        println!("============ agent_data ============");
+        if agent.public_key == public_key {
+            println!("agent_data: {");
+            println!("    org_id: {:?},", agent.org_id);
+            println!("    public_key: {:?},", agent.public_key);
+            println!("    roles: {:?},", agent.roles);
+            println!("    metadata: {:?}", agent.metadata);
+            println!("}");
+            //    return Ok(Some(agent.clone()));
+        }
     }
 
     println!("============ fetch_agent_link ============");
