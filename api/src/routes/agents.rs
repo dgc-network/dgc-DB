@@ -157,13 +157,13 @@ pub async fn fetch_agent(
             //    return Ok(Some(agent.clone()));
         //}
         println!("!dgc-network! serialized: {:?}", agent);
-        Ok(HttpResponse::Ok().body(res.link))
+        //Ok(HttpResponse::Ok().body(res.link))
         //Ok(HttpResponse::Ok().body(agent))
     }
 
     //println!("============ fetch_agent_link ============");
-    //println!("!dgc-network! link = {:?}", res.link);
-    //Ok(HttpResponse::Ok().body(res.link))
+    println!("!dgc-network! link = {:?}", res.link);
+    Ok(HttpResponse::Ok().body(res.link))
 /*
     Ok(HttpResponse::Ok().json(AgentData {
         org_id: &agent.org_id,
