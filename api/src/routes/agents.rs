@@ -93,13 +93,8 @@ pub async fn list_agents(
 
     let url = format!("http://rest-api:8008/state?address={}", &get_agent_prefix());
     let list = reqwest::get(&url).await?.json::<List>().await?;
-    println!("============ list_agent_data ============");
-    //println!("!dgc-network! data = {:?}", list.data);
+    let mut agent_data = "[".to_owned();
     for sub in list.data {
-
-        println!("!dgc-network! sub_data = {:?}", sub.data);
-
-/*
         let msg = base64::decode(&sub.data).unwrap();
         let agents: pike_state::AgentList = match protobuf::parse_from_bytes(&msg){
             Ok(agents) => agents,
@@ -112,20 +107,17 @@ pub async fn list_agents(
         };
 
         for agent in agents.get_agents() {
-            //if agent.public_key == public_key {
-            //    return Ok(Some(agent.clone()));
-            //}
-            println!("!dgc-network! org_id: {:?}", agent.org_id);
-            println!("!dgc-network! public_key: {:?}", agent.public_key);
-            println!("!dgc-network! roles: {:?}", agent.roles);
-            println!("============ agent_data ============");
+            println!("!dgc-network! agent_data: ");
+            println!("    org_id: {:?},", agent.org_id);
+            println!("    public_key: {:?},", agent.public_key);
+            println!("    roles: {:?},", agent.roles);
+            println!("    metadata: {:?}", agent.metadata);
+            
+            agent_data = agent_data + &format!("{{\n  public_key: {:?}, \n  org_id: {:?}, \n  roles: {:?}, \n  metadata: {:?} \n}},", agent.public_key, agent.org_id, agent.roles, agent.metadata);
         }
-*/        
     }
-
-    println!("============ list_agent_link ============");
-    println!("!dgc-network! link = {:?}", list.link);
-    Ok(HttpResponse::Ok().body(list.link))
+    agent_data = agent_data + &format!("]");
+    Ok(HttpResponse::Ok().body(agent_data))
 }
 
 pub async fn fetch_agent(
@@ -147,29 +139,15 @@ pub async fn fetch_agent(
     };
     let mut agent_data = "".to_owned();
     for agent in agents.get_agents() {
-        println!("agent_data: ");
+        println!("!dgc-network! agent_data: ");
         println!("    org_id: {:?},", agent.org_id);
         println!("    public_key: {:?},", agent.public_key);
         println!("    roles: {:?},", agent.roles);
         println!("    metadata: {:?}", agent.metadata);
         
-        agent_data = agent_data + &format!("{{\n  org_id: {:?}, \n  public_key: {:?}, \n  roles: {:?}, \n  metadata: {:?} \n}}", agent.org_id, agent.public_key, agent.roles, agent.metadata);
-        //"{\n  \"link\": \"http://rest-api:8008/batch_statuses?id=d0f527ce7d4c34d3e1f64cd91900eed2fe99602d794de723d69b61eb8c0c28986c7a3b01affd777baed03a17a61610983d6de32e6bccef7a984bdd7db1677d72\"\n}"
+        agent_data = agent_data + &format!("{{\n  public_key: {:?}, \n  org_id: {:?}, \n  roles: {:?}, \n  metadata: {:?} \n}}", agent.public_key, agent.org_id, agent.roles, agent.metadata);
     }
-
-    //println!("============ fetch_agent_link ============");
-    //println!("!dgc-network! link = {:?}", res.link);
-    //Ok(HttpResponse::Ok().body(res.link))
-    println!("!dgc-network! link = {:?}", agent_data);
     Ok(HttpResponse::Ok().body(agent_data))
-/*
-    Ok(HttpResponse::Ok().json(AgentData {
-        org_id: &agent.org_id,
-        private_key: &agent.public_key,
-        roles: &agent.roles,
-        metadata: &agent.metadata,
-    }))
-*/
 }
 
 fn do_batches(
