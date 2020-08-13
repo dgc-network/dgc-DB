@@ -172,7 +172,7 @@ fn do_batches(
     let schema = &input_data.schema;
     let properties_as_string = &input_data.properties;
 
-    let mut properties = Vec::<PropertyDefinition>::new();
+    let mut properties = Vec::<PropertyValue>::new();
     for meta in properties_as_string.chars() {
         let meta_as_string = meta.to_string();
         let key_val: Vec<&str> = meta_as_string.split(",").collect();
