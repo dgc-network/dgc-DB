@@ -1,8 +1,6 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
-//use crypto::digest::Digest;
-//use crypto::sha2::Sha512;
 use protobuf;
 
 cfg_if! {
@@ -23,11 +21,6 @@ cfg_if! {
 use dgc_config::addressing::*;
 use dgc_config::protos::pike_payload::*;
 use dgc_config::protos::pike_state::*;
-//use dgc_config::protos::pike_payload::{
-//    CreateAgentAction, CreateOrganizationAction, PikePayload, PikePayload_Action as Action,
-//    UpdateAgentAction, UpdateOrganizationAction,
-//};
-//use dgc_config::protos::pike_state::{Agent, AgentList, Organization, OrganizationList};
 
 pub struct PikeTransactionHandler {
     family_name: String,
