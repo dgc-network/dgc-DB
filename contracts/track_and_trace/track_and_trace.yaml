@@ -6,7 +6,9 @@ version: '1.0'
 wasm: /tmp/grid-track-and-trace-tp.wasm
 inputs:
   - 'a43b46'
+  - 'f350b8'
   - 'ed02b3'
 outputs:
   - 'a43b46'
+  - 'f350b8'
   - 'ed02b3'
