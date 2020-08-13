@@ -46,13 +46,13 @@ pub async fn list_records(
                 ))))
             }
         };
-
+/*
         record_id: String,
         schema: String,
         owners: Vec<AssociatedAgent>,
         custodians: Vec<AssociatedAgent>,
         field_final: bool,
-    
+*/    
         for record in records.get_records() {
             println!("!dgc-network! response_data: ");
             println!("    record_id: {:?},", record.record_id);
@@ -171,7 +171,7 @@ fn do_batches(
     let record_id = &input_data.record_id;
     let schema = &input_data.schema;
     let properties_as_string = &input_data.properties;
-    
+
     let mut properties = Vec::<PropertyDefinition>::new();
     for meta in properties_as_string.chars() {
         let meta_as_string = meta.to_string();
