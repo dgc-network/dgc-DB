@@ -166,9 +166,9 @@ fn do_batches(
     let mut properties = Vec::<PropertyDefinition>::new();
     //for meta in properties_as_string.chars() {
     for meta in input_data.properties.chars() {
-        //let meta_as_string = meta.to_string();
-        //let key_val: Vec<&str> = meta_as_string.split(",").collect();
-        let key_val: Vec<&str> = meta.split(",").collect();
+        let meta_as_string = meta.to_string();
+        let key_val: Vec<&str> = meta_as_string.split(",").collect();
+        //let key_val: Vec<&str> = meta.split(",").collect();
         if key_val.len() != 7 {
             "Metadata is formated incorrectly".to_string();            
         }
