@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::*;
-//use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
@@ -33,24 +32,30 @@ pub async fn list_schemas(
 
     let url = format!("http://rest-api:8008/state?address={}", &get_schema_prefix());
     let list = reqwest::get(&url).await?.json::<List>().await?;
-    println!("============ list_schema_data ============");
+    let mut response_data = "[".to_owned();
     for sub in list.data {
         let msg = base64::decode(&sub.data).unwrap();
-        let schema: schema_state::Schema = match protobuf::parse_from_bytes(&msg){
-            Ok(schema) => schema,
+        let schemas: schema_state::SchemaList = match protobuf::parse_from_bytes(&msg){
+            Ok(schemas) => schemas,
             Err(err) => {
                 return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
-                    "Cannot deserialize organization: {:?}",
+                    "Cannot deserialize data: {:?}",
                     err,
                 ))))
             }
         };
-        println!("!dgc-network! serialized: {:?}", schema);
-    }
 
-    println!("============ list_schema_link ============");
-    println!("!dgc-network! link = {:?}", list.link);
-    Ok(HttpResponse::Ok().body(list.link))
+        for schema in schemas.get_schemas() {
+            println!("!dgc-network! response_data: ");
+            println!("    schema_name: {:?},", schema.schema_name);
+            println!("    description: {:?},", schema.description);
+            println!("    properties: {:?}", schema.properties);
+            
+            response_data = response_data + &format!("\n  {{\n    schema_name: {:?}, \n    description: {:?}, \n    properties: {:?}, \n  }},\n", schema.schema_name, schema.description, schema.properties);
+        }
+    }
+    response_data = response_data + &format!("]");
+    Ok(HttpResponse::Ok().body(response_data))
 }
 
 pub async fn fetch_schema(
@@ -62,8 +67,8 @@ pub async fn fetch_schema(
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
     println!("============ fetch_schema_data ============");
     let msg = base64::decode(&res.data).unwrap();
-    let schema: schema_state::Schema = match protobuf::parse_from_bytes(&msg){
-        Ok(schema) => schema,
+    let schemas: schema_state::SchemaList = match protobuf::parse_from_bytes(&msg){
+        Ok(schemas) => schemas,
         Err(err) => {
             return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
                 "Cannot deserialize organization: {:?}",
@@ -71,11 +76,16 @@ pub async fn fetch_schema(
             ))))
         }
     };
-    println!("!dgc-network! serialized: {:?}", schema);
-
-    println!("============ fetch_schema_link ============");
-    println!("!dgc-network! link = {:?}", res.link);
-    Ok(HttpResponse::Ok().body(res.link))
+    let mut response_data = "".to_owned();
+    for schema in schemas.get_schemas() {
+        println!("!dgc-network! response_data: ");
+        println!("    schema_name: {:?},", schema.schema_name);
+        println!("    description: {:?},", schema.description);
+        println!("    properties: {:?}", schema.properties);
+        
+        response_data = response_data + &format!("\n  {{\n    schema_name: {:?}, \n    description: {:?}, \n    properties: {:?}, \n  }},\n", schema.schema_name, schema.description, schema.properties);
+    }
+    Ok(HttpResponse::Ok().body(response_data))
 }
 
 pub async fn create_schema(
@@ -149,49 +159,53 @@ fn do_batches(
     // Creating the Payload //
     let schema_name = &input_data.schema_name;
     let description = &input_data.description;
-    //let properties_as_string = &input_data.properties;
-
-    let builder = PropertyDefinitionBuilder::new();
-    let property_definition = builder
-        .with_name("TEST".to_string())
-        .with_data_type(DataType::String)
-        .with_description("Optional".to_string())
-        .build()
-        .unwrap();
-
-/*
-    let mut roles = Vec::<String>::new();
-    for role in roles_as_string.chars() {
-        let entry: String = role.to_string().split(",").collect();
-        roles.push(entry.clone());
-    }
-*/
-/*
-    let mut metadata = Vec::<KeyValueEntry>::new();
-    for meta in metadata_as_string.chars() {
+    let properties_as_string = &input_data.properties;
+    let mut properties = Vec::<PropertyDefinition>::new();
+    for meta in properties_as_string.chars() {
         let meta_as_string = meta.to_string();
         let key_val: Vec<&str> = meta_as_string.split(",").collect();
-        if key_val.len() != 2 {
+        if key_val.len() != 7 {
             "Metadata is formated incorrectly".to_string();            
         }
-        let key = match key_val.get(0) {
-            Some(key) => key.to_string(),
+        let name = match key_val.get(0) {
+            Some(value) => value.to_string(),
             None => "Metadata is formated incorrectly".to_string()
         };
-        let value = match key_val.get(1) {
+        let data_type = match key_val.get(1) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let required = match key_val.get(2) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let description = match key_val.get(3) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let number_exponent = match key_val.get(4) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let enum_options = match key_val.get(5) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let struct_properties = match key_val.get(6) {
             Some(value) => value.to_string(),
             None => "Metadata is formated incorrectly".to_string()
         };
 
-        let key_value = KeyValueEntryBuilder::new()
-            .with_key(key.to_string())
-            .with_value(value.to_string())
-            .build()
-            .unwrap();
+        let builder = PropertyDefinitionBuilder::new();
+        let property_definition = builder
+        .with_name(name.to_string())
+        .with_data_type(DataType::String)
+        .with_description(description.to_string())
+        .build()
+        .unwrap();
 
         metadata.push(key_value.clone());
     }
-*/
 
     if action_plan == "CREATE" {
 
