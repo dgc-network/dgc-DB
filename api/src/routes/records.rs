@@ -53,7 +53,7 @@ pub async fn list_records(
         custodians: Vec<AssociatedAgent>,
         field_final: bool,
 */    
-        for record in records.get_records() {
+        for record in records.get_entries() {
             println!("!dgc-network! response_data: ");
             println!("    record_id: {:?},", record.record_id);
             println!("    schema: {:?},", record.schema);
@@ -75,7 +75,7 @@ pub async fn fetch_record(
     let address = make_record_address(&record_id);
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
-
+    let msg = base64::decode(&res.data).unwrap();
     let records: track_and_trace_state::RecordList = match protobuf::parse_from_bytes(&msg){
         Ok(records) => records,
         Err(err) => {
@@ -86,7 +86,7 @@ pub async fn fetch_record(
         }
     };
     let mut response_data = "".to_owned();
-    for record in records.get_records() {
+    for record in records.get_entries() {
         println!("!dgc-network! response_data: ");
         println!("    record_id: {:?},", record.record_id);
         println!("    schema: {:?},", record.schema);
