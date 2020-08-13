@@ -47,11 +47,12 @@ pub async fn list_schemas(
 
         for schema in schemas.get_schemas() {
             println!("!dgc-network! response_data: ");
-            println!("    schema_name: {:?},", schema.schema_name);
+            println!("    schema_name: {:?},", schema.name);
             println!("    description: {:?},", schema.description);
+            println!("    owner: {:?},", schema.owner);
             println!("    properties: {:?}", schema.properties);
-            
-            response_data = response_data + &format!("\n  {{\n    schema_name: {:?}, \n    description: {:?}, \n    properties: {:?}, \n  }},\n", schema.schema_name, schema.description, schema.properties);
+
+            response_data = response_data + &format!("\n  {{\n    schema_name: {:?}, \n    description: {:?}, \n    owner: {:?}, \n    properties: {:?}, \n  }},\n", schema.name, schema.description, schema.owner, schema.properties);
         }
     }
     response_data = response_data + &format!("]");
@@ -79,11 +80,12 @@ pub async fn fetch_schema(
     let mut response_data = "".to_owned();
     for schema in schemas.get_schemas() {
         println!("!dgc-network! response_data: ");
-        println!("    schema_name: {:?},", schema.schema_name);
+        println!("    schema_name: {:?},", schema.name);
         println!("    description: {:?},", schema.description);
+        println!("    owner: {:?},", schema.owner);
         println!("    properties: {:?}", schema.properties);
         
-        response_data = response_data + &format!("\n  {{\n    schema_name: {:?}, \n    description: {:?}, \n    properties: {:?}, \n  }},\n", schema.schema_name, schema.description, schema.properties);
+        response_data = response_data + &format!("\n  {{\n    schema_name: {:?}, \n    description: {:?}, \n    owner: {:?}, \n    properties: {:?}, \n  }},\n", schema.name, schema.description, schema.owner, schema.properties);
     }
     Ok(HttpResponse::Ok().body(response_data))
 }
@@ -204,7 +206,7 @@ fn do_batches(
         .build()
         .unwrap();
 
-        metadata.push(key_value.clone());
+        properties.push(property_definition.clone());
     }
 
     if action_plan == "CREATE" {
@@ -213,7 +215,8 @@ fn do_batches(
         let action = SchemaCreateBuilder::new()
         .with_schema_name(schema_name.to_string())
         .with_description(description.to_string())
-        .with_properties(vec![property_definition.clone()])
+        //.with_properties(vec![property_definition.clone()])
+        .with_properties(properties)
         .build()
         .unwrap();
 
@@ -248,7 +251,8 @@ fn do_batches(
         let action = SchemaUpdateBuilder::new()
         .with_schema_name(schema_name.to_string())
         //.with_description(description.to_string())
-        .with_properties(vec![property_definition.clone()])
+        //.with_properties(vec![property_definition.clone()])
+        .with_properties(properties)
         .build()
         .unwrap();
 
