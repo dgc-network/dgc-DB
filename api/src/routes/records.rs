@@ -37,7 +37,7 @@ pub async fn list_records(
     let mut response_data = "[".to_owned();
     for sub in list.data {
         let msg = base64::decode(&sub.data).unwrap();
-        let records: pike_state::RecordList = match protobuf::parse_from_bytes(&msg){
+        let records: track_and_trace_state::RecordList = match protobuf::parse_from_bytes(&msg){
             Ok(records) => records,
             Err(err) => {
                 return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
@@ -76,7 +76,7 @@ pub async fn fetch_record(
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
 
-    let records: pike_state::RecordList = match protobuf::parse_from_bytes(&msg){
+    let records: track_and_trace_state::RecordList = match protobuf::parse_from_bytes(&msg){
         Ok(records) => records,
         Err(err) => {
             return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
