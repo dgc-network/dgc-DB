@@ -28,6 +28,26 @@ pub struct AgentData {
     metadata: String,
 }
 
+pub async fn keygen(
+) -> Result<HttpResponse, RestApiResponseError> {
+    // Creating a Private Key and Signer //
+    let context = create_context("secp256k1")
+        .expect("Error creating the right context");
+    let private_key = context.new_random_private_key()
+        .expect("Error generating a new Private Key");
+    let crypto_factory = CryptoFactory::new(context.as_ref());
+    let signer = crypto_factory.new_signer(private_key.as_ref());
+    let public_key = signer.get_public_key()
+        .expect("Error retrieving Public Key");
+    println!("============ create_key ============");
+    println!("!dgc-network! private_key = {:?}", private_key.as_hex());
+    println!("!dgc-network! public_key = {:?}", public_key.as_hex());
+
+    let mut response_data = "".to_owned();
+    response_data = response_data + &format!("{{\n  public_key: {:?}, \n  private_key: {:?}\n}}", public_key.as_hex(), private_key.as_hex());
+    Ok(HttpResponse::Ok().body(response_data))
+}
+
 pub async fn create_agent(
     input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
@@ -52,8 +72,6 @@ pub async fn create_agent(
         .text().await?;
 
     println!("============ create_agent_link ============");
-    //println!("!dgc-network! private_key = {:?}", private_key.as_hex());
-    //println!("!dgc-network! public_key = {:?}", public_key.as_hex());
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
@@ -86,26 +104,6 @@ pub async fn update_agent(
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
-}
-
-pub async fn keygen(
-) -> Result<HttpResponse, RestApiResponseError> {
-    // Creating a Private Key and Signer //
-    let context = create_context("secp256k1")
-        .expect("Error creating the right context");
-    let private_key = context.new_random_private_key()
-        .expect("Error generating a new Private Key");
-    let crypto_factory = CryptoFactory::new(context.as_ref());
-    let signer = crypto_factory.new_signer(private_key.as_ref());
-    let public_key = signer.get_public_key()
-        .expect("Error retrieving Public Key");
-    println!("============ create_agent_link ============");
-    println!("!dgc-network! private_key = {:?}", private_key.as_hex());
-    println!("!dgc-network! public_key = {:?}", public_key.as_hex());
-
-    let mut response_data = "".to_owned();
-    response_data = response_data + &format!("{{\n  public_key: {:?}, \n  private_key: {:?}\n}}", public_key.as_hex(), private_key.as_hex());
-    Ok(HttpResponse::Ok().body(response_data))
 }
 
 pub async fn list_agents(

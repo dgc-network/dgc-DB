@@ -162,10 +162,12 @@ fn do_batches(
     let schema_name = &input_data.schema_name;
     let description = &input_data.description;
     let properties_as_string = &input_data.properties;
+
     let mut properties = Vec::<PropertyDefinition>::new();
     for meta in properties_as_string.chars() {
-        let meta_as_string = meta.to_string();
-        let key_val: Vec<&str> = meta_as_string.split(",").collect();
+        //let meta_as_string = meta.to_string();
+        //let key_val: Vec<&str> = meta_as_string.split(",").collect();
+        let key_val: Vec<&str> = meta.split(",").collect();
         if key_val.len() != 7 {
             "Metadata is formated incorrectly".to_string();            
         }

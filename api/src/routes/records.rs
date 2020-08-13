@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::*;
-//use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
 use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
@@ -20,7 +19,6 @@ use dgc_config::protos::*;
 use dgc_config::addressing::*;
 //use dgc_config::protocol::track_and_trace::state::*;
 use dgc_config::protocol::track_and_trace::payload::*;
-//use dgc_config::protocol::schema::payload::*;
 use dgc_config::protocol::schema::state::*;
 
 #[derive(Deserialize)]
@@ -36,24 +34,38 @@ pub async fn list_records(
 
     let url = format!("http://rest-api:8008/state?address={}", get_record_prefix());
     let list = reqwest::get(&url).await?.json::<List>().await?;
-    println!("============ list_record_data ============");
+    let mut response_data = "[".to_owned();
     for sub in list.data {
         let msg = base64::decode(&sub.data).unwrap();
-        let record: track_and_trace_state::Record = match protobuf::parse_from_bytes(&msg){
-            Ok(record) => record,
+        let records: pike_state::RecordList = match protobuf::parse_from_bytes(&msg){
+            Ok(records) => records,
             Err(err) => {
                 return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
-                    "Cannot deserialize organization: {:?}",
+                    "Cannot deserialize data: {:?}",
                     err,
                 ))))
             }
         };
-        println!("!dgc-network! serialized: {:?}", record);
-    }
 
-    println!("============ list_record_link ============");
-    println!("!dgc-network! link = {:?}", list.link);
-    Ok(HttpResponse::Ok().body(list.link))
+        record_id: String,
+        schema: String,
+        owners: Vec<AssociatedAgent>,
+        custodians: Vec<AssociatedAgent>,
+        field_final: bool,
+    
+        for record in records.get_records() {
+            println!("!dgc-network! response_data: ");
+            println!("    record_id: {:?},", record.record_id);
+            println!("    schema: {:?},", record.schema);
+            println!("    owners: {:?},", record.owners);
+            println!("    custodians: {:?}", record.custodians);
+            println!("    field_final: {:?}", record.field_final);
+            
+            response_data = response_data + &format!("\n  {{\n    record_id: {:?}, \n    schema: {:?}, \n    owner: {:?}, \n    custodians: {:?}, \n    field_final: {:?}\n  }},\n", record.record_id, record.schema, record.owners, record.custodians, record.field_final);
+        }
+    }
+    response_data = response_data + &format!("]");
+    Ok(HttpResponse::Ok().body(response_data))
 }
 
 pub async fn fetch_record(
@@ -63,22 +75,28 @@ pub async fn fetch_record(
     let address = make_record_address(&record_id);
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
-    println!("============ fetch_record_data ============");
-    let msg = base64::decode(&res.data).unwrap();
-    let record: track_and_trace_state::Record = match protobuf::parse_from_bytes(&msg){
-        Ok(record) => record,
+
+    let records: pike_state::RecordList = match protobuf::parse_from_bytes(&msg){
+        Ok(records) => records,
         Err(err) => {
             return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
-                "Cannot deserialize organization: {:?}",
+                "Cannot deserialize data: {:?}",
                 err,
             ))))
         }
     };
-    println!("!dgc-network! serialized: {:?}", record);
-
-    println!("============ fetch_record_link ============");
-    println!("!dgc-network! link = {:?}", res.link);
-    Ok(HttpResponse::Ok().body(res.link))
+    let mut response_data = "".to_owned();
+    for record in records.get_records() {
+        println!("!dgc-network! response_data: ");
+        println!("    record_id: {:?},", record.record_id);
+        println!("    schema: {:?},", record.schema);
+        println!("    owners: {:?},", record.owners);
+        println!("    custodians: {:?}", record.custodians);
+        println!("    field_final: {:?}", record.field_final);
+        
+        response_data = response_data + &format!("{{\n  record_id: {:?}, \n  schema: {:?}, \n  owners: {:?}, \n  custodians: {:?}, \n  field_final: {:?} \n}}", record.record_id, record.schema, record.owners, record.custodians, record.field_final);
+    }
+    Ok(HttpResponse::Ok().body(response_data))
 }
 
 pub async fn create_record(
@@ -148,30 +166,75 @@ fn do_batches(
     let private_key_as_hex = &input_data.private_key;
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
     .expect("Error generating a Private Key");
-    //let context = create_context("secp256k1")
-    //.expect("Error creating the right context");
-    //let public_key = context.get_public_key(&private_key)
-    //.expect("Error retrieving a Public Key");
-
 
     // Creating the Payload //
     let record_id = &input_data.record_id;
     let schema = &input_data.schema;
+    let properties_as_string = &input_data.properties;
+    
+    let mut properties = Vec::<PropertyDefinition>::new();
+    for meta in properties_as_string.chars() {
+        let meta_as_string = meta.to_string();
+        let key_val: Vec<&str> = meta_as_string.split(",").collect();
+        if key_val.len() != 7 {
+            "Metadata is formated incorrectly".to_string();            
+        }
+        let name = match key_val.get(0) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let data_type = match key_val.get(1) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let required = match key_val.get(2) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let description = match key_val.get(3) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let number_exponent = match key_val.get(4) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let enum_options = match key_val.get(5) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let struct_properties = match key_val.get(6) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
 
-    if action_plan == "CREATE" {
-
-        // Building the Action and Payload//
         let property_value = PropertyValueBuilder::new()
         .with_name("egg".into())
         .with_data_type(DataType::Number)
         .with_number_value(42)
         .build()
         .unwrap();
+/*    
+        let builder = PropertyDefinitionBuilder::new();
+        let property_definition = builder
+        .with_name(name.to_string())
+        .with_data_type(DataType::String)
+        .with_description(description.to_string())
+        .build()
+        .unwrap();
+*/
+        properties.push(property_value.clone());
+    }
 
+
+    if action_plan == "CREATE" {
+
+        // Building the Action and Payload//
         let action = CreateRecordActionBuilder::new()
         .with_record_id(record_id.into())
         .with_schema(schema.into())
-        .with_properties(vec![property_value.clone()])
+        //.with_properties(vec![property_value.clone()])
+        .with_properties(properties)
         .build()
         .unwrap();
 
