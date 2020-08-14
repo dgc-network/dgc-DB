@@ -293,7 +293,8 @@ fn do_batches(
         .with_org_id(org_id.to_string())
         .with_public_key(public_key.as_hex())
         .with_active(true)
-        //.with_roles(roles)
+        .with_roles(roles)
+/*        
         .with_roles(vec![
             "admin".to_string(),
             "can_create_schema".to_string(),
@@ -303,6 +304,7 @@ fn do_batches(
             "can_update_product".to_string(),
             "can_delete_product".to_string(),
         ])
+*/        
         .with_metadata(metadata)
         .build()
         .unwrap();
