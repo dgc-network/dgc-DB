@@ -196,8 +196,15 @@ fn do_batches(
 
     let mut metadata = Vec::<KeyValueEntry>::new();
     for meta in metadata_as_string.chars() {
-        let meta_as_string = meta.to_string();
-        let key_val: Vec<&str> = meta_as_string.split(",").collect();
+        let mut key_val = Vec::<String>::new();
+        for n in 1..2 {
+            let entry: String = meta.to_string().split(",").collect();
+            if n == 1 {
+                let key = entry;
+            }
+        }
+        //let meta_as_string = meta.to_string();
+        //let key_val: Vec<&str> = meta_as_string.split(",").collect();
         if key_val.len() != 2 {
             "Metadata is formated incorrectly".to_string();            
         }
