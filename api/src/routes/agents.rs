@@ -185,8 +185,10 @@ fn do_batches(
 
     // Creating the Payload //
     let org_id = &input_data.org_id;
-    let roles_as_string = &input_data.roles;
-    let metadata_as_string = &input_data.metadata;
+    //let roles_as_string = &input_data.roles;
+    let roles_as_string = input_data.roles;
+    //let metadata_as_string = &input_data.metadata;
+    let metadata_as_string = input_data.metadata;
 
     let mut roles = Vec::<String>::new();
     for role in roles_as_string.chars() {
@@ -196,6 +198,7 @@ fn do_batches(
 
     let mut metadata = Vec::<KeyValueEntry>::new();
     for meta in metadata_as_string.chars() {
+/*        
         let mut key_val = Vec::<String>::new();
         for n in 1..2 {
             let entry: String = meta.to_string().split(",").collect();
@@ -203,8 +206,9 @@ fn do_batches(
                 let key = entry;
             }
         }
-        //let meta_as_string = meta.to_string();
-        //let key_val: Vec<&str> = meta_as_string.split(",").collect();
+*/        
+        let meta_as_string = meta.to_string();
+        let key_val: Vec<&str> = meta_as_string.split(",").collect();
         if key_val.len() != 2 {
             "Metadata is formated incorrectly".to_string();            
         }
