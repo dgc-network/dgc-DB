@@ -185,13 +185,13 @@ fn do_batches(
 
     // Creating the Payload //
     let org_id = &input_data.org_id;
-    //let roles_as_string = &input_data.roles;
+    let roles_as_string = &input_data.roles;
     let metadata_as_string = &input_data.metadata;
-    let metadata_as_string = input_data.metadata;
+    //let metadata_as_string = input_data.metadata;
 
     //let mut roles = Vec::<String>::new();
-    let vec: Vec<&str> = metadata_as_string.split(",").collect();
-    let roles = vec.split_whitespace().map(String::from).collect();
+    //let vec: Vec<&str> = metadata_as_string.split(",").collect();
+    let roles: Vec<String> = roles_as_string.split_whitespace(",").map(String::from).collect();
     //let roles: Vec<String> = metadata_as_string.split(",").collect();
     //let roles: String = metadata_as_string.split(",").collect();
 
