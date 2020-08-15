@@ -11,7 +11,8 @@ use reqwest;
 
 use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
-use crate::{List, Fetch};
+//use crate::{List, Fetch};
+use crate::{List, Fetch, split_vec};
 
 use dgc_config::protos::*;
 use dgc_config::addressing::*;
