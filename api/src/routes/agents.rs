@@ -182,60 +182,17 @@ fn do_batches(
     let public_key = context.get_public_key(&private_key)
     .expect("Error retrieving a Public Key");
 
-
     // Creating the Payload //
     let org_id = &input_data.org_id;
     let roles_as_string = &input_data.roles;
     let metadata_as_string = &input_data.metadata;
-    //let metadata_as_string = input_data.metadata;
 
-    //let mut roles = Vec::<String>::new();
     let roles: Vec<String> = roles_as_string.split(",").map(String::from).collect();
-    //let roles: Vec<String> = metadata_as_string.split(",").collect();
-    //let roles: String = metadata_as_string.split(",").collect();
-
-    //for role in roles_as_string.chars() {
-    //    let entry: String = role.to_string().split(",").collect();
-    //    roles.push(entry.clone());
-    //}
 
     let mut metadata = Vec::<KeyValueEntry>::new();
     let vec: Vec<&str> = metadata_as_string.split(",").collect();
     let key_val_vec = split_vec(vec, 2);
     for key_val in key_val_vec {
-        if key_val.len() != 2 {
-            "Metadata is formated incorrectly".to_string();            
-        }
-            let key = match key_val.get(0) {
-            Some(key) => key.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
-        };
-        let value = match key_val.get(1) {
-            Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
-        };
-
-        let key_value = KeyValueEntryBuilder::new()
-            .with_key(key.to_string())
-            .with_value(value.to_string())
-            .build()
-            .unwrap();
-
-        metadata.push(key_value.clone());
-    }
-/*    
-    //for meta in metadata_as_string.chars() {
-/*        
-        let mut key_val = Vec::<String>::new();
-        for n in 1..2 {
-            let entry: String = meta.to_string().split(",").collect();
-            if n == 1 {
-                let key = entry;
-            }
-        }
-*/        
-        let meta_as_string = meta.to_string();
-        let key_val: Vec<&str> = meta_as_string.split(",").collect();
         if key_val.len() != 2 {
             "Metadata is formated incorrectly".to_string();            
         }
@@ -256,34 +213,15 @@ fn do_batches(
 
         metadata.push(key_value.clone());
     }
-*/
+
     if action_plan == Action::CreateAgent {
-/*
-        // Creating a Private Key and Signer //
-        let context = create_context("secp256k1")
-        .expect("Error creating the right context");
-        let private_key = context.new_random_private_key()
-        .expect("Error generating a new Private Key");
-        let crypto_factory = CryptoFactory::new(context.as_ref());
-        let signer = crypto_factory.new_signer(private_key.as_ref());
-        let public_key = signer.get_public_key()
-        .expect("Error retrieving Public Key");
-        println!("============ create_agent_link ============");
-        println!("!dgc-network! private_key = {:?}", private_key.as_hex());
-        println!("!dgc-network! public_key = {:?}", public_key.as_hex());
-*/    
+
         // Building the Action and Payload//
         let action = CreateAgentActionBuilder::new()
         .with_org_id(org_id.to_string())
         .with_public_key(public_key.as_hex())
         .with_active(true)
         .with_roles(roles)
-        //.with_roles(vec![
-        //    "admin".to_string(),
-        //    "can_create_product".to_string(),
-        //    "can_update_product".to_string(),
-        //    "can_delete_product".to_string(),
-        //])
         .with_metadata(metadata)
         .build()
         .unwrap();
@@ -321,17 +259,6 @@ fn do_batches(
         .with_public_key(public_key.as_hex())
         .with_active(true)
         .with_roles(roles)
-/*        
-        .with_roles(vec![
-            "admin".to_string(),
-            "can_create_schema".to_string(),
-            "can_update_schema".to_string(),
-            "can_delete_schema".to_string(),
-            "can_create_product".to_string(),
-            "can_update_product".to_string(),
-            "can_delete_product".to_string(),
-        ])
-*/        
         .with_metadata(metadata)
         .build()
         .unwrap();

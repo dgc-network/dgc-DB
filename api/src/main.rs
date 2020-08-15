@@ -46,6 +46,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             //.data(state.clone())
             .route("/", web::get().to(index))
+            .route("/keygen", web::post().to(keygen))
 /*
             .service(web::resource("/submit_batches")
                 .route(web::post().to(submit_batches)))
