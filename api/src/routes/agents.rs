@@ -190,8 +190,9 @@ fn do_batches(
     let metadata_as_string = input_data.metadata;
 
     //let mut roles = Vec::<String>::new();
-    //let roles: Vec<&str> = metadata_as_string.split(",").collect();
-    let roles: Vec<String> = metadata_as_string.split(",").collect();
+    let vec: Vec<&str> = metadata_as_string.split(",").collect();
+    let roles = vec.split_whitespace().map(String::from).collect();
+    //let roles: Vec<String> = metadata_as_string.split(",").collect();
     //let roles: String = metadata_as_string.split(",").collect();
 
     //for role in roles_as_string.chars() {
