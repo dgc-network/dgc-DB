@@ -186,19 +186,20 @@ fn do_batches(
     // Creating the Payload //
     let org_id = &input_data.org_id;
     //let roles_as_string = &input_data.roles;
-    //let metadata_as_string = &input_data.metadata;
+    let metadata_as_string = &input_data.metadata;
     let metadata_as_string = input_data.metadata;
 
-    let mut roles = Vec::<String>::new();
+    //let mut roles = Vec::<String>::new();
+    let roles: Vec<&str> = metadata_as_string.split(",").collect();
+
     //for role in roles_as_string.chars() {
-    for role in input_data.roles.chars() {
-        let entry: String = role.to_string().split(",").collect();
-        roles.push(entry.clone());
-    }
+    //    let entry: String = role.to_string().split(",").collect();
+    //    roles.push(entry.clone());
+    //}
 
     let mut metadata = Vec::<KeyValueEntry>::new();
+/*    
     //for meta in metadata_as_string.chars() {
-    for meta in input_data.metadata.chars() {
 /*        
         let mut key_val = Vec::<String>::new();
         for n in 1..2 {
@@ -230,7 +231,7 @@ fn do_batches(
 
         metadata.push(key_value.clone());
     }
-
+*/
     if action_plan == Action::CreateAgent {
 /*
         // Creating a Private Key and Signer //
