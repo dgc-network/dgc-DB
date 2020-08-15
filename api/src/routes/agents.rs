@@ -190,7 +190,6 @@ fn do_batches(
     //let metadata_as_string = input_data.metadata;
 
     //let mut roles = Vec::<String>::new();
-    //let vec: Vec<&str> = metadata_as_string.split(",").collect();
     let roles: Vec<String> = roles_as_string.split(",").map(String::from).collect();
     //let roles: Vec<String> = metadata_as_string.split(",").collect();
     //let roles: String = metadata_as_string.split(",").collect();
@@ -201,6 +200,29 @@ fn do_batches(
     //}
 
     let mut metadata = Vec::<KeyValueEntry>::new();
+    let vec: Vec<&str> = metadata_as_string.split(",").collect();
+    let key_val_vec = split_vec(vec, 2);
+    for key_val in key_val_vec {
+        if key_val.len() != 2 {
+            "Metadata is formated incorrectly".to_string();            
+        }
+            let key = match key_val.get(0) {
+            Some(key) => key.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let value = match key_val.get(1) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+
+        let key_value = KeyValueEntryBuilder::new()
+            .with_key(key.to_string())
+            .with_value(value.to_string())
+            .build()
+            .unwrap();
+
+        metadata.push(key_value.clone());
+    }
 /*    
     //for meta in metadata_as_string.chars() {
 /*        
@@ -339,4 +361,18 @@ fn do_batches(
 
         return Ok(batch_list_bytes);
     }
+}
+
+fn split_vec<T>(v: Vec<T>, chunk_size: usize) -> Vec<Vec<T>> {
+    use std::collections::VecDeque;
+
+    let mut v: VecDeque<T> = v.into(); // avoids reallocating when possible
+
+    let mut acc = Vec::new();
+    while v.len() > chunk_size {
+        acc.push(v.drain(0..chunk_size).collect());
+        v.shrink_to_fit();
+    }
+    acc.push(v.into());
+    acc
 }
