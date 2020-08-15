@@ -23,7 +23,6 @@ pub struct SchemaData {
     private_key: String,
     schema_name: String,
     description: String,
-    //properties: Vec<PropertyValue>,
     properties: String,
 }
 
@@ -99,7 +98,7 @@ pub async fn create_schema(
         Ok(schema) => schema,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize organization: {:?}",
+                "Cannot deserialize data: {:?}",
                 err,
             )))
         }
@@ -128,7 +127,7 @@ pub async fn update_schema(
         Ok(schema) => schema,
         Err(err) => {
             return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize organization: {:?}",
+                "Cannot deserialize data: {:?}",
                 err,
             )))
         }
@@ -164,41 +163,39 @@ fn do_batches(
     let properties_as_string = &input_data.properties;
 
     let mut properties = Vec::<PropertyDefinition>::new();
-    //for meta in properties_as_string.chars() {
-    for meta in input_data.properties.chars() {
-        let meta_as_string = meta.to_string();
-        let key_val: Vec<&str> = meta_as_string.split(",").collect();
-        //let key_val: Vec<&str> = meta.split(",").collect();
+    let vec: Vec<&str> = properties_as_string.split(",").collect();
+    let key_val_vec = split_vec(vec, 7);
+    for key_val in key_val_vec {
         if key_val.len() != 7 {
-            "Metadata is formated incorrectly".to_string();            
+            "Properties are formated incorrectly".to_string();            
         }
         let name = match key_val.get(0) {
             Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
+            None => "Properties are formated incorrectly".to_string()
         };
         let data_type = match key_val.get(1) {
             Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
+            None => "Properties are formated incorrectly".to_string()
         };
         let required = match key_val.get(2) {
             Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
+            None => "Properties are formated incorrectly".to_string()
         };
         let description = match key_val.get(3) {
             Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
+            None => "Properties are formated incorrectly".to_string()
         };
         let number_exponent = match key_val.get(4) {
             Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
+            None => "Properties are formated incorrectly".to_string()
         };
         let enum_options = match key_val.get(5) {
             Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
+            None => "Properties are formated incorrectly".to_string()
         };
         let struct_properties = match key_val.get(6) {
             Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
+            None => "Properties are formated incorrectly".to_string()
         };
 
         let builder = PropertyDefinitionBuilder::new();
