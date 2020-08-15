@@ -85,7 +85,7 @@ pub async fn fetch_schema(
         println!("    owner: {:?},", schema.owner);
         println!("    properties: {:?}", schema.properties);
         
-        response_data = response_data + &format!("\n  {{\n    schema_name: {:?}, \n    description: {:?}, \n    owner: {:?}, \n    properties: {:?}, \n  }},\n", schema.name, schema.description, schema.owner, schema.properties);
+        response_data = response_data + &format!("{{\n  schema_name: {:?}, \n  description: {:?}, \n  owner: {:?}, \n  properties: {:?}, \n}}", schema.name, schema.description, schema.owner, schema.properties);
     }
     Ok(HttpResponse::Ok().body(response_data))
 }
