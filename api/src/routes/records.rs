@@ -13,7 +13,7 @@ use std::convert::TryInto;
 
 use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
-use crate::{List, Fetch};
+use crate::{List, Fetch, split_vec};
 
 use dgc_config::protos::*;
 use dgc_config::addressing::*;
@@ -46,13 +46,7 @@ pub async fn list_records(
                 ))))
             }
         };
-/*
-        record_id: String,
-        schema: String,
-        owners: Vec<AssociatedAgent>,
-        custodians: Vec<AssociatedAgent>,
-        field_final: bool,
-*/    
+
         for record in records.get_entries() {
             println!("!dgc-network! response_data: ");
             println!("    record_id: {:?},", record.record_id);
@@ -173,39 +167,56 @@ fn do_batches(
     let properties_as_string = &input_data.properties;
 
     let mut properties = Vec::<PropertyValue>::new();
-    for meta in properties_as_string.chars() {
-        let meta_as_string = meta.to_string();
-        let key_val: Vec<&str> = meta_as_string.split(",").collect();
+    let vec: Vec<&str> = properties_as_string.split(",").collect();
+    let key_val_vec = split_vec(vec, 7);
+    for key_val in key_val_vec {
         if key_val.len() != 7 {
-            "Metadata is formated incorrectly".to_string();            
+            "Properties are formated incorrectly".to_string();            
         }
         let name = match key_val.get(0) {
             Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
+            None => "name is formated incorrectly".to_string()
         };
+
         let data_type = match key_val.get(1) {
-            Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
+            Some(value) => 
+                if (value == &"Byte") | (value == &"byte") | (value == &"BYTE") {Some(DataType::Bytes)}
+                else if (value == &"Boolean") | (value == &"boolean") | (value == &"BOOLEAN") {Some(DataType::Boolean)}
+                else if (value == &"Number") | (value == &"number") | (value == &"NUMBER") {Some(DataType::Number)}
+                else if (value == &"String") | (value == &"string") | (value == &"STRING") {Some(DataType::String)}
+                else if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {Some(DataType::Enum)}
+                else if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {Some(DataType::Struct)}
+                else if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {Some(DataType::LatLong)}
+                else {Some(DataType::Bytes)},
+            
+            None => Some(DataType::Bytes)
         };
+
         let required = match key_val.get(2) {
-            Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
+            Some(value) => 
+                if (value == &"True") | (value == &"true") | (value == &"TRUE") {Some(true)}
+                else {Some(false)},
+            
+            None => Some(false)
         };
+
         let description = match key_val.get(3) {
             Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
+            None => "description is formated incorrectly".to_string()
         };
-        let number_exponent = match key_val.get(4) {
+        let number_exponent_string = match key_val.get(4) {
             Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
+            None => "0".to_string()
         };
+        let number_exponent = number_exponent_string.parse::<i32>().unwrap();
+
         let enum_options = match key_val.get(5) {
             Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
+            None => "enum_options are formated incorrectly".to_string()
         };
         let struct_properties = match key_val.get(6) {
             Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
+            None => "struct_properties are formated incorrectly".to_string()
         };
 
         let property_value = PropertyValueBuilder::new()
@@ -214,18 +225,9 @@ fn do_batches(
         .with_number_value(42)
         .build()
         .unwrap();
-/*    
-        let builder = PropertyDefinitionBuilder::new();
-        let property_definition = builder
-        .with_name(name.to_string())
-        .with_data_type(DataType::String)
-        .with_description(description.to_string())
-        .build()
-        .unwrap();
-*/
+
         properties.push(property_value.clone());
     }
-
 
     if action_plan == "CREATE" {
 
@@ -233,7 +235,6 @@ fn do_batches(
         let action = CreateRecordActionBuilder::new()
         .with_record_id(record_id.into())
         .with_schema(schema.into())
-        //.with_properties(vec![property_value.clone()])
         .with_properties(properties)
         .build()
         .unwrap();
@@ -262,10 +263,9 @@ fn do_batches(
             .expect("Error converting batch list to bytes");
 
         return Ok(batch_list_bytes);
-
-    //} else if (action_plan == "FinalizeRecord") {
-    } else {
-
+    } 
+    
+    if action_plan == "FinalizeRecord" {
         // Building the Action and Payload//
         let action = FinalizeRecordActionBuilder::new()
             .with_record_id(record_id.into())
@@ -295,8 +295,6 @@ fn do_batches(
             .write_to_bytes()
             .expect("Error converting batch list to bytes");
 
-        return Ok(batch_list_bytes);
-        
+        return Ok(batch_list_bytes);        
     }
 }
-

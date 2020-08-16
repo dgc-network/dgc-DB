@@ -11,7 +11,6 @@ use reqwest;
 
 use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
-//use crate::{List, Fetch};
 use crate::{List, Fetch, split_vec};
 
 use dgc_config::protos::*;
@@ -174,10 +173,7 @@ fn do_batches(
             Some(value) => value.to_string(),
             None => "name is formated incorrectly".to_string()
         };
-        //let data_type = match key_val.get(1) {
-        //    Some(value) => value.to_string(),
-        //    None => "data_type is formated incorrectly".to_string()
-        //};
+
         let data_type = match key_val.get(1) {
             Some(value) => 
                 if (value == &"Byte") | (value == &"byte") | (value == &"BYTE") {Some(DataType::Bytes)}
@@ -192,10 +188,6 @@ fn do_batches(
             None => Some(DataType::Bytes)
         };
 
-        //let required = match key_val.get(2) {
-        //    Some(value) => value.to_string(),
-        //    None => "required is formated incorrectly".to_string()
-        //};
         let required = match key_val.get(2) {
             Some(value) => 
                 if (value == &"True") | (value == &"true") | (value == &"TRUE") {Some(true)}
@@ -226,7 +218,6 @@ fn do_batches(
         let builder = PropertyDefinitionBuilder::new();
         let property_definition = builder
         .with_name(name.to_string())
-        //.with_data_type(DataType::String)
         .with_data_type(data_type.unwrap())
         .with_required(required.unwrap())
         .with_description(description.to_string())
@@ -238,12 +229,10 @@ fn do_batches(
     }
 
     if action_plan == "CREATE" {
-
         // Building the Action and Payload//
         let action = SchemaCreateBuilder::new()
         .with_schema_name(schema_name.to_string())
         .with_description(description.to_string())
-        //.with_properties(vec![property_definition.clone()])
         .with_properties(properties)
         .build()
         .unwrap();
@@ -271,15 +260,12 @@ fn do_batches(
             .expect("Error converting batch list to bytes");
 
         return Ok(batch_list_bytes);
-
-    //} else if (action_plan == "UPDATE") {
-    } else {
-
+    } 
+    
+    if action_plan == "UPDATE" {
         // Building the Action and Payload//
         let action = SchemaUpdateBuilder::new()
         .with_schema_name(schema_name.to_string())
-        //.with_description(description.to_string())
-        //.with_properties(vec![property_definition.clone()])
         .with_properties(properties)
         .build()
         .unwrap();
@@ -306,8 +292,6 @@ fn do_batches(
             .write_to_bytes()
             .expect("Error converting batch list to bytes");
 
-        return Ok(batch_list_bytes);
-        
+        return Ok(batch_list_bytes);        
     }
 }
-
