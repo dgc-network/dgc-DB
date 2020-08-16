@@ -179,15 +179,16 @@ fn do_batches(
         //    None => "data_type is formated incorrectly".to_string()
         //};
         let data_type = match key_val.get(1) {
-            Some(value) => Some(
-                if (value == &"Byte") | (value == &"byte") | (value == &"BYTE") {return DataType::Bytes};
-                if (value == &"Boolean") | (value == &"boolean") | (value == &"BOOLEAN") {return DataType::Boolean};
-                if (value == &"Number") | (value == &"number") | (value == &"NUMBER") {return DataType::Number};
-                if (value == &"String") | (value == &"string") | (value == &"STRING") {return DataType::String};
-                if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {return DataType::Enum};
-                if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {return DataType::Struct};
-                if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {return DataType::LatLong};
-            ),
+            Some(value) => 
+                if (value == &"Byte") | (value == &"byte") | (value == &"BYTE") {return DataType::Bytes}
+                else if (value == &"Boolean") | (value == &"boolean") | (value == &"BOOLEAN") {return DataType::Boolean}
+                else if (value == &"Number") | (value == &"number") | (value == &"NUMBER") {return DataType::Number}
+                else if (value == &"String") | (value == &"string") | (value == &"STRING") {return DataType::String}
+                else if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {return DataType::Enum}
+                else if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {return DataType::Struct}
+                else if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {return DataType::LatLong}
+                else {return DataType::Bytes},
+            
             None => DataType::Bytes
         };
 
@@ -196,10 +197,10 @@ fn do_batches(
         //    None => "required is formated incorrectly".to_string()
         //};
         let required = match key_val.get(2) {
-            Some(value) => Some(
+            Some(value) => 
                 if (value == &"True") | (value == &"true") | (value == &"TRUE") {return true}
-                else {return false};
-            ),
+                else {return false},
+            
             None => false
         };
 
