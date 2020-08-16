@@ -180,13 +180,13 @@ fn do_batches(
         //};
         let data_type = match key_val.get(1) {
             Some(value) => {
-                if ((value == "Byte") | (value == "byte") | (value == "BYTE")) {DataType::Bytes};
-                if ((value == "Boolean") | (value == "boolean") | (value == "BOOLEAN")) {DataType::Boolean};
-                if ((value == "Number") | (value == "number") | (value == "NUMBER")) {DataType::Number};
-                if ((value == "String") | (value == "string") | (value == "STRING")) {DataType::String};
-                if ((value == "Enum") | (value == "enum") | (value == "ENUM")) {DataType::Enum};
-                if ((value == "Struct") | (value == "struct") | (value == "STRUCT")) {DataType::Struct};
-                if ((value == "LatLong") | (value == "LatLong") | (value == "LATLONG")) {DataType::LatLong};
+                if (value == "Byte") | (value == "byte") | (value == "BYTE") {DataType::Bytes};
+                if (value == "Boolean") | (value == "boolean") | (value == "BOOLEAN") {DataType::Boolean};
+                if (value == "Number") | (value == "number") | (value == "NUMBER") {DataType::Number};
+                if (value == "String") | (value == "string") | (value == "STRING") {DataType::String};
+                if (value == "Enum") | (value == "enum") | (value == "ENUM") {DataType::Enum};
+                if (value == "Struct") | (value == "struct") | (value == "STRUCT") {DataType::Struct};
+                if (value == "LatLong") | (value == "LatLong") | (value == "LATLONG") {DataType::LatLong};
             },
             None => DataType::Bytes
         };
@@ -197,7 +197,7 @@ fn do_batches(
         //};
         let required = match key_val.get(2) {
             Some(value) => {
-                if ((value == "True") | (value == "true") | (value == "TRUE")) true
+                if (value == "True") | (value == "true") | (value == "TRUE") {true}
                 else false;
             },
             None => false
