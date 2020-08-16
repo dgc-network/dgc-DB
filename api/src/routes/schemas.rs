@@ -187,7 +187,7 @@ fn do_batches(
                 else if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {Some(DataType::Enum)}
                 else if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {Some(DataType::Struct)}
                 else if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {Some(DataType::LatLong)}
-                else {return DataType::Bytes},
+                else {Some(DataType::Bytes)},
             
             None => Some(DataType::Bytes)
         };
@@ -225,8 +225,8 @@ fn do_batches(
         let property_definition = builder
         .with_name(name.to_string())
         //.with_data_type(DataType::String)
-        .with_data_type(data_type)
-        .with_required(required)
+        .with_data_type(data_type.unwrap())
+        .with_required(required.unwrap())
         .with_description(description.to_string())
         .build()
         .unwrap();
