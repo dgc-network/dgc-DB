@@ -179,14 +179,14 @@ fn do_batches(
         //    None => "data_type is formated incorrectly".to_string()
         //};
         let data_type = match key_val.get(1) {
-            Some(value) => match value {
-                &"Byte" | &"byte" | &"BYTE" => DataType::Bytes,
-                &"Boolean" | &"boolean" | &"BOOLEAN" => DataType::Boolean,
-                &"Number" | &"number" | &"NUMBER" => DataType::Number,
-                &"String" | &"string" | &"STRING" => DataType::String,
-                &"Enum" | &"enum" | &"ENUM" => DataType::Enum,
-                &"Struct" | &"struct" | &"STRUCT" => DataType::Struct,
-                &"LatLong" | &"LatLong" | &"LATLONG" => DataType::LatLong,
+            Some(value) => {
+                if value == &"Byte" | value == &"byte" | value == &"BYTE" {DataType::Bytes};
+                if value == &"Boolean" | value == &"boolean" | value == &"BOOLEAN" {DataType::Boolean};
+                if value == &"Number" | value == &"number" | value == &"NUMBER" {DataType::Number};
+                if value == &"String" | value == &"string" | value == &"STRING" {DataType::String};
+                if value == &"Enum" | value == &"enum" | value == &"ENUM" {DataType::Enum};
+                if value == &"Struct" | value == &"struct" | value == &"STRUCT" {DataType::Struct};
+                if value == &"LatLong" | value == &"LatLong" | value == &"LATLONG" {DataType::LatLong};
             },
             None => DataType::Bytes
         };
@@ -196,8 +196,9 @@ fn do_batches(
         //    None => "required is formated incorrectly".to_string()
         //};
         let required = match key_val.get(2) {
-            Some(value) => match value {
-                &"True" | &"true" | &"TRUE" => true,
+            Some(value) => {
+                if value == &"True" | value == &"true" | value == &"TRUE" {true}
+                else false;
             },
             None => false
         };
