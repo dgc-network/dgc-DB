@@ -263,9 +263,9 @@ fn do_batches(
             .expect("Error converting batch list to bytes");
 
         return Ok(batch_list_bytes);
-    } 
-    
-    else if action_plan == "FinalizeRecord" {
+    }     
+    else //if action_plan == "FinalizeRecord" 
+    {
         // Building the Action and Payload//
         let action = FinalizeRecordActionBuilder::new()
             .with_record_id(record_id.into())

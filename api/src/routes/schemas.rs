@@ -260,9 +260,9 @@ fn do_batches(
             .expect("Error converting batch list to bytes");
 
         return Ok(batch_list_bytes);
-    } 
-    
-    else if action_plan == "UPDATE" {
+    }     
+    else //if action_plan == "UPDATE" 
+    {
         // Building the Action and Payload//
         let action = SchemaUpdateBuilder::new()
         .with_schema_name(schema_name.to_string())
