@@ -180,13 +180,13 @@ fn do_batches(
         //};
         let data_type = match key_val.get(1) {
             Some(value) => 
-                if (value == &"Byte") | (value == &"byte") | (value == &"BYTE") {return DataType::Bytes}
-                else if (value == &"Boolean") | (value == &"boolean") | (value == &"BOOLEAN") {return DataType::Boolean}
-                else if (value == &"Number") | (value == &"number") | (value == &"NUMBER") {return DataType::Number}
-                else if (value == &"String") | (value == &"string") | (value == &"STRING") {return DataType::String}
-                else if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {return DataType::Enum}
-                else if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {return DataType::Struct}
-                else if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {return DataType::LatLong}
+                if (value == &"Byte") | (value == &"byte") | (value == &"BYTE") {Some(DataType::Bytes)}
+                else if (value == &"Boolean") | (value == &"boolean") | (value == &"BOOLEAN") {Some(DataType::Boolean)}
+                else if (value == &"Number") | (value == &"number") | (value == &"NUMBER") {Some(DataType::Number)}
+                else if (value == &"String") | (value == &"string") | (value == &"STRING") {Some(DataType::String)}
+                else if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {Some(DataType::Enum)}
+                else if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {Some(DataType::Struct)}
+                else if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {Some(DataType::LatLong)}
                 else {return DataType::Bytes},
             
             None => DataType::Bytes
@@ -198,8 +198,8 @@ fn do_batches(
         //};
         let required = match key_val.get(2) {
             Some(value) => 
-                if (value == &"True") | (value == &"true") | (value == &"TRUE") {return true}
-                else {return false},
+                if (value == &"True") | (value == &"true") | (value == &"TRUE") {Some(true)}
+                else {Some(false)},
             
             None => false
         };
