@@ -265,7 +265,7 @@ fn do_batches(
         return Ok(batch_list_bytes);
     } 
     
-    if action_plan == "FinalizeRecord" {
+    else if action_plan == "FinalizeRecord" {
         // Building the Action and Payload//
         let action = FinalizeRecordActionBuilder::new()
             .with_record_id(record_id.into())
