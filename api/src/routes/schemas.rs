@@ -180,13 +180,13 @@ fn do_batches(
         //};
         let data_type = match key_val.get(1) {
             Some(value) => match value {
-                "Byte" || "byte" || "BYTE" => DataType::Bytes,
-                "Boolean" || "boolean" || "BOOLEAN" => DataType::Boolean,
-                "Number" || "number" || "NUMBER" => DataType::Number,
-                "String" || "string" || "STRING" => DataType::String,
-                "Enum" || "enum" || "ENUM" => DataType::Enum,
-                "Struct" || "struct" || "STRUCT" => DataType::Struct,
-                "LatLong" || "LatLong" || "LATLONG" => DataType::LatLong,
+                &"Byte" | &"byte" | &"BYTE" => DataType::Bytes,
+                &"Boolean" | &"boolean" | &"BOOLEAN" => DataType::Boolean,
+                &"Number" | &"number" | &"NUMBER" => DataType::Number,
+                &"String" | &"string" | &"STRING" => DataType::String,
+                &"Enum" | &"enum" | &"ENUM" => DataType::Enum,
+                &"Struct" | &"struct" | &"STRUCT" => DataType::Struct,
+                &"LatLong" | &"LatLong" | &"LATLONG" => DataType::LatLong,
             },
             None => DataType::Bytes
         };
@@ -197,7 +197,7 @@ fn do_batches(
         //};
         let required = match key_val.get(2) {
             Some(value) => match value {
-                "True" || "true" || "TRUE" => true,
+                &"True" | &"true" | &"TRUE" => true,
             },
             None => false
         };
