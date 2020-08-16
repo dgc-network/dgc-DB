@@ -172,37 +172,59 @@ fn do_batches(
         }
         let name = match key_val.get(0) {
             Some(value) => value.to_string(),
-            None => "Properties are formated incorrectly".to_string()
+            None => "name is formated incorrectly".to_string()
         };
+        //let data_type = match key_val.get(1) {
+        //    Some(value) => value.to_string(),
+        //    None => "data_type is formated incorrectly".to_string()
+        //};
         let data_type = match key_val.get(1) {
-            Some(value) => value.to_string(),
-            None => "Properties are formated incorrectly".to_string()
+            Some(value) => match value {
+                "Byte" || "byte" || "BYTE" => DataType::Bytes,
+                "Boolean" || "boolean" || "BOOLEAN" => DataType::Boolean,
+                "Number" || "number" || "NUMBER" => DataType::Number,
+                "String" || "string" || "STRING" => DataType::String,
+                "Enum" || "enum" || "ENUM" => DataType::Enum,
+                "Struct" || "struct" || "STRUCT" => DataType::Struct,
+                "LatLong" || "LatLong" || "LATLONG" => DataType::LatLong,
+            },
+            None => DataType::Bytes
         };
+
+        //let required = match key_val.get(2) {
+        //    Some(value) => value.to_string(),
+        //    None => "required is formated incorrectly".to_string()
+        //};
         let required = match key_val.get(2) {
-            Some(value) => value.to_string(),
-            None => "Properties are formated incorrectly".to_string()
+            Some(value) => match value {
+                "True" || "true" || "TRUE" => true,
+            },
+            None => false
         };
+
         let description = match key_val.get(3) {
             Some(value) => value.to_string(),
-            None => "Properties are formated incorrectly".to_string()
+            None => "description is formated incorrectly".to_string()
         };
         let number_exponent = match key_val.get(4) {
             Some(value) => value.to_string(),
-            None => "Properties are formated incorrectly".to_string()
+            None => "number is formated incorrectly".to_string()
         };
         let enum_options = match key_val.get(5) {
             Some(value) => value.to_string(),
-            None => "Properties are formated incorrectly".to_string()
+            None => "enum_options are formated incorrectly".to_string()
         };
         let struct_properties = match key_val.get(6) {
             Some(value) => value.to_string(),
-            None => "Properties are formated incorrectly".to_string()
+            None => "struct_properties are formated incorrectly".to_string()
         };
 
         let builder = PropertyDefinitionBuilder::new();
         let property_definition = builder
         .with_name(name.to_string())
-        .with_data_type(DataType::String)
+        //.with_data_type(DataType::String)
+        .with_data_type(data_type)
+        .with_required(required)
         .with_description(description.to_string())
         .build()
         .unwrap();
