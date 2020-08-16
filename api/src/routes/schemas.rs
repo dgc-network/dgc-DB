@@ -179,7 +179,7 @@ fn do_batches(
         //    None => "data_type is formated incorrectly".to_string()
         //};
         let data_type = match key_val.get(1) {
-            Some(value) => {
+            Some(value) => Some(
                 if (value == &"Byte") | (value == &"byte") | (value == &"BYTE") {return DataType::Bytes};
                 if (value == &"Boolean") | (value == &"boolean") | (value == &"BOOLEAN") {return DataType::Boolean};
                 if (value == &"Number") | (value == &"number") | (value == &"NUMBER") {return DataType::Number};
@@ -187,7 +187,7 @@ fn do_batches(
                 if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {return DataType::Enum};
                 if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {return DataType::Struct};
                 if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {return DataType::LatLong};
-            },
+            ),
             None => DataType::Bytes
         };
 
@@ -196,10 +196,10 @@ fn do_batches(
         //    None => "required is formated incorrectly".to_string()
         //};
         let required = match key_val.get(2) {
-            Some(value) => {
+            Some(value) => Some(
                 if (value == &"True") | (value == &"true") | (value == &"TRUE") {return true}
                 else {return false};
-            },
+            ),
             None => false
         };
 
