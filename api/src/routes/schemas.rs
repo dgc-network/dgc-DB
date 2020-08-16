@@ -208,10 +208,12 @@ fn do_batches(
             Some(value) => value.to_string(),
             None => "description is formated incorrectly".to_string()
         };
-        let number_exponent = match key_val.get(4) {
+        let number_exponent_string = match key_val.get(4) {
             Some(value) => value.to_string(),
-            None => "number is formated incorrectly".to_string()
+            None => "0".to_string()
         };
+        let number_exponent = number_exponent_string.parse::<i32>().unwrap();
+
         let enum_options = match key_val.get(5) {
             Some(value) => value.to_string(),
             None => "enum_options are formated incorrectly".to_string()
@@ -228,6 +230,7 @@ fn do_batches(
         .with_data_type(data_type.unwrap())
         .with_required(required.unwrap())
         .with_description(description.to_string())
+        .with_number_exponent(number_exponent)
         .build()
         .unwrap();
 
