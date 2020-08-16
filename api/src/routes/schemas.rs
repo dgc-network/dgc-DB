@@ -189,7 +189,7 @@ fn do_batches(
                 else if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {Some(DataType::LatLong)}
                 else {return DataType::Bytes},
             
-            None => DataType::Bytes
+            None => Some(DataType::Bytes)
         };
 
         //let required = match key_val.get(2) {
@@ -201,7 +201,7 @@ fn do_batches(
                 if (value == &"True") | (value == &"true") | (value == &"TRUE") {Some(true)}
                 else {Some(false)},
             
-            None => false
+            None => Some(false)
         };
 
         let description = match key_val.get(3) {
