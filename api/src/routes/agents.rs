@@ -133,11 +133,6 @@ pub async fn create_agent(
 
     // Building the Action and Payload//
     let action = CreateAgentActionBuilder::new()
-        //.with_org_id(org_id.to_string())
-        //.with_public_key(public_key.as_hex())
-        //.with_active(true)
-        //.with_roles(roles)
-        //.with_metadata(metadata)
         .with_org_id(org_id.to_string())
         .with_public_key(public_key)
         .with_active(true)
@@ -152,36 +147,20 @@ pub async fn create_agent(
         .build()
         .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
 
-        // Building the Transaction and Batch//
-        let batch_list = BatchBuilder::new(
-            PIKE_FAMILY_NAME, 
-            PIKE_FAMILY_VERSION, 
-            //&private_key.as_hex(),
-            private_key,
-        )
-        .add_transaction(
-            &payload.into_proto()?,
-            &[get_pike_prefix()],
-            &[get_pike_prefix()],
-        )?
-        .create_batch_list();
+    // Building the Transaction and Batch//
+    let batch_list = BatchBuilder::new(
+        PIKE_FAMILY_NAME, 
+        PIKE_FAMILY_VERSION, 
+        private_key,
+    ).add_transaction(
+        &payload.into_proto()?,
+        &[get_pike_prefix()],
+        &[get_pike_prefix()],
+    )?.create_batch_list();
 
-        let batch_list_bytes = batch_list
-            .write_to_bytes()
-            .expect("Error converting batch list to bytes");
-
-        //return Ok(batch_list_bytes);
-
-        // Create batch_list_bytes //
-    //let batch_list_bytes = match do_batches(input_data, Action::CreateAgent){
-    //    Ok(agent) => agent,
-    //    Err(err) => {
-    //        return Err(RestApiResponseError::UserError(format!(
-    //            "Cannot deserialize agent: {:?}",
-    //            err,
-    //        )))
-    //    }
-    //};
+    let batch_list_bytes = batch_list
+        .write_to_bytes()
+        .expect("Error converting batch list to bytes");
 
     // Submitting Batches to the Validator //
     let res = reqwest::Client::new()
@@ -201,6 +180,44 @@ pub async fn update_agent(
     input_data: web::Json<AgentData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
+    // Creating the Payload //
+    let private_key = &input_data.private_key;
+    let public_key = retrieve_public_key(&input_data);
+    let org_id = &input_data.org_id;
+    let roles = retrieve_roles(&input_data);
+    let metadata = retrieve_metadata(&input_data);
+
+    // Building the Action and Payload//
+    let action = UpdateAgentActionBuilder::new()
+        .with_org_id(org_id.to_string())
+        .with_public_key(public_key)
+        .with_active(true)
+        .with_roles(roles)
+        .with_metadata(metadata)
+        .build()
+        .unwrap();
+
+    let payload = PikePayloadBuilder::new()
+        .with_action(Action::UpdateAgent)
+        .with_update_agent(action)
+        .build()
+        .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
+
+    // Building the Transaction and Batch//
+    let batch_list = BatchBuilder::new(
+        PIKE_FAMILY_NAME, 
+        PIKE_FAMILY_VERSION, 
+        private_key,
+    ).add_transaction(
+        &payload.into_proto()?,
+        &[get_pike_prefix()],
+        &[get_pike_prefix()],
+    )?.create_batch_list();
+
+    let batch_list_bytes = batch_list
+        .write_to_bytes()
+        .expect("Error converting batch list to bytes");
+/*
     // create batch_list //
     let batch_list_bytes = match do_batches(input_data, Action::UpdateAgent){
         Ok(agent) => agent,
@@ -211,7 +228,7 @@ pub async fn update_agent(
             )))
         }
     };
-
+*/
     // Submitting Batches to the Validator //
     let res = reqwest::Client::new()
         .post("http://rest-api:8008/batches")
@@ -229,7 +246,7 @@ pub async fn update_agent(
 fn retrieve_public_key(
     input_data: &web::Json<AgentData>,
 ) -> String {    
-    // Retrieving a Private Key from the input_data //
+    // Retrieving a Public Key from Private Key //
     let private_key_as_hex = &input_data.private_key;
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
     .expect("Error generating a Private Key");
@@ -252,22 +269,7 @@ fn retrieve_metadata(
     input_data: &web::Json<AgentData>,
 ) -> Vec::<KeyValueEntry> {
     
-    // Retrieving a Private Key from the input_data //
-    let private_key_as_hex = &input_data.private_key;
-    let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
-    .expect("Error generating a Private Key");
-    let context = create_context("secp256k1")
-    .expect("Error creating the right context");
-    let public_key = context.get_public_key(&private_key)
-    .expect("Error retrieving a Public Key");
-
-    // Creating the Payload //
-    let org_id = &input_data.org_id;
-    let roles_as_string = &input_data.roles;
     let metadata_as_string = &input_data.metadata;
-
-    let roles: Vec<String> = roles_as_string.split(",").map(String::from).collect();
-
     let mut metadata = Vec::<KeyValueEntry>::new();
     let vec: Vec<&str> = metadata_as_string.split(",").collect();
     let key_val_vec = split_vec(vec, 2);
@@ -295,7 +297,7 @@ fn retrieve_metadata(
     return metadata
 }
 
-
+/*
 fn do_batches(
     input_data: web::Json<AgentData>,
     action_plan: Action,
@@ -417,3 +419,4 @@ fn do_batches(
         return Ok(batch_list_bytes);
     }
 }
+*/
