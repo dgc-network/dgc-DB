@@ -426,7 +426,7 @@ fn retrieve_property_values(
         let property_value = PropertyValueBuilder::new()
         .with_name(name.into())
         .with_data_type(data_type.unwrap())
-        .with_number_value(number_value.unwrap())
+        //.with_number_value(number_value.unwrap())
         .build()
         .unwrap();
 

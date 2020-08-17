@@ -5,7 +5,7 @@ use actix_web::*;
 use sawtooth_sdk::signing::CryptoFactory;
 use sawtooth_sdk::signing::create_context;
 use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
-use sawtooth_sdk::signing::PrivateKey;
+//use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
 use serde::Deserialize;
 use protobuf::Message;
