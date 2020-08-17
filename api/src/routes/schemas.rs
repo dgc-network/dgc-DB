@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::*;
-use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
-use sawtooth_sdk::signing::PrivateKey;
+//use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
+//use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
 use serde::Deserialize;
 use protobuf::Message;
@@ -367,7 +367,7 @@ fn do_batches(
 }
 */
 fn retrieve_properties(
-    input_data: &web::Json<AgentData>,
+    input_data: &web::Json<SchemaData>,
 ) -> Vec::<PropertyDefinition> {
     
     let properties_as_string = &input_data.properties;

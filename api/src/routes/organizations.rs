@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::*;
-use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
-use sawtooth_sdk::signing::PrivateKey;
+//use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
+//use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
 use serde::{Deserialize, Serialize};
 use protobuf::Message;
@@ -12,7 +12,7 @@ use base64;
 
 use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
-use crate::{List, Fetch};
+use crate::{List, Fetch, split_vec};
 
 use dgc_config::protos::*;
 use dgc_config::addressing::*;
@@ -158,14 +158,12 @@ pub async fn create_org(
     let batch_list = BatchBuilder::new(
         PIKE_FAMILY_NAME, 
         PIKE_FAMILY_VERSION, 
-        &private_key.as_hex()
-    )
-    .add_transaction(
+        private_key,
+    ).add_transaction(
         &payload.into_proto()?,
         &[get_pike_prefix()],
         &[get_pike_prefix()],
-    )?
-    .create_batch_list();
+    )?.create_batch_list();
 
     let batch_list_bytes = batch_list
         .write_to_bytes()
@@ -250,14 +248,12 @@ pub async fn update_org(
     let batch_list = BatchBuilder::new(
         PIKE_FAMILY_NAME, 
         PIKE_FAMILY_VERSION, 
-        &private_key.as_hex()
-    )
-    .add_transaction(
+        private_key,
+    ).add_transaction(
         &payload.into_proto()?,
         &[get_pike_prefix()],
         &[get_pike_prefix()],
-    )?
-    .create_batch_list();
+    )?.create_batch_list();
 
     let batch_list_bytes = batch_list
         .write_to_bytes()
@@ -278,7 +274,7 @@ pub async fn update_org(
 }
 
 fn retrieve_metadata(
-    input_data: &web::Json<AgentData>,
+    input_data: &web::Json<OrgData>,
 ) -> Vec::<KeyValueEntry> {
     
     let metadata_as_string = &input_data.metadata;
