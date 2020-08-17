@@ -129,7 +129,7 @@ pub async fn create_agent(
     let public_key = retrieve_public_key(input_data);
     let org_id = &input_data.org_id;
     let roles = retrieve_roles(input_data);
-    let metadata = retrieve_matadata(input_data);
+    let metadata = retrieve_metadata(input_data);
 /*
     org_id: String,
     public_key: String,
@@ -144,7 +144,7 @@ pub async fn create_agent(
         //.with_active(true)
         //.with_roles(roles)
         //.with_metadata(metadata)
-        .with_org_id(org_id)
+        .with_org_id(input_data.org_id)
         .with_public_key(public_key)
         .with_active(true)
         .with_roles(roles)
