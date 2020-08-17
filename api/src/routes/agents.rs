@@ -126,17 +126,11 @@ pub async fn create_agent(
 
     // Creating the Payload //
     let private_key = &input_data.private_key;
-    let public_key = retrieve_public_key(input_data);
+    let public_key = retrieve_public_key(&input_data);
     let org_id = &input_data.org_id;
-    let roles = retrieve_roles(input_data);
-    let metadata = retrieve_metadata(input_data);
-/*
-    org_id: String,
-    public_key: String,
-    active: bool,
-    roles: Vec<String>,
-    metadata: Vec<KeyValueEntry>,
-*/
+    let roles = retrieve_roles(&input_data);
+    let metadata = retrieve_metadata(&input_data);
+
     // Building the Action and Payload//
     let action = CreateAgentActionBuilder::new()
         //.with_org_id(org_id.to_string())
