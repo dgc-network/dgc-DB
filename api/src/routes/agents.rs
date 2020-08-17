@@ -129,7 +129,7 @@ pub async fn create_agent(
     let public_key = retrieve_public_key(&input_data);
     let org_id = &input_data.org_id;
     let roles = retrieve_roles(&input_data);
-    let metadata = retrieve_metadata(&input_data;
+    let metadata = retrieve_metadata(&input_data);
 
     // Building the Action and Payload//
     let action = CreateAgentActionBuilder::new()
