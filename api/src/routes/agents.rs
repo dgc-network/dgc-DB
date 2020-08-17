@@ -48,64 +48,6 @@ pub async fn keygen(
     Ok(HttpResponse::Ok().body(response_data))
 }
 
-pub async fn create_agent(
-    input_data: web::Json<AgentData>,
-) -> Result<HttpResponse, RestApiResponseError> {
-
-    // Create batch_list_bytes //
-    let batch_list_bytes = match do_batches(input_data, Action::CreateAgent){
-        Ok(agent) => agent,
-        Err(err) => {
-            return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize agent: {:?}",
-                err,
-            )))
-        }
-    };
-
-    // Submitting Batches to the Validator //
-    let res = reqwest::Client::new()
-        .post("http://rest-api:8008/batches")
-        .header("Content-Type", "application/octet-stream")
-        .body(batch_list_bytes)
-        .send().await?
-        .text().await?;
-
-    println!("============ create_agent_link ============");
-    println!("!dgc-network! submit_status = {:?}", res);
-
-    Ok(HttpResponse::Ok().body(res))
-}
-
-pub async fn update_agent(
-    input_data: web::Json<AgentData>,
-) -> Result<HttpResponse, RestApiResponseError> {
-
-    // create batch_list //
-    let batch_list_bytes = match do_batches(input_data, Action::UpdateAgent){
-        Ok(agent) => agent,
-        Err(err) => {
-            return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize agent: {:?}",
-                err,
-            )))
-        }
-    };
-
-    // Submitting Batches to the Validator //
-    let res = reqwest::Client::new()
-        .post("http://rest-api:8008/batches")
-        .header("Content-Type", "application/octet-stream")
-        .body(batch_list_bytes)
-        .send().await?
-        .text().await?;
-
-    println!("============ update_agent_link ============");
-    println!("!dgc-network! submit_status = {:?}", res);
-
-    Ok(HttpResponse::Ok().body(res))
-}
-
 pub async fn list_agents(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
@@ -150,7 +92,7 @@ pub async fn fetch_agent(
         Ok(agents) => agents,
         Err(err) => {
             return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
-                "Cannot deserialize agent: {:?}",
+                "Cannot deserialize data: {:?}",
                 err,
             ))))
         }
@@ -167,6 +109,170 @@ pub async fn fetch_agent(
     }
     Ok(HttpResponse::Ok().body(response_data))
 }
+
+pub async fn create_agent(
+    input_data: web::Json<AgentData>,
+) -> Result<HttpResponse, RestApiResponseError> {
+
+    // Creating the Payload //
+    let r: CreateAgentAction = retrieve_payload(input_data);
+/*
+    org_id: String,
+    public_key: String,
+    active: bool,
+    roles: Vec<String>,
+    metadata: Vec<KeyValueEntry>,
+*/
+    // Building the Action and Payload//
+    let action = CreateAgentActionBuilder::new()
+        //.with_org_id(org_id.to_string())
+        //.with_public_key(public_key.as_hex())
+        //.with_active(true)
+        //.with_roles(roles)
+        //.with_metadata(metadata)
+        .with_org_id(r.org_id)
+        .with_public_key(r.public_key)
+        .with_active(true)
+        .with_roles(r.roles)
+        .with_metadata(r.metadata)
+        .build()
+        .unwrap();
+
+    let payload = PikePayloadBuilder::new()
+        .with_action(Action::CreateAgent)
+        .with_create_agent(action)
+        .build()
+        .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
+
+        // Building the Transaction and Batch//
+        let batch_list = BatchBuilder::new(
+            PIKE_FAMILY_NAME, 
+            PIKE_FAMILY_VERSION, 
+            &private_key.as_hex(),
+        )
+        .add_transaction(
+            &payload.into_proto()?,
+            &[get_pike_prefix()],
+            &[get_pike_prefix()],
+        )?
+        .create_batch_list();
+
+        let batch_list_bytes = batch_list
+            .write_to_bytes()
+            .expect("Error converting batch list to bytes");
+
+        //return Ok(batch_list_bytes);
+
+        // Create batch_list_bytes //
+    //let batch_list_bytes = match do_batches(input_data, Action::CreateAgent){
+    //    Ok(agent) => agent,
+    //    Err(err) => {
+    //        return Err(RestApiResponseError::UserError(format!(
+    //            "Cannot deserialize agent: {:?}",
+    //            err,
+    //        )))
+    //    }
+    //};
+
+    // Submitting Batches to the Validator //
+    let res = reqwest::Client::new()
+        .post("http://rest-api:8008/batches")
+        .header("Content-Type", "application/octet-stream")
+        .body(batch_list_bytes)
+        .send().await?
+        .text().await?;
+
+    println!("============ create_agent_link ============");
+    println!("!dgc-network! submit_status = {:?}", res);
+
+    Ok(HttpResponse::Ok().body(res))
+}
+
+pub async fn update_agent(
+    input_data: web::Json<AgentData>,
+) -> Result<HttpResponse, RestApiResponseError> {
+
+    // create batch_list //
+    let batch_list_bytes = match do_batches(input_data, Action::UpdateAgent){
+        Ok(agent) => agent,
+        Err(err) => {
+            return Err(RestApiResponseError::UserError(format!(
+                "Cannot deserialize agent: {:?}",
+                err,
+            )))
+        }
+    };
+
+    // Submitting Batches to the Validator //
+    let res = reqwest::Client::new()
+        .post("http://rest-api:8008/batches")
+        .header("Content-Type", "application/octet-stream")
+        .body(batch_list_bytes)
+        .send().await?
+        .text().await?;
+
+    println!("============ update_agent_link ============");
+    println!("!dgc-network! submit_status = {:?}", res);
+
+    Ok(HttpResponse::Ok().body(res))
+}
+
+fn retrieve_payload(
+    input_data: web::Json<AgentData>,
+    //action_plan: Action,
+//) -> Result<Vec<u8>, RestApiResponseError> {
+) -> Result<CreateAgentAction, RestApiResponseError> {
+    
+    // Retrieving a Private Key from the input_data //
+    let private_key_as_hex = &input_data.private_key;
+    let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
+    .expect("Error generating a Private Key");
+    let context = create_context("secp256k1")
+    .expect("Error creating the right context");
+    let public_key = context.get_public_key(&private_key)
+    .expect("Error retrieving a Public Key");
+
+    // Creating the Payload //
+    let org_id = &input_data.org_id;
+    let roles_as_string = &input_data.roles;
+    let metadata_as_string = &input_data.metadata;
+
+    let roles: Vec<String> = roles_as_string.split(",").map(String::from).collect();
+
+    let mut metadata = Vec::<KeyValueEntry>::new();
+    let vec: Vec<&str> = metadata_as_string.split(",").collect();
+    let key_val_vec = split_vec(vec, 2);
+    for key_val in key_val_vec {
+        if key_val.len() != 2 {
+            "Metadata is formated incorrectly".to_string();            
+        }
+        let key = match key_val.get(0) {
+            Some(key) => key.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let value = match key_val.get(1) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+
+        let key_value = KeyValueEntryBuilder::new()
+            .with_key(key.to_string())
+            .with_value(value.to_string())
+            .build()
+            .unwrap();
+
+        metadata.push(key_value.clone());
+    }
+
+    Ok(CreateAgentAction {
+        org_id: org_id.to_string(),
+        public_key: public_key.as_hex(),
+        active: true,
+        roles: roles,
+        metadata: metadata,
+    })
+}
+
 
 fn do_batches(
     input_data: web::Json<AgentData>,
