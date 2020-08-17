@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::*;
-use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
-use sawtooth_sdk::signing::PrivateKey;
+//use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
+//use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
 use serde::Deserialize;
 use protobuf::Message;
@@ -349,7 +349,7 @@ fn do_batches(
 fn retrieve_property_values(
     input_data: &web::Json<RecordData>,
 ) -> Vec::<PropertyValue> {
-    
+/*    
     name: String,
     data_type: DataType,
     bytes_value: Vec<u8>,
@@ -359,7 +359,7 @@ fn retrieve_property_values(
     enum_value: u32,
     struct_values: Vec<PropertyValue>,
     lat_long_value: LatLong,
-
+*/
 
     let properties_as_string = &input_data.properties;
     let mut properties = Vec::<PropertyValue>::new();
