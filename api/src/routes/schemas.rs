@@ -95,7 +95,7 @@ pub async fn create_schema(
     let private_key = &input_data.private_key;
     let schema_name = &input_data.schema_name;
     let description = &input_data.description;
-    let properties = retrieve_properties(&input_data);
+    let properties = retrieve_property_definitions(&input_data);
 
     // Building the Action and Payload//
     let action = SchemaCreateBuilder::new()
@@ -147,7 +147,7 @@ pub async fn update_schema(
     let private_key = &input_data.private_key;
     let schema_name = &input_data.schema_name;
     let description = &input_data.description;
-    let properties = retrieve_properties(&input_data);
+    let properties = retrieve_property_definitions(&input_data);
 
     // Building the Action and Payload//
     let action = SchemaUpdateBuilder::new()
@@ -190,7 +190,7 @@ pub async fn update_schema(
     Ok(HttpResponse::Ok().body(res))
 }
 
-fn retrieve_properties(
+fn retrieve_property_definitions(
     input_data: &web::Json<SchemaData>,
 ) -> Vec::<PropertyDefinition> {
     

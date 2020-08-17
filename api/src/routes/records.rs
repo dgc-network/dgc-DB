@@ -101,7 +101,7 @@ pub async fn create_record(
     let private_key = &input_data.private_key;
     let record_id = &input_data.record_id;
     let schema = &input_data.schema;
-    let properties = retrieve_properties(&input_data);
+    let properties = retrieve_property_values(&input_data);
 
     // Building the Action and Payload//
     let action = CreateRecordActionBuilder::new()
@@ -154,7 +154,7 @@ pub async fn update_record(
     let private_key = &input_data.private_key;
     let record_id = &input_data.record_id;
     let schema = &input_data.schema;
-    let properties = retrieve_properties(&input_data);
+    let properties = retrieve_property_values(&input_data);
 
     // Building the Action and Payload//
     let action = FinalizeRecordActionBuilder::new()
@@ -346,16 +346,27 @@ fn do_batches(
 }
 */
 
-fn retrieve_properties(
+fn retrieve_property_values(
     input_data: &web::Json<RecordData>,
 ) -> Vec::<PropertyValue> {
     
+    name: String,
+    data_type: DataType,
+    bytes_value: Vec<u8>,
+    boolean_value: bool,
+    number_value: i64,
+    string_value: String,
+    enum_value: u32,
+    struct_values: Vec<PropertyValue>,
+    lat_long_value: LatLong,
+
+
     let properties_as_string = &input_data.properties;
     let mut properties = Vec::<PropertyValue>::new();
     let vec: Vec<&str> = properties_as_string.split(",").collect();
-    let key_val_vec = split_vec(vec, 7);
+    let key_val_vec = split_vec(vec, 9);
     for key_val in key_val_vec {
-        if key_val.len() != 7 {
+        if key_val.len() != 9 {
             "Properties are formated incorrectly".to_string();            
         }
         let name = match key_val.get(0) {
@@ -377,37 +388,44 @@ fn retrieve_properties(
             None => Some(DataType::Bytes)
         };
 
-        let required = match key_val.get(2) {
-            Some(value) => 
-                if (value == &"True") | (value == &"true") | (value == &"TRUE") {Some(true)}
-                else {Some(false)},
-            
-            None => Some(false)
-        };
-
-        let description = match key_val.get(3) {
+        let bytes_value = match key_val.get(2) {
             Some(value) => value.to_string(),
             None => "description is formated incorrectly".to_string()
         };
 
-        let number_exponent_string = match key_val.get(4) {
+        let boolean_value = match key_val.get(3) {
             Some(value) => value.to_string(),
-            None => "0".to_string()
+            None => "description is formated incorrectly".to_string()
         };
-        let number_exponent = number_exponent_string.parse::<i32>().unwrap();
 
-        let enum_options = match key_val.get(5) {
+        let number_value = match key_val.get(4) {
             Some(value) => value.to_string(),
-            None => "enum_options are formated incorrectly".to_string()
+            None => "description is formated incorrectly".to_string()
         };
-        let struct_properties = match key_val.get(6) {
+
+        let string_value = match key_val.get(5) {
             Some(value) => value.to_string(),
-            None => "struct_properties are formated incorrectly".to_string()
+            None => "description is formated incorrectly".to_string()
+        };
+
+        let enum_value = match key_val.get(6) {
+            Some(value) => value.to_string(),
+            None => "description is formated incorrectly".to_string()
+        };
+
+        let struct_value = match key_val.get(7) {
+            Some(value) => value.to_string(),
+            None => "description is formated incorrectly".to_string()
+        };
+
+        let lat_long_value = match key_val.get(8) {
+            Some(value) => value.to_string(),
+            None => "description is formated incorrectly".to_string()
         };
 
         let property_value = PropertyValueBuilder::new()
-        .with_name("egg".into())
-        .with_data_type(DataType::Number)
+        .with_name(name.into())
+        .with_data_type(data_type)
         .with_number_value(42)
         .build()
         .unwrap();
