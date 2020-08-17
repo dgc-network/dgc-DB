@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::*;
-//use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
-//use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
 use serde::Deserialize;
 use protobuf::Message;
@@ -126,18 +124,7 @@ pub async fn create_schema(
     let batch_list_bytes = batch_list
         .write_to_bytes()
         .expect("Error converting batch list to bytes");
-/*
-    // Create batch_list_bytes //
-    let batch_list_bytes = match do_batches(input_data, "CREATE"){
-        Ok(schema) => schema,
-        Err(err) => {
-            return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize data: {:?}",
-                err,
-            )))
-        }
-    };
-*/
+
     // Submitting Batches to the Validator //
     let res = reqwest::Client::new()
         .post("http://rest-api:8008/batches")
@@ -189,20 +176,6 @@ pub async fn update_schema(
         .write_to_bytes()
         .expect("Error converting batch list to bytes");
 
-
-
-/*
-    // create batch_list //
-    let batch_list_bytes = match do_batches(input_data, "UPDATE"){
-        Ok(schema) => schema,
-        Err(err) => {
-            return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize data: {:?}",
-                err,
-            )))
-        }
-    };
-*/
     // Submitting Batches to the Validator //
     let res = reqwest::Client::new()
         .post("http://rest-api:8008/batches")
@@ -216,156 +189,7 @@ pub async fn update_schema(
 
     Ok(HttpResponse::Ok().body(res))
 }
-/*
-fn do_batches(
-    input_data: web::Json<SchemaData>,
-    action_plan: &str,
-) -> Result<Vec<u8>, RestApiResponseError> {
 
-    // Retrieving a Private Key from the input_data //
-    let private_key_as_hex = &input_data.private_key;
-    let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
-    .expect("Error generating a Private Key");
-
-    // Creating the Payload //
-    let schema_name = &input_data.schema_name;
-    let description = &input_data.description;
-    let properties_as_string = &input_data.properties;
-
-    let mut properties = Vec::<PropertyDefinition>::new();
-    let vec: Vec<&str> = properties_as_string.split(",").collect();
-    let key_val_vec = split_vec(vec, 7);
-    for key_val in key_val_vec {
-        if key_val.len() != 7 {
-            "Properties are formated incorrectly".to_string();            
-        }
-        let name = match key_val.get(0) {
-            Some(value) => value.to_string(),
-            None => "name is formated incorrectly".to_string()
-        };
-
-        let data_type = match key_val.get(1) {
-            Some(value) => 
-                if (value == &"Byte") | (value == &"byte") | (value == &"BYTE") {Some(DataType::Bytes)}
-                else if (value == &"Boolean") | (value == &"boolean") | (value == &"BOOLEAN") {Some(DataType::Boolean)}
-                else if (value == &"Number") | (value == &"number") | (value == &"NUMBER") {Some(DataType::Number)}
-                else if (value == &"String") | (value == &"string") | (value == &"STRING") {Some(DataType::String)}
-                else if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {Some(DataType::Enum)}
-                else if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {Some(DataType::Struct)}
-                else if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {Some(DataType::LatLong)}
-                else {Some(DataType::Bytes)},
-            
-            None => Some(DataType::Bytes)
-        };
-
-        let required = match key_val.get(2) {
-            Some(value) => 
-                if (value == &"True") | (value == &"true") | (value == &"TRUE") {Some(true)}
-                else {Some(false)},
-            
-            None => Some(false)
-        };
-
-        let description = match key_val.get(3) {
-            Some(value) => value.to_string(),
-            None => "description is formated incorrectly".to_string()
-        };
-        let number_exponent_string = match key_val.get(4) {
-            Some(value) => value.to_string(),
-            None => "0".to_string()
-        };
-        let number_exponent = number_exponent_string.parse::<i32>().unwrap();
-
-        let enum_options = match key_val.get(5) {
-            Some(value) => value.to_string(),
-            None => "enum_options are formated incorrectly".to_string()
-        };
-        let struct_properties = match key_val.get(6) {
-            Some(value) => value.to_string(),
-            None => "struct_properties are formated incorrectly".to_string()
-        };
-
-        let builder = PropertyDefinitionBuilder::new();
-        let property_definition = builder
-        .with_name(name.to_string())
-        .with_data_type(data_type.unwrap())
-        .with_required(required.unwrap())
-        .with_description(description.to_string())
-        .with_number_exponent(number_exponent)
-        .build()
-        .unwrap();
-
-        properties.push(property_definition.clone());
-    }
-
-    if action_plan == "CREATE" {
-        // Building the Action and Payload//
-        let action = SchemaCreateBuilder::new()
-        .with_schema_name(schema_name.to_string())
-        .with_description(description.to_string())
-        .with_properties(properties)
-        .build()
-        .unwrap();
-
-        let payload = SchemaPayloadBuilder::new()
-        .with_action(Action::SchemaCreate(action.clone()))
-        .build()
-        .unwrap();
-
-        // Building the Transaction and Batch//
-        let batch_list = BatchBuilder::new(
-            SCHEMA_FAMILY_NAME, 
-            SCHEMA_FAMILY_VERSION, 
-            &private_key.as_hex(),
-        )
-        .add_transaction(
-            &payload.into_proto()?,
-            &[get_schema_prefix(), get_pike_prefix()],
-            &[get_schema_prefix(), get_pike_prefix()],
-        )?
-        .create_batch_list();
-
-        let batch_list_bytes = batch_list
-            .write_to_bytes()
-            .expect("Error converting batch list to bytes");
-
-        return Ok(batch_list_bytes);
-    }     
-    else //if action_plan == "UPDATE" 
-    {
-        // Building the Action and Payload//
-        let action = SchemaUpdateBuilder::new()
-        .with_schema_name(schema_name.to_string())
-        .with_properties(properties)
-        .build()
-        .unwrap();
-
-        let payload = SchemaPayloadBuilder::new()
-        .with_action(Action::SchemaUpdate(action.clone()))
-        .build()
-        .unwrap();
-
-        // Building the Transaction and Batch//
-        let batch_list = BatchBuilder::new(
-            SCHEMA_FAMILY_NAME, 
-            SCHEMA_FAMILY_VERSION, 
-            &private_key.as_hex(),
-        )
-        .add_transaction(
-            &payload.into_proto()?,
-            &[get_schema_prefix(), get_pike_prefix()],
-            &[get_schema_prefix(), get_pike_prefix()],
-        )?
-        .create_batch_list();
-
-        let batch_list_bytes = batch_list
-            .write_to_bytes()
-            .expect("Error converting batch list to bytes");
-
-        return Ok(batch_list_bytes);        
-    }
-}
-*/
 fn retrieve_properties(
     input_data: &web::Json<SchemaData>,
 ) -> Vec::<PropertyDefinition> {
@@ -409,6 +233,7 @@ fn retrieve_properties(
             Some(value) => value.to_string(),
             None => "description is formated incorrectly".to_string()
         };
+
         let number_exponent_string = match key_val.get(4) {
             Some(value) => value.to_string(),
             None => "0".to_string()

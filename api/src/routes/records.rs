@@ -97,16 +97,40 @@ pub async fn create_record(
     input_data: web::Json<RecordData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    // Create batch_list_bytes //
-    let batch_list_bytes = match do_batches(input_data, "CREATE"){
-        Ok(record) => record,
-        Err(err) => {
-            return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize record: {:?}",
-                err,
-            )))
-        }
-    };
+    // Creating the Payload //
+    let private_key = &input_data.private_key;
+    let record_id = &input_data.record_id;
+    let schema = &input_data.schema;
+    let properties = retrieve_properties(&input_data);
+
+    // Building the Action and Payload//
+    let action = CreateRecordActionBuilder::new()
+        .with_record_id(record_id.into())
+        .with_schema(schema.into())
+        .with_properties(properties)
+        .build()
+        .unwrap();
+
+    let payload = TrackAndTracePayloadBuilder::new()
+        .with_action(Action::CreateRecord(action.clone()))
+        .with_timestamp(chrono::offset::Utc::now().timestamp().try_into().unwrap())
+        .build()
+        .unwrap();
+
+    // Building the Transaction and Batch//
+    let batch_list = BatchBuilder::new(
+        TNT_FAMILY_NAME, 
+        TNT_FAMILY_VERSION, 
+        private_key,
+    ).add_transaction(
+        &payload.into_proto()?,
+        &[get_record_prefix(), get_pike_prefix()],
+        &[get_record_prefix(), get_pike_prefix()],
+    )?.create_batch_list();
+
+    let batch_list_bytes = batch_list
+        .write_to_bytes()
+        .expect("Error converting batch list to bytes");
 
     // Submitting Batches to the Validator //
     let res = reqwest::Client::new()
@@ -126,16 +150,38 @@ pub async fn update_record(
     input_data: web::Json<RecordData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    // create batch_list //
-    let batch_list_bytes = match do_batches(input_data, "FINALIZE"){
-        Ok(record) => record,
-        Err(err) => {
-            return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize record: {:?}",
-                err,
-            )))
-        }
-    };
+    // Creating the Payload //
+    let private_key = &input_data.private_key;
+    let record_id = &input_data.record_id;
+    let schema = &input_data.schema;
+    let properties = retrieve_properties(&input_data);
+
+    // Building the Action and Payload//
+    let action = FinalizeRecordActionBuilder::new()
+        .with_record_id(record_id.into())
+        .build()
+        .unwrap();
+
+    let payload = TrackAndTracePayloadBuilder::new()
+        .with_action(Action::FinalizeRecord(action.clone()))
+        .with_timestamp(chrono::offset::Utc::now().timestamp().try_into().unwrap())
+        .build()
+        .unwrap();
+
+    // Building the Transaction and Batch//
+    let batch_list = BatchBuilder::new(
+        TNT_FAMILY_NAME, 
+        TNT_FAMILY_VERSION, 
+        private_key,
+    ).add_transaction(
+        &payload.into_proto()?,
+        &[get_record_prefix(), get_pike_prefix()],
+        &[get_record_prefix(), get_pike_prefix()],
+    )?.create_batch_list();
+
+    let batch_list_bytes = batch_list
+        .write_to_bytes()
+        .expect("Error converting batch list to bytes");
 
     // Submitting Batches to the Validator //
     let res = reqwest::Client::new()
@@ -145,12 +191,12 @@ pub async fn update_record(
         .send().await?
         .text().await?;
 
-    println!("============ update_record_link ============");
+    println!("============ finalize_record_link ============");
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
 }
-
+/*
 fn do_batches(
     input_data: web::Json<RecordData>,
     action_plan: &str,
@@ -297,4 +343,76 @@ fn do_batches(
 
         return Ok(batch_list_bytes);        
     }
+}
+*/
+
+fn retrieve_properties(
+    input_data: &web::Json<RecordData>,
+) -> Vec::<PropertyValue> {
+    
+    let properties_as_string = &input_data.properties;
+    let mut properties = Vec::<PropertyValue>::new();
+    let vec: Vec<&str> = properties_as_string.split(",").collect();
+    let key_val_vec = split_vec(vec, 7);
+    for key_val in key_val_vec {
+        if key_val.len() != 7 {
+            "Properties are formated incorrectly".to_string();            
+        }
+        let name = match key_val.get(0) {
+            Some(value) => value.to_string(),
+            None => "name is formated incorrectly".to_string()
+        };
+
+        let data_type = match key_val.get(1) {
+            Some(value) => 
+                if (value == &"Byte") | (value == &"byte") | (value == &"BYTE") {Some(DataType::Bytes)}
+                else if (value == &"Boolean") | (value == &"boolean") | (value == &"BOOLEAN") {Some(DataType::Boolean)}
+                else if (value == &"Number") | (value == &"number") | (value == &"NUMBER") {Some(DataType::Number)}
+                else if (value == &"String") | (value == &"string") | (value == &"STRING") {Some(DataType::String)}
+                else if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {Some(DataType::Enum)}
+                else if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {Some(DataType::Struct)}
+                else if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {Some(DataType::LatLong)}
+                else {Some(DataType::Bytes)},
+            
+            None => Some(DataType::Bytes)
+        };
+
+        let required = match key_val.get(2) {
+            Some(value) => 
+                if (value == &"True") | (value == &"true") | (value == &"TRUE") {Some(true)}
+                else {Some(false)},
+            
+            None => Some(false)
+        };
+
+        let description = match key_val.get(3) {
+            Some(value) => value.to_string(),
+            None => "description is formated incorrectly".to_string()
+        };
+
+        let number_exponent_string = match key_val.get(4) {
+            Some(value) => value.to_string(),
+            None => "0".to_string()
+        };
+        let number_exponent = number_exponent_string.parse::<i32>().unwrap();
+
+        let enum_options = match key_val.get(5) {
+            Some(value) => value.to_string(),
+            None => "enum_options are formated incorrectly".to_string()
+        };
+        let struct_properties = match key_val.get(6) {
+            Some(value) => value.to_string(),
+            None => "struct_properties are formated incorrectly".to_string()
+        };
+
+        let property_value = PropertyValueBuilder::new()
+        .with_name("egg".into())
+        .with_data_type(DataType::Number)
+        .with_number_value(42)
+        .build()
+        .unwrap();
+
+        properties.push(property_value.clone());
+    }
+    return properties
 }
