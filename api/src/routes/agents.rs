@@ -29,15 +29,6 @@ pub struct AgentData {
     metadata: String,
 }
 
-pub struct JsonAgentData {
-    org_id: String,
-    //public_key: String,
-    active: bool,
-    roles: Vec<String>,
-    metadata: Vec<KeyValueEntry>,
-    //private_key: String,
-}
-
 pub async fn keygen(
 ) -> Result<HttpResponse, RestApiResponseError> {
     // Creating a Private Key and Signer //
@@ -217,18 +208,7 @@ pub async fn update_agent(
     let batch_list_bytes = batch_list
         .write_to_bytes()
         .expect("Error converting batch list to bytes");
-/*
-    // create batch_list //
-    let batch_list_bytes = match do_batches(input_data, Action::UpdateAgent){
-        Ok(agent) => agent,
-        Err(err) => {
-            return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize agent: {:?}",
-                err,
-            )))
-        }
-    };
-*/
+
     // Submitting Batches to the Validator //
     let res = reqwest::Client::new()
         .post("http://rest-api:8008/batches")
@@ -261,7 +241,8 @@ fn retrieve_roles(
     input_data: &web::Json<AgentData>,
 ) -> Vec<String> {
     let roles_as_string = &input_data.roles;
-    let roles: Vec<String> = roles_as_string.split(",").map(String::from).collect();
+    //let roles: Vec<String> = roles_as_string.split(",").map(String::from).collect();
+    let roles: Vec<String> = roles_as_string.split(",").trim().map(String::from).collect();
     return roles
 }
 
@@ -296,127 +277,3 @@ fn retrieve_metadata(
     }
     return metadata
 }
-
-/*
-fn do_batches(
-    input_data: web::Json<AgentData>,
-    action_plan: Action,
-) -> Result<Vec<u8>, RestApiResponseError> {
-
-    // Retrieving a Private Key from the input_data //
-    let private_key_as_hex = &input_data.private_key;
-    let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
-    .expect("Error generating a Private Key");
-    let context = create_context("secp256k1")
-    .expect("Error creating the right context");
-    let public_key = context.get_public_key(&private_key)
-    .expect("Error retrieving a Public Key");
-
-    // Creating the Payload //
-    let org_id = &input_data.org_id;
-    let roles_as_string = &input_data.roles;
-    let metadata_as_string = &input_data.metadata;
-
-    let roles: Vec<String> = roles_as_string.split(",").map(String::from).collect();
-
-    let mut metadata = Vec::<KeyValueEntry>::new();
-    let vec: Vec<&str> = metadata_as_string.split(",").collect();
-    let key_val_vec = split_vec(vec, 2);
-    for key_val in key_val_vec {
-        if key_val.len() != 2 {
-            "Metadata is formated incorrectly".to_string();            
-        }
-        let key = match key_val.get(0) {
-            Some(key) => key.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
-        };
-        let value = match key_val.get(1) {
-            Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
-        };
-
-        let key_value = KeyValueEntryBuilder::new()
-            .with_key(key.to_string())
-            .with_value(value.to_string())
-            .build()
-            .unwrap();
-
-        metadata.push(key_value.clone());
-    }
-
-    if action_plan == Action::CreateAgent {
-
-        // Building the Action and Payload//
-        let action = CreateAgentActionBuilder::new()
-        .with_org_id(org_id.to_string())
-        .with_public_key(public_key.as_hex())
-        .with_active(true)
-        .with_roles(roles)
-        .with_metadata(metadata)
-        .build()
-        .unwrap();
-
-        let payload = PikePayloadBuilder::new()
-        .with_action(Action::CreateAgent)
-        .with_create_agent(action)
-        .build()
-        .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
-
-        // Building the Transaction and Batch//
-        let batch_list = BatchBuilder::new(
-            PIKE_FAMILY_NAME, 
-            PIKE_FAMILY_VERSION, 
-            &private_key.as_hex(),
-        )
-        .add_transaction(
-            &payload.into_proto()?,
-            &[get_pike_prefix()],
-            &[get_pike_prefix()],
-        )?
-        .create_batch_list();
-
-        let batch_list_bytes = batch_list
-            .write_to_bytes()
-            .expect("Error converting batch list to bytes");
-
-        return Ok(batch_list_bytes);
-
-    } else {
-
-        // Building the Action and Payload//
-        let action = UpdateAgentActionBuilder::new()
-        .with_org_id(org_id.to_string())
-        .with_public_key(public_key.as_hex())
-        .with_active(true)
-        .with_roles(roles)
-        .with_metadata(metadata)
-        .build()
-        .unwrap();
-
-        let payload = PikePayloadBuilder::new()
-        .with_action(Action::UpdateAgent)
-        .with_update_agent(action)
-        .build()
-        .map_err(|err| RestApiResponseError::UserError(format!("{}", err)))?;
-
-        // Building the Transaction and Batch//
-        let batch_list = BatchBuilder::new(
-            PIKE_FAMILY_NAME, 
-            PIKE_FAMILY_VERSION, 
-            &private_key.as_hex(),
-        )
-        .add_transaction(
-            &payload.into_proto()?,
-            &[get_pike_prefix()],
-            &[get_pike_prefix()],
-        )?
-        .create_batch_list();
-
-        let batch_list_bytes = batch_list
-            .write_to_bytes()
-            .expect("Error converting batch list to bytes");
-
-        return Ok(batch_list_bytes);
-    }
-}
-*/
