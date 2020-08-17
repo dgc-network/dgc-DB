@@ -24,8 +24,18 @@ use dgc_config::protocol::pike::payload::*;
 pub struct AgentData {
     private_key: String,
     org_id: String,
+    active: String,
     roles: String,
     metadata: String,
+}
+
+pub struct JsonAgentData {
+    org_id: String,
+    //public_key: String,
+    active: bool,
+    roles: Vec<String>,
+    metadata: Vec<KeyValueEntry>,
+    //private_key: String,
 }
 
 pub async fn keygen(
@@ -115,7 +125,11 @@ pub async fn create_agent(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
     // Creating the Payload //
-    let r: CreateAgentAction = retrieve_payload(input_data);
+    let private_key = &input_data.private_key;
+    let public_key = retrieve_public_key(input_data);
+    let org_id = &input_data.org_id;
+    let roles = retrieve_roles(input_data);
+    let metadata = retrieve_matadata(input_data);
 /*
     org_id: String,
     public_key: String,
@@ -130,11 +144,11 @@ pub async fn create_agent(
         //.with_active(true)
         //.with_roles(roles)
         //.with_metadata(metadata)
-        .with_org_id(r.org_id)
-        .with_public_key(r.public_key)
+        .with_org_id(org_id)
+        .with_public_key(public_key)
         .with_active(true)
-        .with_roles(r.roles)
-        .with_metadata(r.metadata)
+        .with_roles(roles)
+        .with_metadata(metadata)
         .build()
         .unwrap();
 
@@ -148,7 +162,8 @@ pub async fn create_agent(
         let batch_list = BatchBuilder::new(
             PIKE_FAMILY_NAME, 
             PIKE_FAMILY_VERSION, 
-            &private_key.as_hex(),
+            //&private_key.as_hex(),
+            private_key,
         )
         .add_transaction(
             &payload.into_proto()?,
@@ -217,11 +232,31 @@ pub async fn update_agent(
     Ok(HttpResponse::Ok().body(res))
 }
 
-fn retrieve_payload(
+fn retrieve_public_key(
     input_data: web::Json<AgentData>,
-    //action_plan: Action,
-//) -> Result<Vec<u8>, RestApiResponseError> {
-) -> Result<CreateAgentAction, RestApiResponseError> {
+) -> String {    
+    // Retrieving a Private Key from the input_data //
+    let private_key_as_hex = &input_data.private_key;
+    let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
+    .expect("Error generating a Private Key");
+    let context = create_context("secp256k1")
+    .expect("Error creating the right context");
+    let public_key = context.get_public_key(&private_key)
+    .expect("Error retrieving a Public Key");
+    return public_key.as_hex()
+}
+
+fn retrieve_roles(
+    input_data: web::Json<AgentData>,
+) -> Vec<String> {
+    let roles_as_string = &input_data.roles;
+    let roles: Vec<String> = roles_as_string.split(",").map(String::from).collect();
+    return roles
+}
+
+fn retrieve_metadata(
+    input_data: web::Json<AgentData>,
+) -> Vec::<KeyValueEntry> {
     
     // Retrieving a Private Key from the input_data //
     let private_key_as_hex = &input_data.private_key;
@@ -263,14 +298,7 @@ fn retrieve_payload(
 
         metadata.push(key_value.clone());
     }
-
-    Ok(CreateAgentAction {
-        org_id: org_id.to_string(),
-        public_key: public_key.as_hex(),
-        active: true,
-        roles: roles,
-        metadata: metadata,
-    })
+    return metadata
 }
 
 
