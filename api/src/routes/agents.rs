@@ -241,8 +241,8 @@ fn retrieve_roles(
     input_data: &web::Json<AgentData>,
 ) -> Vec<String> {
     let roles_as_string = &input_data.roles;
-    //let roles: Vec<String> = roles_as_string.split(",").map(String::from).collect();
-    let roles: Vec<String> = roles_as_string.split(",").trim().map(String::from).collect();
+    let roles: Vec<String> = roles_as_string.split(",").map(String::from).collect();
+    //let roles: Vec<String> = roles_as_string.split(",").trim().map(String::from).collect();
     return roles
 }
 

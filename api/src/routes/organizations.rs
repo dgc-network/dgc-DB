@@ -97,6 +97,13 @@ pub async fn create_org(
     input_data: web::Json<OrgData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
+    // Creating the Payload //
+    let private_key = &input_data.private_key;
+    let org_id = &input_data.org_id;
+    let name = &input_data.name;
+    let address = &input_data.address;
+    let metadata = retrieve_metadata(&input_data);
+/*
     // Creating a Private Key and Signer //
     let private_key_as_hex = &input_data.private_key;
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
@@ -132,7 +139,7 @@ pub async fn create_org(
 
         metadata.push(key_value.clone());
     }
-
+*/
     let action = CreateOrganizationActionBuilder::new()
         .with_org_id(org_id.to_string())
         .with_name(name.to_string())
@@ -182,6 +189,13 @@ pub async fn update_org(
     input_data: web::Json<OrgData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
+    // Creating the Payload //
+    let private_key = &input_data.private_key;
+    let org_id = &input_data.org_id;
+    let name = &input_data.name;
+    let address = &input_data.address;
+    let metadata = retrieve_metadata(&input_data);
+/*
     // Creating a Private Key and Signer //
     let private_key_as_hex = &input_data.private_key;
     let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
@@ -217,7 +231,7 @@ pub async fn update_org(
 
         metadata.push(key_value.clone());
     }
-
+*/
     let action = UpdateOrganizationActionBuilder::new()
         .with_org_id(org_id.to_string())
         .with_name(name.to_string())
@@ -261,4 +275,36 @@ pub async fn update_org(
     println!("!dgc-network! res = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
+}
+
+fn retrieve_metadata(
+    input_data: &web::Json<AgentData>,
+) -> Vec::<KeyValueEntry> {
+    
+    let metadata_as_string = &input_data.metadata;
+    let mut metadata = Vec::<KeyValueEntry>::new();
+    let vec: Vec<&str> = metadata_as_string.split(",").collect();
+    let key_val_vec = split_vec(vec, 2);
+    for key_val in key_val_vec {
+        if key_val.len() != 2 {
+            "Metadata is formated incorrectly".to_string();            
+        }
+        let key = match key_val.get(0) {
+            Some(key) => key.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+        let value = match key_val.get(1) {
+            Some(value) => value.to_string(),
+            None => "Metadata is formated incorrectly".to_string()
+        };
+
+        let key_value = KeyValueEntryBuilder::new()
+            .with_key(key.to_string())
+            .with_value(value.to_string())
+            .build()
+            .unwrap();
+
+        metadata.push(key_value.clone());
+    }
+    return metadata
 }
