@@ -138,7 +138,7 @@ pub async fn create_agent(
         //.with_active(true)
         //.with_roles(roles)
         //.with_metadata(metadata)
-        .with_org_id(input_data.org_id)
+        .with_org_id(org_id.to_string())
         .with_public_key(public_key)
         .with_active(true)
         .with_roles(roles)
