@@ -217,13 +217,13 @@ fn retrieve_property_values(
     let vec: Vec<&str> = properties_as_string.split(",").collect();
     let key_val_vec = split_vec(vec, 9);
     for key_val in key_val_vec {
-        let mut property_value = PropertyValueBuilder::new();
+        //let mut property_value = PropertyValueBuilder::new();
         if key_val.len() != 9 {
             "Properties are formated incorrectly".to_string();            
         }
         let name = match key_val.get(0) {
             Some(value) => {
-                property_value = property_value.with_name(value.to_string());
+                //property_value = property_value.with_name(value.to_string());
                 value.to_string()
             },
             None => "name is formated incorrectly".to_string()
@@ -242,7 +242,7 @@ fn retrieve_property_values(
             
             None => Some(DataType::Bytes)
         };
-        property_value = property_value.with_data_type(data_type.unwrap());
+        //property_value = property_value.with_data_type(data_type.unwrap());
 
         if data_type.unwrap() == DataType::Bytes {
             let bytes_value = match key_val.get(2) {
@@ -268,11 +268,18 @@ fn retrieve_property_values(
         if data_type.unwrap() == DataType::String {
             let string_value = match key_val.get(5) {
                 Some(value) => {
-                    property_value = property_value.with_string_value(value.to_string());
+                    //property_value = property_value.with_string_value(value.to_string());
                     value.to_string()
                 },
                 None => "description is formated incorrectly".to_string()
             };    
+            let property_value = PropertyValueBuilder::new()
+            .with_name(name.into())
+            .with_data_type(data_type.unwrap())
+            .with_string_value(string_value.unwrap())
+            .build();
+            .unwrap();
+            properties.push(property_value.clone());
         }
 
         if data_type.unwrap() == DataType::Enum {
@@ -295,15 +302,15 @@ fn retrieve_property_values(
                 None => "description is formated incorrectly".to_string()
             };    
         }
-
-        //let property_value = PropertyValueBuilder::new()
-        //.with_name(name.into())
-        //.with_data_type(data_type.unwrap())
-        //.with_number_value(number_value.unwrap())
-        property_value = property_value.build();
-        //.unwrap();
-
+/*
+        let property_value = PropertyValueBuilder::new()
+        .with_name(name.into())
+        .with_data_type(data_type.unwrap())
+        .with_number_value(number_value.unwrap())
+        .build();
+        .unwrap();
         properties.push(property_value.clone());
+*/        
     }
     return properties
 }
