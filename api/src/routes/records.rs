@@ -300,8 +300,8 @@ fn retrieve_property_values(
         //.with_name(name.into())
         //.with_data_type(data_type.unwrap())
         //.with_number_value(number_value.unwrap())
-        property_value = property_value.build()
-        .unwrap();
+        property_value = property_value.build();
+        //.unwrap();
 
         properties.push(property_value.clone());
     }
