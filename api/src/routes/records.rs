@@ -217,6 +217,16 @@ fn retrieve_property_values(
     let vec: Vec<&str> = properties_as_string.split(",").collect();
     let key_val_vec = split_vec(vec, 9);
     for key_val in key_val_vec {
+
+        let name: String = match key_val.get(0) {
+            Some(value) => value.to_string(),
+            None => "name is formated incorrectly".to_string()
+        };
+        println!("!dgc-network! name = {:?}", name);
+
+
+
+/*
         //let mut property_value = PropertyValueBuilder::new();
         if key_val.len() != 9 {
             "Properties are formated incorrectly".to_string();            
@@ -302,12 +312,13 @@ fn retrieve_property_values(
                 None => "description is formated incorrectly".to_string()
             };    
         }
+*/        
 /*
         let property_value = PropertyValueBuilder::new()
         .with_name(name.into())
         .with_data_type(data_type.unwrap())
         .with_number_value(number_value.unwrap())
-        .build();
+        .build()
         .unwrap();
         properties.push(property_value.clone());
 */        
