@@ -223,7 +223,7 @@ fn retrieve_property_values(
         let mut property_value = PropertyValueBuilder::new();
         let name = match key_val.get(0) {
             Some(value) => {
-                property_value.with_name(value.into());
+                property_value.with_name(value.to_string());
                 value.to_string()
             },
             None => "name is formated incorrectly".to_string()
@@ -244,28 +244,28 @@ fn retrieve_property_values(
         };
         property_value.with_data_type(data_type.unwrap());
 
-        if data_type.unwrap() == "Bytes" {
+        if data_type.unwrap() == DataType::Bytes {
             let bytes_value = match key_val.get(2) {
                 Some(value) => value.to_string(),
                 None => "description is formated incorrectly".to_string()
             };    
         }
 
-        if data_type.unwrap() == "Boolean" {
+        if data_type.unwrap() == DataType::Boolean {
             let boolean_value = match key_val.get(3) {
                 Some(value) => value.to_string(),
                 None => "description is formated incorrectly".to_string()
             };    
         }
 
-        if data_type.unwrap() == "Number" {
+        if data_type.unwrap() == DataType::Number {
             let number_value = match key_val.get(4) {
                 Some(value) => value.to_string(),
                 None => "description is formated incorrectly".to_string()
             };    
         }
 
-        if data_type.unwrap() == "String" {
+        if data_type.unwrap() == DataType::String {
             let string_value = match key_val.get(5) {
                 Some(value) => {
                     property_value.with_string_value(value.to_string());
@@ -275,21 +275,21 @@ fn retrieve_property_values(
             };    
         }
 
-        if data_type.unwrap() == "Enum" {
+        if data_type.unwrap() == DataType::Enum {
             let enum_value = match key_val.get(6) {
                 Some(value) => value.to_string(),
                 None => "description is formated incorrectly".to_string()
             };    
         }
 
-        if data_type.unwrap() == "Struct" {
+        if data_type.unwrap() == DataType::Struct {
             let struct_value = match key_val.get(7) {
                 Some(value) => value.to_string(),
                 None => "description is formated incorrectly".to_string()
             };    
         }
 
-        if data_type.unwrap() == "LatLong" {
+        if data_type.unwrap() == DataType::LatLong {
             let lat_long_value = match key_val.get(8) {
                 Some(value) => value.to_string(),
                 None => "description is formated incorrectly".to_string()
