@@ -124,8 +124,8 @@ pub async fn create_record(
         private_key,
     ).add_transaction(
         &payload.into_proto()?,
-        &[get_record_prefix(), get_pike_prefix()],
-        &[get_record_prefix(), get_pike_prefix()],
+        &[get_record_prefix(), get_schema_prefix(), get_pike_prefix()],
+        &[get_record_prefix(), get_schema_prefix(), get_pike_prefix()],
     )?.create_batch_list();
 
     let batch_list_bytes = batch_list
@@ -175,8 +175,8 @@ pub async fn update_record(
         private_key,
     ).add_transaction(
         &payload.into_proto()?,
-        &[get_record_prefix(), get_pike_prefix()],
-        &[get_record_prefix(), get_pike_prefix()],
+        &[get_record_prefix(), get_schema_prefix(), get_pike_prefix()],
+        &[get_record_prefix(), get_schema_prefix(), get_pike_prefix()],
     )?.create_batch_list();
 
     let batch_list_bytes = batch_list
