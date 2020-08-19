@@ -200,7 +200,7 @@ pub async fn update_product(
 }
 
 fn retrieve_property_values(
-    input_data: &web::Json<RecordData>,
+    input_data: &web::Json<ProductData>,
 ) -> Vec::<PropertyValue> {
 /*    
     name: String,
@@ -241,6 +241,16 @@ fn retrieve_property_values(
             None => DataType::Bytes
         };
         println!("!dgc-network! data_type = {:?}", data_type);
+
+        if data_type == DataType:String {
+            let property_value = PropertyValueBuilder::new()
+            .with_name(name.into())
+            .with_data_type(DataType:String)
+            //.with_string_value(number_value.unwrap())
+            .build()
+            .unwrap();
+            properties.push(property_value.clone());    
+        }
 /*
         let property_value = PropertyValueBuilder::new()
         .with_name(name.into())
