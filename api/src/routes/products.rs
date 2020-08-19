@@ -3,8 +3,8 @@
 
 use actix_web::*;
 //use sawtooth_sdk::signing::create_context;
-use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
-use sawtooth_sdk::signing::PrivateKey;
+//use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
+//use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
 use serde::Deserialize;
 use protobuf::Message;
@@ -175,17 +175,6 @@ pub async fn update_product(
     let batch_list_bytes = batch_list
         .write_to_bytes()
         .expect("Error converting batch list to bytes");
-
-    // create batch_list //
-    let batch_list_bytes = match do_batches(input_data, "UPDATE"){
-        Ok(product) => product,
-        Err(err) => {
-            return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize organization: {:?}",
-                err,
-            )))
-        }
-    };
 
     // Submitting Batches to the Validator //
     let res = reqwest::Client::new()
