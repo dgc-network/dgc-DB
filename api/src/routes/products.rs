@@ -11,7 +11,7 @@ use std::convert::TryInto;
 
 use crate::transaction::BatchBuilder;
 use crate::error::RestApiResponseError;
-use crate::{List, Fetch};
+use crate::{List, Fetch, split_vec};
 
 use dgc_config::protos::*;
 use dgc_config::addressing::*;
@@ -230,19 +230,28 @@ fn retrieve_property_values(
             //Some(value) => value.to_string(),
             //None => "data_type is formated incorrectly".to_string()
             Some(value) => 
-                if (value == &"Bytes") | (value == &"bytes") | (value == &"BYTES") {Some(DataType::Bytes)}
-                else if (value == &"Boolean") | (value == &"boolean") | (value == &"BOOLEAN") {Some(DataType::Boolean)}
-                else if (value == &"Number") | (value == &"number") | (value == &"NUMBER") {Some(DataType::Number)}
-                else if (value == &"String") | (value == &"string") | (value == &"STRING") {Some(DataType::String)}
-                else if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {Some(DataType::Enum)}
-                else if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {Some(DataType::Struct)}
-                else if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {Some(DataType::LatLong)}
-                else {Some(DataType::Bytes)},
-            None => Some(DataType::Bytes)
+                if (value == &"Bytes") | (value == &"bytes") | (value == &"BYTES") {DataType::Bytes}
+                else if (value == &"Boolean") | (value == &"boolean") | (value == &"BOOLEAN") {DataType::Boolean}
+                else if (value == &"Number") | (value == &"number") | (value == &"NUMBER") {DataType::Number}
+                else if (value == &"String") | (value == &"string") | (value == &"STRING") {DataType::String}
+                else if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {DataType::Enum}
+                else if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {DataType::Struct}
+                else if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {DataType::LatLong}
+                else {DataType::Bytes},
+            None => DataType::Bytes
         };
         println!("!dgc-network! data_type = {:?}", data_type);
-
+/*
+        let property_value = PropertyValueBuilder::new()
+        .with_name(name.into())
+        .with_data_type(data_type.unwrap())
+        .with_number_value(number_value.unwrap())
+        .build()
+        .unwrap();
+        properties.push(property_value.clone());
+*/
     }
+    return properties
 }
 
 fn make_properties() -> Vec<PropertyValue> {
