@@ -244,7 +244,7 @@ fn retrieve_property_values(
 
         if data_type == DataType::Number {
             let number_value = match key_val.get(4) {
-                Some(value) => value.to_string().parse::<i64>(),
+                Some(value) => value.parse::<i64>(),
                 None => 0
             };    
 
