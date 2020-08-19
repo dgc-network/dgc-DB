@@ -252,7 +252,7 @@ fn retrieve_property_values(
             let property_value = PropertyValueBuilder::new()
             .with_name(name.clone().into())
             .with_data_type(DataType::Bytes)
-            .with_bytes_value(bytes_value.unwrap())
+            .with_bytes_value(bytes_value)
             .build()
             .unwrap();
             properties.push(property_value.clone());    
