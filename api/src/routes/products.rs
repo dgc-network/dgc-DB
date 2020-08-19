@@ -28,7 +28,6 @@ pub struct ProductData {
     product_id: String,
     product_type: String,
     owner: String,
-    //properties: Vec<PropertyValue>,
     properties: String,
 }
 
@@ -86,16 +85,42 @@ pub async fn create_product(
     input_data: web::Json<ProductData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    // Create batch_list_bytes //
-    let batch_list_bytes = match do_batches(input_data, "CREATE"){
-        Ok(product) => product,
-        Err(err) => {
-            return Err(RestApiResponseError::UserError(format!(
-                "Cannot deserialize organization: {:?}",
-                err,
-            )))
-        }
-    };
+    // Creating the Payload //
+    let private_key = &input_data.private_key;
+    let product_id = &input_data.product_id;
+    //let product_type = retrieve_product_type(&input_data);
+    let owner = &input_data.owner;
+    //let properties = retrieve_property_values(&input_data);
+
+    // Building the Action and Payload//
+    let action = ProductCreateActionBuilder::new()
+        .with_product_id(product_id.to_string())
+        .with_product_type(ProductType::GS1)
+        .with_owner(owner.to_string())
+        .with_properties(make_properties())
+        .build()
+        .unwrap();
+
+    let payload = ProductPayloadBuilder::new()
+        .with_action(Action::ProductCreate(action.clone()))
+        .with_timestamp(chrono::offset::Utc::now().timestamp().try_into().unwrap())
+        .build()
+        .unwrap();
+
+    // Building the Transaction and Batch//
+    let batch_list = BatchBuilder::new(
+        PRODUCT_FAMILY_NAME, 
+        PRODUCT_FAMILY_VERSION, 
+        private_key,
+    ).add_transaction(
+        &payload.into_proto()?,
+        &[get_product_prefix(), get_pike_prefix()],
+        &[get_product_prefix(), get_pike_prefix()],
+    )?.create_batch_list();
+
+    let batch_list_bytes = batch_list
+        .write_to_bytes()
+        .expect("Error converting batch list to bytes");
 
     // Submitting Batches to the Validator //
     let res = reqwest::Client::new()
@@ -114,6 +139,42 @@ pub async fn create_product(
 pub async fn update_product(
     input_data: web::Json<ProductData>,
 ) -> Result<HttpResponse, RestApiResponseError> {
+
+    // Creating the Payload //
+    let private_key = &input_data.private_key;
+    let product_id = &input_data.product_id;
+    //let product_type = retrieve_product_type(&input_data);
+    let owner = &input_data.owner;
+    //let properties = retrieve_property_values(&input_data);
+
+    // Building the Action and Payload//
+    let action = ProductUpdateActionBuilder::new()
+        .with_product_id(product_id.to_string())
+        .with_product_type(ProductType::GS1)
+        .with_properties(make_properties())
+        .build()
+        .unwrap();
+
+    let payload = ProductPayloadBuilder::new()
+        .with_action(Action::ProductUpdate(action.clone()))
+        .with_timestamp(chrono::offset::Utc::now().timestamp().try_into().unwrap())
+        .build()
+        .unwrap();
+
+    // Building the Transaction and Batch//
+    let batch_list = BatchBuilder::new(
+        PRODUCT_FAMILY_NAME, 
+        PRODUCT_FAMILY_VERSION, 
+        private_key,
+    ).add_transaction(
+        &payload.into_proto()?,
+        &[get_product_prefix(), get_pike_prefix()],
+        &[get_product_prefix(), get_pike_prefix()],
+    )?.create_batch_list();
+
+    let batch_list_bytes = batch_list
+        .write_to_bytes()
+        .expect("Error converting batch list to bytes");
 
     // create batch_list //
     let batch_list_bytes = match do_batches(input_data, "UPDATE"){
@@ -138,128 +199,6 @@ pub async fn update_product(
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
-}
-
-fn do_batches(
-    input_data: web::Json<ProductData>,
-    action_plan: &str,
-) -> Result<Vec<u8>, RestApiResponseError> {
-
-    // Retrieving a Private Key from the input_data //
-    let private_key_as_hex = &input_data.private_key;
-    let private_key = Secp256k1PrivateKey::from_hex(&private_key_as_hex)
-    .expect("Error generating a Private Key");
-
-    // Creating the Payload //
-    let product_id = &input_data.product_id;
-    let owner = &input_data.owner;
-    let properties_as_string = &input_data.properties;
-/*
-    let mut roles = Vec::<String>::new();
-    for role in roles_as_string.chars() {
-        let entry: String = role.to_string().split(",").collect();
-        roles.push(entry.clone());
-    }
-*/
-/*
-    let mut metadata = Vec::<KeyValueEntry>::new();
-    for meta in metadata_as_string.chars() {
-        let meta_as_string = meta.to_string();
-        let key_val: Vec<&str> = meta_as_string.split(",").collect();
-        if key_val.len() != 2 {
-            "Metadata is formated incorrectly".to_string();            
-        }
-        let key = match key_val.get(0) {
-            Some(key) => key.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
-        };
-        let value = match key_val.get(1) {
-            Some(value) => value.to_string(),
-            None => "Metadata is formated incorrectly".to_string()
-        };
-
-        let key_value = KeyValueEntryBuilder::new()
-            .with_key(key.to_string())
-            .with_value(value.to_string())
-            .build()
-            .unwrap();
-
-        metadata.push(key_value.clone());
-    }
-*/
-
-    if action_plan == "CREATE" {
-
-        // Building the Action and Payload//
-        let action = ProductCreateActionBuilder::new()
-        .with_product_id(product_id.to_string())
-        .with_product_type(ProductType::GS1)
-        .with_owner(owner.to_string())
-        .with_properties(make_properties())
-        .build()
-        .unwrap();
-
-        let payload = ProductPayloadBuilder::new()
-        .with_action(Action::ProductCreate(action.clone()))
-        .with_timestamp(chrono::offset::Utc::now().timestamp().try_into().unwrap())
-        .build()
-        .unwrap();
-
-        // Building the Transaction and Batch//
-        let batch_list = BatchBuilder::new(
-            PRODUCT_FAMILY_NAME, 
-            PRODUCT_FAMILY_VERSION, 
-            &private_key.as_hex(),
-        )
-        .add_transaction(
-            &payload.into_proto()?,
-            &[get_product_prefix(), get_pike_prefix()],
-            &[get_product_prefix(), get_pike_prefix()],
-        )?
-        .create_batch_list();
-
-        let batch_list_bytes = batch_list
-            .write_to_bytes()
-            .expect("Error converting batch list to bytes");
-
-        return Ok(batch_list_bytes);
-
-    //} else if (action_plan == "UPDATE") {
-    } else {
-
-        // Building the Action and Payload//
-        let action = ProductUpdateActionBuilder::new()
-        .with_product_id(product_id.to_string())
-        .with_product_type(ProductType::GS1)
-        .with_properties(make_properties())
-        .build()
-        .unwrap();
-
-        let payload = ProductPayloadBuilder::new()
-        .with_action(Action::ProductUpdate(action.clone()))
-        .with_timestamp(chrono::offset::Utc::now().timestamp().try_into().unwrap())
-        .build()
-        .unwrap();
-
-        // Building the Transaction and Batch//
-        let batch_list = BatchBuilder::new(
-            PRODUCT_FAMILY_NAME, 
-            PRODUCT_FAMILY_VERSION, 
-            &private_key.as_hex(),
-        )
-        .add_transaction(
-            &payload.into_proto()?,
-            &[get_product_prefix(), get_pike_prefix()],
-            &[get_product_prefix(), get_pike_prefix()],
-        )?
-        .create_batch_list();
-
-        let batch_list_bytes = batch_list
-            .write_to_bytes()
-            .expect("Error converting batch list to bytes");
-
-        return Ok(batch_list_bytes);
-    }
 }
 
 fn make_properties() -> Vec<PropertyValue> {
