@@ -250,7 +250,7 @@ fn retrieve_property_values(
             let number_value = string_value.parse::<i64>();
 
             let property_value = PropertyValueBuilder::new()
-            .with_name(name.into())
+            .with_name(name.clone().into())
             .with_data_type(DataType::Number)
             .with_number_value(number_value.unwrap())
             .build()
@@ -265,7 +265,7 @@ fn retrieve_property_values(
             };    
 
             let property_value = PropertyValueBuilder::new()
-            .with_name(name.into())
+            .with_name(name.clone().into())
             .with_data_type(DataType::String)
             .with_string_value(string_value)
             .build()
