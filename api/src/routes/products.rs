@@ -106,7 +106,8 @@ pub async fn create_product(
         .with_product_id(product_id.to_string())
         .with_product_type(ProductType::GS1)
         .with_owner(owner.to_string())
-        .with_properties(make_properties())
+        //.with_properties(make_properties())
+        .with_properties(properties)
         .build()
         .unwrap();
 
@@ -160,7 +161,8 @@ pub async fn update_product(
     let action = ProductUpdateActionBuilder::new()
         .with_product_id(product_id.to_string())
         .with_product_type(ProductType::GS1)
-        .with_properties(make_properties())
+        //.with_properties(make_properties())
+        .with_properties(properties)
         .build()
         .unwrap();
 
@@ -227,8 +229,6 @@ fn retrieve_property_values(
         println!("!dgc-network! name = {:?}", name);
         
         let data_type: DataType = match key_val.get(1) {
-            //Some(value) => value.to_string(),
-            //None => "data_type is formated incorrectly".to_string()
             Some(value) => 
                 if (value == &"Bytes") | (value == &"bytes") | (value == &"BYTES") {DataType::Bytes}
                 else if (value == &"Boolean") | (value == &"boolean") | (value == &"BOOLEAN") {DataType::Boolean}
@@ -241,6 +241,21 @@ fn retrieve_property_values(
             None => DataType::Bytes
         };
         println!("!dgc-network! data_type = {:?}", data_type);
+
+        if data_type == DataType::Number {
+            let number_value = match key_val.get(4) {
+                Some(value) => value.to_string(),
+                None => "number_value is formated incorrectly".to_string()
+            };    
+
+            let property_value = PropertyValueBuilder::new()
+            .with_name(name.into())
+            .with_data_type(DataType::Number)
+            .with_number_value(number_value)
+            .build()
+            .unwrap();
+            properties.push(property_value.clone());    
+        }
 
         if data_type == DataType::String {
             let string_value = match key_val.get(5) {
@@ -256,6 +271,7 @@ fn retrieve_property_values(
             .unwrap();
             properties.push(property_value.clone());    
         }
+
 /*
         let property_value = PropertyValueBuilder::new()
         .with_name(name.into())
