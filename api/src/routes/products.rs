@@ -244,8 +244,8 @@ fn retrieve_property_values(
 
         if data_type == DataType::Number {
             let number_value = match key_val.get(4) {
-                Some(value) => value.to_string(),
-                None => "number_value is formated incorrectly".to_string()
+                Some(value) => value.to_string().parse::<i64>(),
+                None => 0
             };    
 
             let property_value = PropertyValueBuilder::new()
@@ -271,16 +271,6 @@ fn retrieve_property_values(
             .unwrap();
             properties.push(property_value.clone());    
         }
-
-/*
-        let property_value = PropertyValueBuilder::new()
-        .with_name(name.into())
-        .with_data_type(data_type.unwrap())
-        .with_number_value(number_value.unwrap())
-        .build()
-        .unwrap();
-        properties.push(property_value.clone());
-*/
     }
     return properties
 }
