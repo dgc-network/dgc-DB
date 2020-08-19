@@ -89,7 +89,7 @@ pub async fn fetch_product(
     product_id: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
-    let address = make_record_address(&record_id);
+    let address = make_product_address(&product_id);
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
     let msg = base64::decode(&res.data).unwrap();
