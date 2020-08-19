@@ -242,6 +242,38 @@ fn retrieve_property_values(
         };
         println!("!dgc-network! data_type = {:?}", data_type);
 
+        if data_type == DataType::Bytes {
+            let string_value = match key_val.get(2) {
+                Some(value) => value.to_string(),
+                None => "string_value is formated incorrectly".to_string()
+            };    
+            let bytes_value = string_value.as_bytes();
+
+            let property_value = PropertyValueBuilder::new()
+            .with_name(name.clone().into())
+            .with_data_type(DataType::Bytes)
+            .with_bytes_value(bytes_value.unwrap())
+            .build()
+            .unwrap();
+            properties.push(property_value.clone());    
+        }
+
+        if data_type == DataType::Boolean {
+            let string_value = match key_val.get(3) {
+                Some(value) => value.to_string(),
+                None => "string_value is formated incorrectly".to_string()
+            };    
+            let boolean_value = string_value.parse::<bool>();
+
+            let property_value = PropertyValueBuilder::new()
+            .with_name(name.clone().into())
+            .with_data_type(DataType::Boolean)
+            .with_boolean_value(boolean_value.unwrap())
+            .build()
+            .unwrap();
+            properties.push(property_value.clone());    
+        }
+
         if data_type == DataType::Number {
             let string_value = match key_val.get(4) {
                 Some(value) => value.to_string(),
@@ -272,6 +304,23 @@ fn retrieve_property_values(
             .unwrap();
             properties.push(property_value.clone());    
         }
+
+        if data_type == DataType::Enum {
+            let string_value = match key_val.get(6) {
+                Some(value) => value.to_string(),
+                None => "string_value is formated incorrectly".to_string()
+            };    
+            let enum_value = string_value.parse::<u32>();
+
+            let property_value = PropertyValueBuilder::new()
+            .with_name(name.clone().into())
+            .with_data_type(DataType::Enum)
+            .with_enum_value(enum_value.unwrap())
+            .build()
+            .unwrap();
+            properties.push(property_value.clone());    
+        }
+
     }
     return properties
 }
