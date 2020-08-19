@@ -243,10 +243,11 @@ fn retrieve_property_values(
         println!("!dgc-network! data_type = {:?}", data_type);
 
         if data_type == DataType::Number {
-            let number_value = match key_val.get(4) {
-                Some(value) => value.parse::<i64>(),
-                None => 0
+            let string_value = match key_val.get(4) {
+                Some(value) => value.to_string(),
+                None => "string_value is formated incorrectly".to_string()
             };    
+            let number_value = string_value.parse::<i64>();
 
             let property_value = PropertyValueBuilder::new()
             .with_name(name.into())
