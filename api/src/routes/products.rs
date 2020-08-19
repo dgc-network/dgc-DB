@@ -2,9 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use actix_web::*;
-//use sawtooth_sdk::signing::create_context;
-//use sawtooth_sdk::signing::secp256k1::Secp256k1PrivateKey;
-//use sawtooth_sdk::signing::PrivateKey;
 use sawtooth_sdk::processor::handler::ApplyError;
 use serde::Deserialize;
 use protobuf::Message;
@@ -61,28 +58,6 @@ pub async fn list_products(
     }
     response_data = response_data + &format!("]");
     Ok(HttpResponse::Ok().body(response_data))
-/*
-    let url = format!("http://rest-api:8008/state?address={}", &get_product_prefix());
-    let list = reqwest::get(&url).await?.json::<List>().await?;
-    println!("============ list_product_data ============");
-    for sub in list.data {
-        let msg = base64::decode(&sub.data).unwrap();
-        let product: product_state::Product = match protobuf::parse_from_bytes(&msg){
-            Ok(product) => product,
-            Err(err) => {
-                return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
-                    "Cannot deserialize organization: {:?}",
-                    err,
-                ))))
-            }
-        };
-        println!("!dgc-network! serialized: {:?}", product);
-    }
-
-    println!("============ list_product_link ============");
-    println!("!dgc-network! link = {:?}", list.link);
-    Ok(HttpResponse::Ok().body(list.link))
-*/    
 }
 
 pub async fn fetch_product(
@@ -113,27 +88,6 @@ pub async fn fetch_product(
         response_data = response_data + &format!("{{\n  product_id: {:?}, \n  product_type: {:?}, \n  owner: {:?}, \n  properties: {:?}, \n}}", product.product_id, product.product_type, product.owner, product.properties);
     }
     Ok(HttpResponse::Ok().body(response_data))
-/*
-    let address = make_product_address(&product_id);
-    let url = format!("http://rest-api:8008/state/{}", address);
-    let res = reqwest::get(&url).await?.json::<Fetch>().await?;
-    println!("============ fetch_product_data ============");
-    let msg = base64::decode(&res.data).unwrap();
-    let product: product_state::Product = match protobuf::parse_from_bytes(&msg){
-        Ok(product) => product,
-        Err(err) => {
-            return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
-                "Cannot deserialize organization: {:?}",
-                err,
-            ))))
-        }
-    };
-    println!("!dgc-network! serialized: {:?}", product);
-
-    println!("============ fetch_product_link ============");
-    println!("!dgc-network! link = {:?}", res.link);
-    Ok(HttpResponse::Ok().body(res.link))
-*/    
 }
 
 pub async fn create_product(
@@ -145,7 +99,7 @@ pub async fn create_product(
     let product_id = &input_data.product_id;
     //let product_type = retrieve_product_type(&input_data);
     let owner = &input_data.owner;
-    //let properties = retrieve_property_values(&input_data);
+    let properties = retrieve_property_values(&input_data);
 
     // Building the Action and Payload//
     let action = ProductCreateActionBuilder::new()
@@ -200,7 +154,7 @@ pub async fn update_product(
     let product_id = &input_data.product_id;
     //let product_type = retrieve_product_type(&input_data);
     let owner = &input_data.owner;
-    //let properties = retrieve_property_values(&input_data);
+    let properties = retrieve_property_values(&input_data);
 
     // Building the Action and Payload//
     let action = ProductUpdateActionBuilder::new()
@@ -243,6 +197,52 @@ pub async fn update_product(
     println!("!dgc-network! submit_status = {:?}", res);
 
     Ok(HttpResponse::Ok().body(res))
+}
+
+fn retrieve_property_values(
+    input_data: &web::Json<RecordData>,
+) -> Vec::<PropertyValue> {
+/*    
+    name: String,
+    data_type: DataType,
+    bytes_value: Vec<u8>,
+    boolean_value: bool,
+    number_value: i64,
+    string_value: String,
+    enum_value: u32,
+    struct_values: Vec<PropertyValue>,
+    lat_long_value: LatLong,
+*/
+
+    let mut properties = Vec::<PropertyValue>::new();
+    let properties_as_string = &input_data.properties;
+    let vec: Vec<&str> = properties_as_string.split(",").collect();
+    let key_val_vec = split_vec(vec, 9);
+    for key_val in key_val_vec {
+
+        let name: String = match key_val.get(0) {
+            Some(value) => value.to_string(),
+            None => "name is formated incorrectly".to_string()
+        };
+        println!("!dgc-network! name = {:?}", name);
+        
+        let data_type: DataType = match key_val.get(1) {
+            //Some(value) => value.to_string(),
+            //None => "data_type is formated incorrectly".to_string()
+            Some(value) => 
+                if (value == &"Bytes") | (value == &"bytes") | (value == &"BYTES") {Some(DataType::Bytes)}
+                else if (value == &"Boolean") | (value == &"boolean") | (value == &"BOOLEAN") {Some(DataType::Boolean)}
+                else if (value == &"Number") | (value == &"number") | (value == &"NUMBER") {Some(DataType::Number)}
+                else if (value == &"String") | (value == &"string") | (value == &"STRING") {Some(DataType::String)}
+                else if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {Some(DataType::Enum)}
+                else if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {Some(DataType::Struct)}
+                else if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {Some(DataType::LatLong)}
+                else {Some(DataType::Bytes)},
+            None => Some(DataType::Bytes)
+        };
+        println!("!dgc-network! data_type = {:?}", data_type);
+
+    }
 }
 
 fn make_properties() -> Vec<PropertyValue> {
