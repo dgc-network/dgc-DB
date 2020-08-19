@@ -34,6 +34,34 @@ pub struct ProductData {
 pub async fn list_products(
 ) -> Result<HttpResponse, RestApiResponseError> {
 
+    let url = format!("http://rest-api:8008/state?address={}", get_product_prefix());
+    let list = reqwest::get(&url).await?.json::<List>().await?;
+    let mut response_data = "[".to_owned();
+    for sub in list.data {
+        let msg = base64::decode(&sub.data).unwrap();
+        let products: product_state::ProductList = match protobuf::parse_from_bytes(&msg){
+            Ok(products) => products,
+            Err(err) => {
+                return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
+                    "Cannot deserialize data: {:?}",
+                    err,
+                ))))
+            }
+        };
+
+        for product in products.get_entries() {
+            println!("!dgc-network! response_data: ");
+            println!("    product_id: {:?},", product.product_id);
+            println!("    product_type: {:?},", product.product_type);
+            println!("    owner: {:?},", product.owner);
+            println!("    properties: {:?}", product.properties);
+            
+            response_data = response_data + &format!("\n  {{\n    product_id: {:?}, \n    product_type: {:?}, \n    owner: {:?}, \n    properties: {:?}, \n  }},\n", product.product_id, product.product_type, product.owner, product.properties);
+        }
+    }
+    response_data = response_data + &format!("]");
+    Ok(HttpResponse::Ok().body(response_data))
+/*
     let url = format!("http://rest-api:8008/state?address={}", &get_product_prefix());
     let list = reqwest::get(&url).await?.json::<List>().await?;
     println!("============ list_product_data ============");
@@ -54,12 +82,38 @@ pub async fn list_products(
     println!("============ list_product_link ============");
     println!("!dgc-network! link = {:?}", list.link);
     Ok(HttpResponse::Ok().body(list.link))
+*/    
 }
 
 pub async fn fetch_product(
     product_id: web::Path<String>,
 ) -> Result<HttpResponse, RestApiResponseError> {
 
+    let address = make_record_address(&record_id);
+    let url = format!("http://rest-api:8008/state/{}", address);
+    let res = reqwest::get(&url).await?.json::<Fetch>().await?;
+    let msg = base64::decode(&res.data).unwrap();
+    let products: product_state::ProductList = match protobuf::parse_from_bytes(&msg){
+        Ok(products) => products,
+        Err(err) => {
+            return Err(RestApiResponseError::ApplyError(ApplyError::InternalError(format!(
+                "Cannot deserialize data: {:?}",
+                err,
+            ))))
+        }
+    };
+    let mut response_data = "".to_owned();
+    for product in products.get_entries() {
+        println!("!dgc-network! response_data: ");
+        println!("    product_id: {:?},", product.product_id);
+        println!("    product_type: {:?},", product.product_type);
+        println!("    owner: {:?},", product.owner);
+        println!("    properties: {:?}", product.properties);
+        
+        response_data = response_data + &format!("{{\n  product_id: {:?}, \n  product_type: {:?}, \n  owner: {:?}, \n  properties: {:?}, \n}}", product.product_id, product.product_type, product.owner, product.properties);
+    }
+    Ok(HttpResponse::Ok().body(response_data))
+/*
     let address = make_product_address(&product_id);
     let url = format!("http://rest-api:8008/state/{}", address);
     let res = reqwest::get(&url).await?.json::<Fetch>().await?;
@@ -79,6 +133,7 @@ pub async fn fetch_product(
     println!("============ fetch_product_link ============");
     println!("!dgc-network! link = {:?}", res.link);
     Ok(HttpResponse::Ok().body(res.link))
+*/    
 }
 
 pub async fn create_product(
