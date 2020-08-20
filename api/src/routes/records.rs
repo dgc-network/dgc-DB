@@ -196,7 +196,7 @@ pub async fn update_record(
 }
 
 fn retrieve_property_values(
-    input_data: &web::Json<RecordData>,
+    input_data: &web::Json<ProductData>,
 ) -> Vec::<PropertyValue> {
 /*    
     name: String,
@@ -221,105 +221,100 @@ fn retrieve_property_values(
             None => "name is formated incorrectly".to_string()
         };
         println!("!dgc-network! name = {:?}", name);
-
-
-
-/*
-        //let mut property_value = PropertyValueBuilder::new();
-        if key_val.len() != 9 {
-            "Properties are formated incorrectly".to_string();            
-        }
-        let name = match key_val.get(0) {
-            Some(value) => {
-                //property_value = property_value.with_name(value.to_string());
-                value.to_string()
-            },
-            None => "name is formated incorrectly".to_string()
-        };
-
-        let data_type = match key_val.get(1) {
+        
+        let data_type: DataType = match key_val.get(1) {
             Some(value) => 
-                if (value == &"Byte") | (value == &"byte") | (value == &"BYTE") {Some(DataType::Bytes)}
-                else if (value == &"Boolean") | (value == &"boolean") | (value == &"BOOLEAN") {Some(DataType::Boolean)}
-                else if (value == &"Number") | (value == &"number") | (value == &"NUMBER") {Some(DataType::Number)}
-                else if (value == &"String") | (value == &"string") | (value == &"STRING") {Some(DataType::String)}
-                else if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {Some(DataType::Enum)}
-                else if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {Some(DataType::Struct)}
-                else if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {Some(DataType::LatLong)}
-                else {Some(DataType::Bytes)},
-            
-            None => Some(DataType::Bytes)
+                if (value == &"Bytes") | (value == &"bytes") | (value == &"BYTES") {DataType::Bytes}
+                else if (value == &"Boolean") | (value == &"boolean") | (value == &"BOOLEAN") {DataType::Boolean}
+                else if (value == &"Number") | (value == &"number") | (value == &"NUMBER") {DataType::Number}
+                else if (value == &"String") | (value == &"string") | (value == &"STRING") {DataType::String}
+                else if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {DataType::Enum}
+                else if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {DataType::Struct}
+                else if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {DataType::LatLong}
+                else {DataType::String},
+            None => DataType::String
         };
-        //property_value = property_value.with_data_type(data_type.unwrap());
+        println!("!dgc-network! data_type = {:?}", data_type);
 
-        if data_type.unwrap() == DataType::Bytes {
-            let bytes_value = match key_val.get(2) {
+        if data_type == DataType::Bytes {
+            let string_value = match key_val.get(2) {
                 Some(value) => value.to_string(),
-                None => "description is formated incorrectly".to_string()
+                None => "string_value is formated incorrectly".to_string()
             };    
-        }
+            let bytes_value = string_value.as_bytes();
 
-        if data_type.unwrap() == DataType::Boolean {
-            let boolean_value = match key_val.get(3) {
-                Some(value) => value.to_string(),
-                None => "description is formated incorrectly".to_string()
-            };    
-        }
-
-        if data_type.unwrap() == DataType::Number {
-            let number_value = match key_val.get(4) {
-                Some(value) => value.to_string(),
-                None => "description is formated incorrectly".to_string()
-            };    
-        }
-
-        if data_type.unwrap() == DataType::String {
-            let string_value = match key_val.get(5) {
-                Some(value) => {
-                    //property_value = property_value.with_string_value(value.to_string());
-                    value.to_string()
-                },
-                None => "description is formated incorrectly".to_string()
-            };    
             let property_value = PropertyValueBuilder::new()
-            .with_name(name.into())
-            .with_data_type(data_type.unwrap())
+            .with_name(name.clone().into())
+            .with_data_type(DataType::Bytes)
+            .with_bytes_value(bytes_value.to_vec())
+            .build()
+            .unwrap();
+            properties.push(property_value.clone());    
+        }
+
+        if data_type == DataType::Boolean {
+            let string_value = match key_val.get(3) {
+                Some(value) => value.to_string(),
+                None => "string_value is formated incorrectly".to_string()
+            };    
+            let boolean_value = string_value.parse::<bool>();
+
+            let property_value = PropertyValueBuilder::new()
+            .with_name(name.clone().into())
+            .with_data_type(DataType::Boolean)
+            .with_boolean_value(boolean_value.unwrap())
+            .build()
+            .unwrap();
+            properties.push(property_value.clone());    
+        }
+
+        if data_type == DataType::Number {
+            let string_value = match key_val.get(4) {
+                Some(value) => value.to_string(),
+                None => "string_value is formated incorrectly".to_string()
+            };    
+            let number_value = string_value.parse::<i64>();
+
+            let property_value = PropertyValueBuilder::new()
+            .with_name(name.clone().into())
+            .with_data_type(DataType::Number)
+            .with_number_value(number_value.unwrap())
+            .build()
+            .unwrap();
+            properties.push(property_value.clone());    
+        }
+
+        if data_type == DataType::String {
+            let string_value = match key_val.get(5) {
+                Some(value) => value.to_string(),
+                None => "string_value is formated incorrectly".to_string()
+            };    
+
+            let property_value = PropertyValueBuilder::new()
+            .with_name(name.clone().into())
+            .with_data_type(DataType::String)
             .with_string_value(string_value)
             .build()
             .unwrap();
-            properties.push(property_value.clone());
+            properties.push(property_value.clone());    
         }
 
-        if data_type.unwrap() == DataType::Enum {
-            let enum_value = match key_val.get(6) {
+        if data_type == DataType::Enum {
+            let string_value = match key_val.get(6) {
                 Some(value) => value.to_string(),
-                None => "description is formated incorrectly".to_string()
+                None => "string_value is formated incorrectly".to_string()
             };    
+            let enum_value = string_value.parse::<u32>();
+
+            let property_value = PropertyValueBuilder::new()
+            .with_name(name.clone().into())
+            .with_data_type(DataType::Enum)
+            .with_enum_value(enum_value.unwrap())
+            .build()
+            .unwrap();
+            properties.push(property_value.clone());    
         }
 
-        if data_type.unwrap() == DataType::Struct {
-            let struct_value = match key_val.get(7) {
-                Some(value) => value.to_string(),
-                None => "description is formated incorrectly".to_string()
-            };    
-        }
-
-        if data_type.unwrap() == DataType::LatLong {
-            let lat_long_value = match key_val.get(8) {
-                Some(value) => value.to_string(),
-                None => "description is formated incorrectly".to_string()
-            };    
-        }
-*/        
-/*
-        let property_value = PropertyValueBuilder::new()
-        .with_name(name.into())
-        .with_data_type(data_type.unwrap())
-        .with_number_value(number_value.unwrap())
-        .build()
-        .unwrap();
-        properties.push(property_value.clone());
-*/        
     }
     return properties
 }

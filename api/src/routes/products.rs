@@ -237,8 +237,8 @@ fn retrieve_property_values(
                 else if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {DataType::Enum}
                 else if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {DataType::Struct}
                 else if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {DataType::LatLong}
-                else {DataType::Bytes},
-            None => DataType::Bytes
+                else {DataType::String},
+            None => DataType::String
         };
         println!("!dgc-network! data_type = {:?}", data_type);
 
