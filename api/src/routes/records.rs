@@ -196,7 +196,7 @@ pub async fn update_record(
 }
 
 fn retrieve_property_values(
-    input_data: &web::Json<ProductData>,
+    input_data: &web::Json<RecordData>,
 ) -> Vec::<PropertyValue> {
 /*    
     name: String,
