@@ -273,7 +273,7 @@ fn retrieve_property_definitions(
             let property_definition = PropertyDefinitionBuilder::new()
             .with_name(name.clone().into())
             .with_data_type(DataType::Number)
-            .with_required(required.clone())
+            .with_required(required.clone().unwrap())
             .with_description(description.clone().to_string())
             .with_number_exponent(number_exponent.unwrap())
             .build()
@@ -284,7 +284,7 @@ fn retrieve_property_definitions(
             let property_definition = PropertyDefinitionBuilder::new()
             .with_name(name.clone().into())
             .with_data_type(DataType::Number)
-            .with_required(required.clone())
+            .with_required(required.clone().unwrap())
             .with_description(description.clone().to_string())
             .build()
             .unwrap();    
