@@ -255,11 +255,11 @@ fn retrieve_property_definitions(
             .build()
             .unwrap();    
             properties.push(property_definition.clone());
-            
+
         } else {
             let property_definition = PropertyDefinitionBuilder::new()
             .with_name(name.clone().into())
-            .with_data_type(data_type.clone().unwrap())
+            .with_data_type(data_type.clone())
             .with_required(required.clone().unwrap())
             .with_description(description.clone().to_string())
             .build()
