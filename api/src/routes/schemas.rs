@@ -224,7 +224,7 @@ fn retrieve_property_definitions(
             Some(value) => value.to_string(),
             None => "false".to_string()
         };    
-        let required = required_value.parse::<bool>();
+        let required = required_string.parse::<bool>();
 
         let description = match key_val.get(3) {
             Some(value) => value.to_string(),
