@@ -204,17 +204,6 @@ pub async fn update_product(
 fn retrieve_property_values(
     input_data: &web::Json<ProductData>,
 ) -> Vec::<PropertyValue> {
-/*    
-    name: String,
-    data_type: DataType,
-    bytes_value: Vec<u8>,
-    boolean_value: bool,
-    number_value: i64,
-    string_value: String,
-    enum_value: u32,
-    struct_values: Vec<PropertyValue>,
-    lat_long_value: LatLong,
-*/
 
     let mut properties = Vec::<PropertyValue>::new();
     let properties_as_string = &input_data.properties;
@@ -277,7 +266,7 @@ fn retrieve_property_values(
         if data_type == DataType::Number {
             let string_value = match key_val.get(4) {
                 Some(value) => value.to_string(),
-                None => "string_value is formated incorrectly".to_string()
+                None => "0".to_string()
             };    
             let number_value = string_value.parse::<i64>();
 

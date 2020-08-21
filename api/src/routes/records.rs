@@ -271,7 +271,7 @@ fn retrieve_property_values(
         if data_type == DataType::Number {
             let string_value = match key_val.get(4) {
                 Some(value) => value.to_string(),
-                None => "string_value is formated incorrectly".to_string()
+                None => "0".to_string()
             };    
             let number_value = string_value.parse::<i64>();
 
