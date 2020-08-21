@@ -193,7 +193,15 @@ pub async fn update_schema(
 fn retrieve_property_definitions(
     input_data: &web::Json<SchemaData>,
 ) -> Vec::<PropertyDefinition> {
-
+/*
+    name: String,
+    data_type: DataType,
+    required: bool,
+    description: String,
+    number_exponent: i32,
+    enum_options: Vec<String>,
+    struct_properties: Vec<PropertyDefinition>,
+*/
     let mut properties = Vec::<PropertyDefinition>::new();
     let properties_as_string = &input_data.properties;
     let vec: Vec<&str> = properties_as_string.split(",").collect();
@@ -230,39 +238,7 @@ fn retrieve_property_definitions(
             Some(value) => value.to_string(),
             None => "description is formated incorrectly".to_string()
         };
-/*
-        if data_type == DataType::Bytes {
-            let string_value = match key_val.get(2) {
-                Some(value) => value.to_string(),
-                None => "string_value is formated incorrectly".to_string()
-            };    
-            let bytes_value = string_value.as_bytes();
 
-            let property_value = PropertyValueBuilder::new()
-            .with_name(name.clone().into())
-            .with_data_type(DataType::Bytes)
-            .with_bytes_value(bytes_value.to_vec())
-            .build()
-            .unwrap();
-            properties.push(property_value.clone());    
-        }
-
-        if data_type == DataType::Boolean {
-            let string_value = match key_val.get(3) {
-                Some(value) => value.to_string(),
-                None => "string_value is formated incorrectly".to_string()
-            };    
-            let boolean_value = string_value.parse::<bool>();
-
-            let property_value = PropertyValueBuilder::new()
-            .with_name(name.clone().into())
-            .with_data_type(DataType::Boolean)
-            .with_boolean_value(boolean_value.unwrap())
-            .build()
-            .unwrap();
-            properties.push(property_value.clone());    
-        }
-*/
         if data_type == DataType::Number {
             let number_exponent_string = match key_val.get(4) {
                 Some(value) => value.to_string(),
@@ -279,124 +255,17 @@ fn retrieve_property_definitions(
             .build()
             .unwrap();    
             properties.push(property_definition.clone());
+            
         } else {
-
             let property_definition = PropertyDefinitionBuilder::new()
             .with_name(name.clone().into())
-            .with_data_type(DataType::Number)
+            .with_data_type(data_type.clone().unwrap())
             .with_required(required.clone().unwrap())
             .with_description(description.clone().to_string())
             .build()
             .unwrap();    
             properties.push(property_definition.clone());
         }
-/*
-        if data_type == DataType::String {
-            let string_value = match key_val.get(5) {
-                Some(value) => value.to_string(),
-                None => "string_value is formated incorrectly".to_string()
-            };    
-
-            let property_value = PropertyValueBuilder::new()
-            .with_name(name.clone().into())
-            .with_data_type(DataType::String)
-            .with_string_value(string_value)
-            .build()
-            .unwrap();
-            properties.push(property_value.clone());    
-        }
-
-        if data_type == DataType::Enum {
-            let string_value = match key_val.get(6) {
-                Some(value) => value.to_string(),
-                None => "string_value is formated incorrectly".to_string()
-            };    
-            let enum_value = string_value.parse::<u32>();
-
-            let property_value = PropertyValueBuilder::new()
-            .with_name(name.clone().into())
-            .with_data_type(DataType::Enum)
-            .with_enum_value(enum_value.unwrap())
-            .build()
-            .unwrap();
-            properties.push(property_value.clone());    
-        }
-*/
     }
     return properties
 }
-/*
-fn retrieve_property_definitions(
-    input_data: &web::Json<SchemaData>,
-) -> Vec::<PropertyDefinition> {
-    
-    let properties_as_string = &input_data.properties;
-    let mut properties = Vec::<PropertyDefinition>::new();
-    let vec: Vec<&str> = properties_as_string.split(",").collect();
-    let key_val_vec = split_vec(vec, 7);
-    for key_val in key_val_vec {
-        if key_val.len() != 7 {
-            "Properties are formated incorrectly".to_string();            
-        }
-        let name = match key_val.get(0) {
-            Some(value) => value.to_string(),
-            None => "name is formated incorrectly".to_string()
-        };
-
-        let data_type = match key_val.get(1) {
-            Some(value) => 
-                if (value == &"Byte") | (value == &"byte") | (value == &"BYTE") {Some(DataType::Bytes)}
-                else if (value == &"Boolean") | (value == &"boolean") | (value == &"BOOLEAN") {Some(DataType::Boolean)}
-                else if (value == &"Number") | (value == &"number") | (value == &"NUMBER") {Some(DataType::Number)}
-                else if (value == &"String") | (value == &"string") | (value == &"STRING") {Some(DataType::String)}
-                else if (value == &"Enum") | (value == &"enum") | (value == &"ENUM") {Some(DataType::Enum)}
-                else if (value == &"Struct") | (value == &"struct") | (value == &"STRUCT") {Some(DataType::Struct)}
-                else if (value == &"LatLong") | (value == &"LatLong") | (value == &"LATLONG") {Some(DataType::LatLong)}
-                else {Some(DataType::Bytes)},
-            
-            None => Some(DataType::Bytes)
-        };
-
-        let required = match key_val.get(2) {
-            Some(value) => 
-                if (value == &"True") | (value == &"true") | (value == &"TRUE") {Some(true)}
-                else {Some(false)},
-            
-            None => Some(false)
-        };
-
-        let description = match key_val.get(3) {
-            Some(value) => value.to_string(),
-            None => "description is formated incorrectly".to_string()
-        };
-
-        let number_exponent_string = match key_val.get(4) {
-            Some(value) => value.to_string(),
-            None => "0".to_string()
-        };
-        let number_exponent = number_exponent_string.parse::<i32>().unwrap();
-
-        let enum_options = match key_val.get(5) {
-            Some(value) => value.to_string(),
-            None => "enum_options are formated incorrectly".to_string()
-        };
-        let struct_properties = match key_val.get(6) {
-            Some(value) => value.to_string(),
-            None => "struct_properties are formated incorrectly".to_string()
-        };
-
-        let builder = PropertyDefinitionBuilder::new();
-        let property_definition = builder
-        .with_name(name.to_string())
-        .with_data_type(data_type.unwrap())
-        .with_required(required.unwrap())
-        .with_description(description.to_string())
-        .with_number_exponent(number_exponent)
-        .build()
-        .unwrap();
-
-        properties.push(property_definition.clone());
-    }
-    return properties
-}
-*/
