@@ -255,7 +255,7 @@ fn retrieve_property_values(
         if data_type == DataType::Boolean {
             let string_value = match key_val.get(3) {
                 Some(value) => value.to_string(),
-                None => "string_value is formated incorrectly".to_string()
+                None => "false".to_string()
             };    
             let boolean_value = string_value.parse::<bool>();
 
